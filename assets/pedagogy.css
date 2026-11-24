@@ -1,0 +1,387 @@
+/*
+ * Gavin Physics 2.0 教學鷹架元件樣式
+ * ・Pre-Lab 生活暖身、KaTeX 方程式解剖卡、綠字×藍字雙欄思考解題器、易混淆對照、課堂討論與收束
+ * ・全面沿用 warm.css 的 --gp-* 色彩與字體變數，並強化數學公式對比度與可讀性
+ */
+
+.gp-ped-card {
+  margin: 18px 0;
+  padding: 18px 20px;
+  background: var(--gp-card, #fffaf3);
+  border: 1px solid var(--gp-line, #e7d6c3);
+  border-radius: var(--gp-radius, 16px);
+  box-shadow: var(--gp-shadow);
+  font-family: var(--gp-sans);
+  color: var(--gp-ink, #3b2c24);
+}
+.gp-ped-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gp-accent-ink, #9f4a28);
+  background: var(--gp-accent-soft, #f7e3d6);
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.gp-ped-card h3 {
+  margin: 0 0 8px;
+  font-family: var(--gp-serif);
+  font-size: 1.08rem;
+  color: var(--gp-ink, #3b2c24);
+}
+.gp-ped-card p { margin: 0 0 10px; line-height: 1.7; }
+.gp-ped-card p:last-child { margin-bottom: 0; }
+
+/* ---------- 00 Pre-Lab 生活暖身 ---------- */
+.gp-prelab { border-left: 4px solid var(--gp-honey, #d4962e); }
+.gp-prelab-q {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: var(--gp-card-2, #fbf3e8);
+  border: 1px solid var(--gp-line, #e7d6c3);
+  border-radius: 12px;
+}
+.gp-prelab-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.gp-ped-btn {
+  font: 600 0.88rem/1.35 var(--gp-sans);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gp-line, #e7d6c3);
+  background: var(--gp-card, #fffaf3);
+  color: var(--gp-ink, #3b2c24);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.gp-ped-btn:hover, .gp-ped-btn:focus-visible { border-color: var(--gp-accent, #c0603a); outline: none; }
+.gp-ped-btn.on { background: var(--gp-accent, #c0603a); border-color: var(--gp-accent, #c0603a); color: #fff; }
+.gp-ped-btn.ok { background: var(--gp-sage-soft, #e7f0e2); border-color: var(--gp-sage, #5f8a5c); color: #2d4e2b; }
+.gp-ped-btn.bad { background: var(--gp-rose-soft, #f8e2e0); border-color: var(--gp-rose, #b4484d); color: #6e2226; }
+.gp-prelab-note {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--gp-honey-soft, #fbefd6);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* ---------- 方程式解剖卡（普物式曲虛線直指符號） ---------- */
+.gp-eq-card { border-left: 4px solid var(--gp-teal, #3b8b86); }
+.gp-eq-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.gp-eq-mask-btn {
+  padding: 5px 12px;
+  font-size: 0.8rem;
+}
+.gp-eq-causal {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--gp-bg-soft, #f2e7d8);
+  font-size: 0.96rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.gp-eq-role-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-size: 0.78rem;
+  color: var(--gp-muted, #7d6a5c);
+  margin-bottom: 10px;
+}
+.gp-eq-role-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+
+.gp-eq-stage {
+  position: relative;
+  background: #fffdf8;
+  border: 1.5px solid var(--gp-line, #e7d6c3);
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin: 10px 0 14px;
+  overflow: hidden;
+}
+.gp-eq-wires {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+  transition: opacity 0.15s;
+}
+.gp-eq-wire {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-dasharray: 2.2 3.2;
+  stroke-linecap: round;
+  opacity: 0.78;
+  transition: opacity 0.15s, stroke-width 0.15s;
+}
+.gp-eq-wire.on {
+  opacity: 1;
+  stroke-width: 2.1;
+  stroke-dasharray: none;
+}
+.gp-eq-lane {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px 26px;
+  min-height: 28px;
+}
+.gp-eq-lane-top { margin-bottom: 36px; }
+.gp-eq-lane-bot { margin-top: 36px; }
+.gp-eq-formula-row {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 6px 8px;
+  color: #1c1410;
+}
+.gp-eq-formula-row .katex-display { margin: 0; }
+.gp-eq-formula-row .katex { font-size: 1.85rem; color: #1c1410; }
+
+.gp-k-tok {
+  cursor: pointer;
+  padding: 3px 5px;
+  margin: 0 1px;
+  border-radius: 6px;
+  border: 0;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.gp-k-role-cause { color: #8a4f04; }
+.gp-k-role-effect { color: #115c57; }
+.gp-k-role-prop { color: #1d487a; }
+.gp-k-role-op { color: #524238; }
+.gp-k-tok:hover, .gp-k-tok:focus-visible { background: rgba(192, 96, 58, 0.11); outline: none; }
+.gp-k-tok.on { background: rgba(192, 96, 58, 0.18); box-shadow: 0 0 0 2px rgba(192, 96, 58, 0.28); }
+
+.gp-eq-lbl {
+  background: transparent;
+  border: 1.5px solid transparent;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font: 700 0.88rem/1.35 var(--gp-sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+.gp-eq-lbl[data-role="cause"] { color: #8c5206; background: #fdf6e7; }
+.gp-eq-lbl[data-role="effect"] { color: #135c56; background: #ecf7f6; }
+.gp-eq-lbl[data-role="prop"] { color: #1e497a; background: #eef4fc; }
+.gp-eq-lbl[data-role="op"] { color: #54453a; background: #f5f0ea; }
+.gp-eq-lbl:hover, .gp-eq-lbl:focus-visible { border-color: currentColor; outline: none; }
+.gp-eq-lbl.on {
+  border-color: var(--gp-accent, #c0603a);
+  box-shadow: 0 0 0 2.5px rgba(192, 96, 58, 0.22);
+}
+.gp-eq-hide-callouts .gp-eq-lbl,
+.gp-eq-hide-callouts .gp-eq-wires { opacity: 0; visibility: hidden; }
+
+.gp-eq-inspect {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--gp-card-2, #fbf3e8);
+  border: 1px solid var(--gp-line, #e7d6c3);
+  font-size: 0.94rem;
+}
+.gp-eq-inspect-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+.gp-eq-inspect-sym {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--gp-line, #e7d6c3);
+  color: #1c1410;
+  font-weight: 700;
+}
+.gp-eq-inspect-sym .katex { font-size: 1.15rem; color: #1c1410; }
+.gp-eq-inspect-head strong { font-size: 1.02rem; }
+.gp-eq-unit { font-size: 0.82rem; color: var(--gp-muted, #7d6a5c); background: var(--gp-card, #fffaf3); padding: 1px 8px; border-radius: 999px; border: 1px solid var(--gp-line); }
+.gp-eq-trap { margin-top: 6px; font-size: 0.89rem; color: var(--gp-rose, #b4484d); }
+.gp-eq-limit { margin-top: 10px; font-size: 0.9rem; }
+.gp-eq-limit summary { cursor: pointer; font-weight: 700; color: var(--gp-accent-ink, #9f4a28); }
+
+/* ---------- 覆蓋課本公式卡與速查表字體對比度 ---------- */
+.gp-math-fb {
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", Georgia, "Noto Serif TC", serif;
+  font-weight: 600;
+  color: #1c1410;
+}
+.gp-math-fb-disp {
+  display: block;
+  font-size: 1.24rem;
+  line-height: 1.7;
+  padding: 4px 0;
+}
+.formula-card .equation {
+  background: #fffdf9;
+  border: 1px solid var(--gp-line, #e7d6c3);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+.formula-card .formula,
+.fold-body .formula,
+.panel .formula {
+  font-family: "Cambria Math", "STIX Two Math", Georgia, "Noto Serif TC", serif;
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.8;
+  color: #1c1410;
+}
+.formula .katex { font-size: 1.24rem; color: #1c1410; }
+.formula .katex-display { margin: 4px 0; overflow-x: auto; text-align: left; }
+.gp-col-blue sub, .gp-math-fb sub { font-size: 0.74em; vertical-align: sub; }
+.gp-col-blue sup, .gp-math-fb sup { font-size: 0.74em; vertical-align: super; }
+
+html.gp-teach .gp-eq-formula-row .katex { font-size: 2.2rem; }
+html.gp-teach .formula .katex { font-size: 1.45rem; }
+
+@media (max-width: 540px) {
+  .gp-eq-stage { padding: 14px 10px; overflow-x: auto; }
+  .gp-eq-formula-row .katex { font-size: 1.42rem; }
+  .gp-eq-lane { gap: 8px 12px; }
+  .gp-eq-lane-top { margin-bottom: 32px; }
+  .gp-eq-lane-bot { margin-top: 32px; }
+  .gp-eq-lbl { font-size: 0.8rem; white-space: normal; text-align: center; }
+}
+
+/* ---------- 綠字 × 藍字 雙欄思考解題器 ---------- */
+.gp-solver { border-left: 4px solid var(--gp-sage, #5f8a5c); }
+.gp-solver-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+.gp-solver-modes { display: flex; gap: 6px; flex-wrap: wrap; }
+.gp-solver-stem {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--gp-card-2, #fbf3e8);
+  border: 1px solid var(--gp-line, #e7d6c3);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.gp-solver-cols { display: flex; flex-direction: column; gap: 8px; }
+.gp-solver-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--gp-line, #e7d6c3);
+  background: #fffdf9;
+}
+@media (max-width: 640px) { .gp-solver-row { grid-template-columns: 1fr; } }
+.gp-col-green { color: #245b38; font-size: 0.92rem; line-height: 1.55; }
+.gp-col-blue { color: #1b4d82; font-size: 0.96rem; font-weight: 600; line-height: 1.55; border-left: 2px solid var(--gp-line); padding-left: 10px; }
+@media (max-width: 640px) { .gp-col-blue { border-left: 0; border-top: 1px dashed var(--gp-line); padding-left: 0; padding-top: 8px; } }
+.gp-step-badge { display: inline-block; font-size: 0.78rem; font-weight: 700; margin-right: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(0, 0, 0, 0.06); }
+.gp-solver-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.gp-wedoit-box {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--gp-sage-soft, #e7f0e2);
+  border: 1px solid #bfd4b8;
+}
+.gp-wedoit-opts { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.gp-wedoit-opt { text-align: left; border-radius: 10px; padding: 8px 12px; }
+.gp-cue-box {
+  margin-top: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--gp-honey-soft, #fbefd6);
+  border-left: 3px solid var(--gp-honey, #d4962e);
+  font-size: 0.9rem;
+  color: #5a3c0c;
+}
+.gp-branch-card {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f4edf6;
+  border: 1px solid #d7c3de;
+  color: #3f2547;
+}
+.gp-branch-card .gp-ped-kicker { background: #e8d8ee; color: #5b2c6f; }
+
+/* ---------- 易混淆負遷移排雷 ---------- */
+.gp-contrast { border-left: 4px solid var(--gp-rose, #b4484d); }
+.gp-contrast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+@media (max-width: 640px) { .gp-contrast-grid { grid-template-columns: 1fr; } }
+.gp-contrast-box {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--gp-card-2, #fbf3e8);
+  border: 1px solid var(--gp-line, #e7d6c3);
+  font-size: 0.92rem;
+}
+.gp-contrast-box strong { display: block; margin-bottom: 4px; color: var(--gp-accent-ink, #9f4a28); }
+.gp-contrast-rule {
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: var(--gp-rose-soft, #f8e2e0);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ---------- 課堂討論 & 本節收束 ---------- */
+.gp-collab { border-left: 4px solid var(--gp-plum, #86587f); }
+.gp-closure { border-left: 4px solid var(--gp-accent, #c0603a); }
+.gp-closure-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 6px 0;
+  font-size: 0.93rem;
+  cursor: pointer;
+}
+
+/* ---------- 隱藏實驗讀值（先估再看） ---------- */
+.gp-readout-masked dd {
+  filter: blur(7px);
+  user-select: none;
+  transition: filter 0.15s;
+}
+.gp-readout-masked::before {
+  content: "🙈 讀值已隱藏——先依圖形估算，再點「顯示讀值」核對";
+  grid-column: 1 / -1;
+  font-size: 0.85rem;
+  color: var(--gp-accent-ink, #9f4a28);
+  font-weight: 700;
+  padding: 4px 0;
+}
+
+@media print {
+  .gp-solver-modes, .gp-solver-controls, .gp-wedoit-box, .gp-prelab-opts, .gp-eq-callouts { break-inside: avoid; }
+}

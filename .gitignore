@@ -14,7 +14,8 @@ Thumbs.db
 node_modules/
 .venv/
 __pycache__/
-**/scratch/temp_pdfs/
+**/scratch/
+*.gdoc
 
 # 含答案的合併題庫不可提交
 bank_all.json

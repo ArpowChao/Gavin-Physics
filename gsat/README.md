@@ -4,11 +4,11 @@
 
 ## 線上使用
 
-[開啟學測物理 SOIL 核心複習系統](https://arpowchao.github.io/phy-senior/)
+[開啟學測物理 SOIL 核心複習系統](https://arpowchao.github.io/Gavin-Physics/gsat/)
 
 網站不需要註冊或安裝套件，使用桌面或行動裝置的現代瀏覽器即可開啟。
 
-[查看 GitHub 原始碼與下載專案](https://github.com/ArpowChao/phy-senior)
+[查看 GitHub 原始碼與下載專案](https://github.com/ArpowChao/Gavin-Physics)
 
 ## 課綱背景資料
 

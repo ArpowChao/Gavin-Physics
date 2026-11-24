@@ -29,6 +29,8 @@
     slit: ['apps/single-slit-diffraction/', '單狹縫繞射四大核心主題', '成德高中 陳家騏老師 設計'],
     charged: ['apps/charged-spheres/', '帶電球的近距離電力', '均勻帶電球與點電荷庫侖力比較'],
     alpha: ['apps/alpha.html', '拉塞福散射公式推導', 'α 粒子散射與原子核模型'],
+    pnDiode: ['apps/pn-diode/', 'DIODE 二極體單行道', 'PN 接面與非歐姆整流特性（延伸）'],
+    semiconductor: ['apps/semiconductor.html', '半導體物理進階模擬', '摻雜、能隙與載子（延伸）'],
   };
   // 只放「課本這一節有教」的實驗（依 108 課綱與現行課本核對）。
   //   超出必修的（拋體、質心、動量、人造衛星軌道…）放首頁「選修物理Ⅰ・Ⅱ 力學」；
@@ -47,8 +49,20 @@
       N21: ['doppler'],        // 必修 4-5 都卜勒效應
     },
     em: {},
+    pv: {
+      '1-2': ['pnDiode', 'semiconductor'],
+      '3-1': ['alpha'],
+    },
+    pi: {
+      '1-1': ['uncertainty', 'sampler'],
+      '1-2': ['dataLab'],
+      '3-4': ['lidToss'],
+      '4-3': ['pulley'],
+      '5-3': ['cannon', 'orbit'],
+      '5-4': ['orbit'],
+    },
   };
-  const course = /\/gsat\//.test(location.pathname) ? 'gsat' : /\/wave-optics\/wave_optics_review/.test(location.pathname) ? 'wave' : /\/electromag\//.test(location.pathname) ? 'em' : null;
+  const course = /\/gsat\//.test(location.pathname) ? 'gsat' : /\/wave-optics\/wave_optics_review/.test(location.pathname) ? 'wave' : /\/electromag\//.test(location.pathname) ? 'em' : /\/physics-v\//.test(location.pathname) ? 'pv' : /\/physics-i\//.test(location.pathname) ? 'pi' : null;
   if (!course) return;
 
   function nodeFromHash() {

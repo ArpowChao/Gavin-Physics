@@ -12,7 +12,7 @@
   const MODE = (me && me.dataset.mode) || '';
   const Q = me && me.src.indexOf('?') > 0 ? me.src.slice(me.src.indexOf('?')) : '';
   const here = location.href;
-  const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['electromag/', '選修・電磁學'], ['practice/', '線上練習']];
+  const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['physics-i/', '選修・力學Ⅰ'], ['wave-optics/', '選修・波動光學'], ['electromag/', '選修・電磁學'], ['physics-v/', '選修・近代物理Ⅴ'], ['practice/', '線上練習']];
   window.__GP_ROOT__ = ROOT;
   const active = p => p ? here.indexOf(ROOT + p) === 0 : here.replace(/(index\.html)?([?#].*)?$/, '') === ROOT;
 
@@ -155,10 +155,89 @@
     el.className = side ? 'gp-bar gp-side' : 'gp-bar'; el.setAttribute('aria-label', '全站導覽');
     el.innerHTML = '<div class="gp-in"><a class="gp-brand" href="' + ROOT + '"><i aria-hidden="true"></i>Gavin Physics</a><div class="gp-links">' +
       NAV.map(([p, t]) => '<a href="' + ROOT + p + '"' + (active(p) ? ' class="on" aria-current="page"' : '') + '>' + t + '</a>').join('') +
-      '</div><div class="gp-tools">' + (withFS ? '<button type="button" class="gp-fsbtn">⛶ 全螢幕</button>' : '') +
+      '</div><div class="gp-tools">' +
+      '<button type="button" class="gp-iconbtn gp-search-btn" title="搜尋全站概念與實驗 (Ctrl+K)">🔍 搜尋</button>' +
+      '<button type="button" class="gp-iconbtn gp-teach-btn" title="課堂授課模式：放大字體並遮蔽詳解（點一下才顯示）">🎓 授課</button>' +
+      (withFS ? '<button type="button" class="gp-fsbtn">⛶ 全螢幕</button>' : '') +
       '<a class="gp-user" id="gp-user" href="' + ROOT + 'practice/">登入練習帳號</a></div></div>';
     return el;
   }
+
+  // ---------- 全站概念搜尋 ----------
+  let searchIdx = null, searchModal = null;
+  async function getSearchIndex() {
+    if (!searchIdx) {
+      const res = await fetch(ROOT + 'assets/search-index.json' + Q);
+      searchIdx = await res.json();
+    }
+    return searchIdx;
+  }
+  function closeSearch() { if (searchModal) { searchModal.remove(); searchModal = null; } }
+  async function openSearch() {
+    if (searchModal) { closeSearch(); return; }
+    const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const bg = document.createElement('div'); bg.className = 'gp-search-backdrop';
+    bg.innerHTML = '<div class="gp-search-box" role="dialog" aria-label="全站概念搜尋">' +
+      '<div class="gp-search-head"><span>🔍</span><input type="search" placeholder="搜尋概念、公式、實驗（例：摩擦力、全反射、都卜勒、冷次）" autocomplete="off"><kbd id="gp-s-esc">ESC</kbd></div>' +
+      '<div class="gp-search-list"><div class="gp-search-empty">載入索引中…</div></div></div>';
+    document.body.appendChild(bg); searchModal = bg;
+    const inp = bg.querySelector('input'), list = bg.querySelector('.gp-search-list');
+    bg.querySelector('#gp-s-esc').onclick = closeSearch;
+    bg.addEventListener('click', e => { if (e.target === bg) closeSearch(); });
+    inp.focus();
+
+    let rows = [];
+    try { rows = await getSearchIndex(); } catch (e) { list.innerHTML = '<div class="gp-search-empty">無法載入搜尋索引。</div>'; return; }
+
+    let sel = 0, matches = [];
+    const renderList = q => {
+      const terms = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      matches = (terms.length ? rows.filter(r => {
+        const hay = (r.t + ' ' + r.sub + ' ' + r.book + ' ' + r.kw).toLowerCase();
+        return terms.every(t => hay.includes(t));
+      }) : rows).slice(0, 30);
+      sel = 0;
+      if (!matches.length) { list.innerHTML = '<div class="gp-search-empty">找不到相關概念或實驗，試試換個關鍵字。</div>'; return; }
+      list.innerHTML = matches.map((r, i) => '<a class="gp-search-item' + (i === 0 ? ' on' : '') + '" href="' + esc(ROOT + r.url) + '"><div><strong>' + esc(r.t) + '</strong><span>' + esc(r.sub) + '</span></div><span class="gp-search-book">' + esc(r.book) + '</span></a>').join('');
+      list.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSearch));
+    };
+    renderList('');
+    inp.addEventListener('input', () => renderList(inp.value));
+    inp.addEventListener('keydown', e => {
+      const items = [...list.querySelectorAll('.gp-search-item')];
+      if (e.key === 'Escape') { e.preventDefault(); closeSearch(); }
+      else if (e.key === 'ArrowDown' && items.length) { e.preventDefault(); sel = (sel + 1) % items.length; items.forEach((x, i) => x.classList.toggle('on', i === sel)); items[sel].scrollIntoView({ block: 'nearest' }); }
+      else if (e.key === 'ArrowUp' && items.length) { e.preventDefault(); sel = (sel - 1 + items.length) % items.length; items.forEach((x, i) => x.classList.toggle('on', i === sel)); items[sel].scrollIntoView({ block: 'nearest' }); }
+      else if (e.key === 'Enter' && items[sel]) { e.preventDefault(); closeSearch(); location.href = items[sel].href; }
+    });
+  }
+
+  // ---------- 課堂授課模式 ----------
+  const TEACH_KEY = 'gp_teach';
+  function setTeach(on) {
+    document.documentElement.classList.toggle('gp-teach', !!on);
+    try { sessionStorage.setItem(TEACH_KEY, on ? '1' : ''); } catch (e) {}
+    document.querySelectorAll('.gp-teach-btn').forEach(b => b.classList.toggle('on', !!on));
+  }
+  function initTeach() {
+    let saved = false; try { saved = sessionStorage.getItem(TEACH_KEY) === '1'; } catch (e) {}
+    if (!document.querySelector('.gp-teach-badge')) {
+      const badge = document.createElement('div'); badge.className = 'gp-teach-badge';
+      badge.innerHTML = '<span>🎓 授課模式（點模糊區顯示解答）</span><button type="button">結束</button>';
+      badge.querySelector('button').onclick = () => setTeach(false);
+      document.body.appendChild(badge);
+    }
+    setTeach(saved);
+    document.addEventListener('click', e => {
+      if (!document.documentElement.classList.contains('gp-teach')) return;
+      const t = e.target.closest('.worked-example p, .check-feedback, .quiz-exp, .exam-sol, .exp, .why');
+      if (t && !t.classList.contains('gp-revealed')) { t.classList.add('gp-revealed'); e.stopPropagation(); }
+    }, true);
+  }
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
+    else if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName)) { e.preventDefault(); openSearch(); }
+  });
   // body 有最大寬度或內距的頁面：把導覽列拉滿整個視窗寬、貼齊頂端
   function stretch(b) {
     b.style.marginLeft = b.style.marginTop = b.style.width = '';
@@ -190,8 +269,11 @@
       else { const b = bar(false, withFS); document.body.insertBefore(b, document.body.firstChild); stretch(b); window.addEventListener('resize', () => stretch(b)); }
     }
     document.querySelectorAll('.gp-fsbtn').forEach(b => b.addEventListener('click', togglePage));
+    document.querySelectorAll('.gp-search-btn').forEach(b => b.addEventListener('click', openSearch));
+    document.querySelectorAll('.gp-teach-btn').forEach(b => b.addEventListener('click', () => setTeach(!document.documentElement.classList.contains('gp-teach'))));
+    initTeach();
     loadApi().then(refreshUser);
-    if (/\/(gsat|electromag)\/|wave_optics_review/.test(path)) load(ROOT + 'assets/topic-labs.js' + Q);
+    if (/\/(gsat|electromag|physics-i|physics-v)\/|wave_optics_review/.test(path)) load(ROOT + 'assets/topic-labs.js' + Q);
     decorate(); setTimeout(decorate, 1200);
     new MutationObserver(scheduleDecorate).observe(document.body, { childList: true, subtree: true });
     window.addEventListener('resize', () => { if (!stageEl) scheduleDecorate(); });

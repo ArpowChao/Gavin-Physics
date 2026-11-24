@@ -7,19 +7,19 @@
  * 第一次使用：依序執行 setup → importLegacy → installHourlyTrigger，再部署為網頁應用程式
  ****************************************************************/
 
-// ====== 設定（setup 會把試算表 ID 存進指令碼屬性；以下為預設值） ======
+// ====== 設定（請用 configureProperties() 將實際 ID 與信箱存進指令碼屬性，勿提交到公開程式碼） ======
 const DEFAULTS = {
-  FIG_FOLDER_ID: '16MNlYaCY1aqb2qrMcGu9uoLd5J79tRZT',     // 易混淆概念題的附圖（沿用原本的雲端資料夾）
-  LEGACY_SHEET_ID: '1y1yze94zM5elUqDt31Ys9VHASJJ1LBIq_I0VdMyv2Pc',   // 舊系統「物理練習系統_資料庫」
-  BANK_FILE_ID: '18jMm11P4JKg4y4UEBFcBZHxsrT8rsYjy',      // 合併題庫 bank_all.json（雲端硬碟「Gavin Physics 線上練習」資料夾，含電磁學）
+  FIG_FOLDER_ID: '',
+  LEGACY_SHEET_ID: '',
+  BANK_FILE_ID: '',
+  FEEDBACK_TO: '',
 };
 const ANCHORS_PER_SESSION = 2;      // 每次練習加入的錨題數（同一量尺）
 const TOKEN_HOURS = 6;              // 登入閒置多久後失效（每次呼叫都會延長）
-const FEEDBACK_TO = 'arpowchaosun@smhs.kh.edu.tw';
 
 const SH = { users: 'Users', sess: 'Sessions', resp: 'Responses', items: 'Items', irtI: 'IRT_Items', irtP: 'IRT_Persons', mastery: 'IRT_Mastery', fb: 'Feedback' };
 const HEAD = {
-  Users: ['userId', 'nickname', 'salt', 'hash', 'createdAt', 'lastLogin'],
+  Users: ['userId', 'nickname', 'salt', 'hash', 'createdAt', 'lastLogin', 'classCode'],
   Sessions: ['sessionId', 'userId', 'startedAt', 'finishedAt', 'mode', 'itemIds', 'score', 'total'],
   Responses: ['timestamp', 'sessionId', 'userId', 'itemId', 'response', 'correct', 'partial', 'seconds', 'attempt'],
   Items: ['itemId', 'bank', 'scale', 'paper', 'pno', 'concept', 'ability', 'bloom', 'type', 'answer', 'anchor', 'groupId', 'section', 'focus', 'key'],
@@ -28,16 +28,28 @@ const HEAD = {
 
 function prop_(k) { return PropertiesService.getScriptProperties().getProperty(k) || DEFAULTS[k] || ''; }
 
+/** 第一次部署前，於 Apps Script 編輯器填入實際雲端 ID 與通知信箱並手動執行一次 */
+function configureProperties() {
+  PropertiesService.getScriptProperties().setProperties({
+    FIG_FOLDER_ID: '',
+    LEGACY_SHEET_ID: '',
+    BANK_FILE_ID: '',
+    FEEDBACK_TO: '',
+  });
+  Logger.log('ScriptProperties 已更新');
+}
+
 // ====== 網頁入口 ======
 // 以函式回傳，避免各 .gs 檔載入順序造成未定義
 function api_() { return {
   ping: () => ({ ok: true, time: new Date().toISOString() }),
-  register, login, getMeta, getProgress, getWrongBook, startSession, submitSession, getMyReport, reportIssue, getFigure, logResponse, getPageHistory,
-  adminLogin, adminRunIRT, adminOverview, adminItemDetail, adminStudentDetail,
+  register, login, updateClass, getMeta, getProgress, getWrongBook, startSession, submitSession, getMyReport, reportIssue, getFigure, logResponse, getPageHistory,
+  adminLogin, adminRunIRT, adminOverview, adminItemDetail, adminStudentDetail, adminResetPassword,
 }; }
 function doGet(e) {
   const p = (e && e.parameter) || {};
-  if (p.fn) return handle_(p.fn, p.args ? JSON.parse(p.args) : []);
+  if (p.fn === 'ping') return handle_('ping', []);
+  if (p.fn) return json_({ ok: false, error: '請改用 POST 呼叫 API' });
   return json_({ ok: true, data: { name: 'Gavin Physics 線上練習 API', time: new Date().toISOString() } });
 }
 function doPost(e) {
@@ -67,7 +79,7 @@ function setup() {
   });
   const first = ss.getSheetByName('工作表1') || ss.getSheetByName('Sheet1'); if (first && ss.getSheets().length > 1) ss.deleteSheet(first);
   writeItemsSheet_();
-  if (!props.getProperty('ADMIN_KEY')) props.setProperty('ADMIN_KEY', Utilities.getUuid().slice(0, 8));
+  if (!props.getProperty('ADMIN_KEY')) props.setProperty('ADMIN_KEY', Utilities.getUuid().replace(/-/g, '').slice(0, 16));
   try { importFigures(); } catch (e) { Logger.log('附圖匯入失敗：' + e.message); }
   Logger.log('初始化完成。資料試算表：https://docs.google.com/spreadsheets/d/' + id);
   Logger.log('後台管理金鑰：' + props.getProperty('ADMIN_KEY'));
@@ -109,7 +121,7 @@ function installHourlyTrigger() {
 }
 /** 程式碼裡指定的題庫檔若和目前使用的不同（更新題庫後），切換過去並清除快取；runIRT／每小時觸發器都會檢查 */
 function syncBankFile_() {
-  const props = PropertiesService.getScriptProperties(); const want = DEFAULTS.BANK_FILE_ID;
+  const props = PropertiesService.getScriptProperties(); const want = DEFAULTS.BANK_FILE_ID || props.getProperty('BANK_FILE_ID');
   if (!want || props.getProperty('BANK_FILE_ID') === want) return false;
   props.setProperty('BANK_FILE_ID', want); clearCaches(); __IM = __KM = __GM = null;
   try { writeItemsSheet_(); } catch (e) { Logger.log('題庫總覽更新失敗：' + e.message); }
@@ -176,32 +188,76 @@ function pubGroups_(items) {
   return Object.keys(used).map(k => ({ gid: k, theme: used[k].theme, stem: used[k].stem, table: used[k].table, fig: used[k].fig }));
 }
 
-// ====== 帳號（只有暱稱與密碼，不收集任何個資） ======
-function register(nick, pw) {
+// ====== 帳號（只有暱稱與密碼，不收集任何個資；班級代碼選填） ======
+function rateLimit_(key, max, sec) {
+  const c = CacheService.getScriptCache();
+  const n = Number(c.get(key) || 0);
+  if (n >= max) throw new Error('嘗試次數過多，請稍後再試');
+  return {
+    fail() { c.put(key, String(n + 1), sec); },
+    clear() { c.remove(key); },
+  };
+}
+function cleanClass_(c) {
+  const s = String(c == null ? '' : c).trim();
+  if (!/^[\w\u4e00-\u9fff\-]{0,12}$/.test(s)) throw new Error('班級代碼限 12 字以內，只能用中英文、數字、底線或連字號');
+  return s;
+}
+function ensureUsersClassCol_(sh) {
+  if (sh.getLastColumn() < 7 || String(sh.getRange(1, 7).getValue() || '').trim() !== 'classCode') {
+    sh.getRange(1, 7).setValue('classCode').setFontWeight('bold');
+  }
+}
+function register(nick, pw, classCode) {
   nick = String(nick || '').trim(); pw = String(pw || '');
   if (!/^[\w一-鿿]{2,16}$/.test(nick)) throw new Error('暱稱需 2～16 字，只能用中英文、數字或底線');
   if (pw.length < 4) throw new Error('密碼至少 4 個字元');
+  const cc = cleanClass_(classCode);
   const lock = LockService.getScriptLock(); lock.waitLock(20000);
   try {
     dirty_(SH.users);
     if (rows_(SH.users).some(r => String(r[1]).toLowerCase() === nick.toLowerCase())) throw new Error('這個暱稱已有人使用，請換一個');
     const uid = 'u' + Utilities.getUuid().replace(/-/g, '').slice(0, 10);
     const salt = Utilities.getUuid();
-    sheet_(SH.users).appendRow([uid, nick, salt, hash_(salt, pw), new Date(), new Date()]);
-    return { token: newToken_(uid, nick), nickname: nick };
+    const sh = sheet_(SH.users);
+    ensureUsersClassCol_(sh);
+    sh.appendRow([uid, nick, salt, hash_(salt, pw), new Date(), new Date(), cc]);
+    dirty_(SH.users);
+    return { token: newToken_(uid, nick), nickname: nick, classCode: cc };
   } finally { lock.releaseLock(); }
 }
 function login(nick, pw) {
   nick = String(nick || '').trim();
+  const rl = rateLimit_('rl_login_' + nick.toLowerCase(), 10, 900);
   const sh = sheet_(SH.users); const v = sh.getDataRange().getValues();
   for (let r = 1; r < v.length; r++) {
     if (String(v[r][1]).toLowerCase() === nick.toLowerCase()) {
       if (hash_(v[r][2], String(pw || '')) !== v[r][3]) break;
+      rl.clear();
       sh.getRange(r + 1, 6).setValue(new Date());
-      return { token: newToken_(v[r][0], v[r][1]), nickname: v[r][1] };
+      return { token: newToken_(v[r][0], v[r][1]), nickname: v[r][1], classCode: String(v[r][6] || '') };
     }
   }
+  rl.fail();
   throw new Error('暱稱或密碼錯誤');
+}
+function updateClass(token, classCode) {
+  const me = who_(token);
+  const cc = cleanClass_(classCode);
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = sheet_(SH.users);
+    ensureUsersClassCol_(sh);
+    const v = sh.getDataRange().getValues();
+    for (let r = 1; r < v.length; r++) {
+      if (v[r][0] === me.uid) {
+        sh.getRange(r + 1, 7).setValue(cc);
+        dirty_(SH.users);
+        return { classCode: cc };
+      }
+    }
+    throw new Error('找不到帳號');
+  } finally { lock.releaseLock(); }
 }
 
 // ====== 學生端：題庫資訊 ======
@@ -446,13 +502,18 @@ function reportIssue(token, itemId, kind, text) {
     '題庫編號：' + itemId + '　' + bankName_(it.bank) + '／' + paperName_(it.paper) + ' 第 ' + it.pno + ' 題　概念：' + concept,
     g ? '題組情境：' + g.stem : '', '題目：' + it.stem, ...it.opts.map((o, j) => '(' + L[j] + ') ' + o), '答案：' + it.ans, '',
     '所有回報都記錄在資料試算表的「Feedback」工作表：https://docs.google.com/spreadsheets/d/' + prop_('SHEET_ID')].join('\n');
-  try { MailApp.sendEmail({ to: FEEDBACK_TO, subject: '【題目回報】' + kind + '｜題庫編號 ' + itemId + '（' + concept + '）', body }); }
-  catch (e) { Logger.log('寄信失敗：' + e); }
+  const to = prop_('FEEDBACK_TO');
+  if (to) {
+    try { MailApp.sendEmail({ to, subject: '【題目回報】' + kind + '｜題庫編號 ' + itemId + '（' + concept + '）', body }); }
+    catch (e) { Logger.log('寄信失敗：' + e); }
+  }
   return { ok: true };
 }
 function testFeedbackMail() {
-  MailApp.sendEmail(FEEDBACK_TO, '【題目回報】寄信功能測試', 'Gavin Physics 練習系統的題目回報功能已可寄信。');
-  Logger.log('已寄出測試信到 ' + FEEDBACK_TO + '，今日剩餘寄信額度：' + MailApp.getRemainingDailyQuota());
+  const to = prop_('FEEDBACK_TO');
+  if (!to) throw new Error('尚未設定 FEEDBACK_TO（請先執行 configureProperties）');
+  MailApp.sendEmail(to, '【題目回報】寄信功能測試', 'Gavin Physics 練習系統的題目回報功能已可寄信。');
+  Logger.log('已寄出測試信到 ' + to + '，今日剩餘寄信額度：' + MailApp.getRemainingDailyQuota());
 }
 
 /** 標準常態累積機率 Φ(z)（Abramowitz–Stegun 近似，誤差 < 1e-7） */

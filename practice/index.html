@@ -129,6 +129,7 @@ button.primary{border-radius:999px}
     <div class="tabs"><button class="primary" id="tLogin">登入</button><button class="ghost" id="tReg">註冊新帳號</button></div>
     <label>暱稱</label><input type="text" id="nick" maxlength="16" autocomplete="username">
     <label>密碼</label><input type="password" id="pw" autocomplete="current-password">
+    <div id="regClassWrap" class="hidden"><label>班級代碼（選填，方便老師分班查看進度，例：305）</label><input type="text" id="regClass" maxlength="12" placeholder="可留空"></div>
     <p class="note">原本「物理易混淆概念練習」的帳號可以直接登入。請勿使用真實姓名或學號作為暱稱。系統只記錄暱稱與作答，不收集任何個人資料；密碼以雜湊方式儲存。</p>
     <div class="err" id="authErr"></div>
     <button class="primary" id="authBtn" style="width:100%">登入</button>
@@ -136,9 +137,10 @@ button.primary{border-radius:999px}
 
   <!-- 選題 -->
   <section id="vSetup" class="hidden">
+    <div class="card exp hidden" id="assignBanner"></div>
     <div class="card" id="pgCard">
       <div class="pg-top"><div class="pg-num">已作答 <b id="pgDone">–</b> ／ <span id="pgTotal">–</span> 題</div>
-        <button class="ghost" id="wrongBtn">📕 錯題本<span class="badge hidden" id="wrongBadge"></span></button></div>
+        <div class="row"><span class="note" id="clsTag"></span><button type="button" class="ghost" id="clsBtn" style="padding:5px 11px;font-size:13px">設定班級</button><button class="ghost" id="wrongBtn">📕 錯題本<span class="badge hidden" id="wrongBadge"></span></button></div></div>
       <div class="pg-bar"><div id="pgFill" style="width:0"></div></div>
       <p class="note" id="pgNote">每題第一次作答就算「已作答」；答錯的題目會自動收進錯題本。</p>
     </div>
@@ -236,13 +238,13 @@ async function loadFig(el, name){
 }
 
 // ---------- 登入 ----------
-function setMode(m){ mode = m; $('tLogin').className = m === 'login' ? 'primary' : 'ghost'; $('tReg').className = m === 'reg' ? 'primary' : 'ghost'; $('authBtn').textContent = m === 'login' ? '登入' : '註冊並登入'; $('authErr').textContent = ''; }
+function setMode(m){ mode = m; $('tLogin').className = m === 'login' ? 'primary' : 'ghost'; $('tReg').className = m === 'reg' ? 'primary' : 'ghost'; $('regClassWrap').classList.toggle('hidden', m !== 'reg'); $('authBtn').textContent = m === 'login' ? '登入' : '註冊並登入'; $('authErr').textContent = ''; }
 $('tLogin').onclick = () => setMode('login'); $('tReg').onclick = () => setMode('reg');
 $('authBtn').onclick = async () => {
   $('authErr').textContent = '';
   try {
-    const r = await call(mode === 'login' ? 'login' : 'register', $('nick').value, $('pw').value);
-    TOKEN = r.token; NICK = r.nickname; PhyAPI.setUser(TOKEN, NICK); $('pw').value = '';
+    const r = mode === 'login' ? await call('login', $('nick').value, $('pw').value) : await call('register', $('nick').value, $('pw').value, $('regClass').value);
+    TOKEN = r.token; NICK = r.nickname; PhyAPI.setUser(TOKEN, NICK, r.classCode != null ? r.classCode : (mode === 'reg' ? $('regClass').value.trim() : undefined)); $('pw').value = '';
     const back = new URLSearchParams(location.search).get('back');
     if (back && /^\/[^/]/.test(back)) { location.href = back; return; }
     enterSetup();
@@ -252,9 +254,51 @@ function logout(){ TOKEN = null; NICK = null; PhyAPI.logout(); $('who').textCont
 $('logoutBtn').onclick = logout;
 
 // ---------- 選題 ----------
+let assignApplied = false;
+function renderClassTag(){
+  const cc = (PhyAPI.user() || {}).classCode || '';
+  $('clsTag').textContent = cc ? '班級：' + cc : '尚未設定班級';
+}
+$('clsBtn').onclick = async () => {
+  const cur = (PhyAPI.user() || {}).classCode || '';
+  const next = window.prompt('請輸入班級代碼（限 12 字內，留空表示清除）：', cur);
+  if (next === null) return;
+  try {
+    const r = await call('updateClass', TOKEN, next.trim());
+    PhyAPI.setUser(TOKEN, NICK, r.classCode || '');
+    renderClassTag();
+  } catch (e) { alert('設定班級失敗：' + (e.message || e)); }
+};
+function applyAssignParams(){
+  if (assignApplied || !META) return;
+  assignApplied = true;
+  const sp = new URLSearchParams(location.search);
+  const qb = sp.get('bank'), qc = sp.get('concepts'), qp = sp.get('papers'), qn = sp.get('n'), qt = sp.get('timer');
+  if (!qb && !qc && !qp && !qn && qt == null) return;
+  if (qb && META.banks.some(b => b.key === qb)) { BANK = qb; store.set('gp_bank', BANK); }
+  selPapers.clear(); selConcepts.clear();
+  if (qp) {
+    const list = qp.split(',').map(s => s.trim()).filter(Boolean);
+    META.papers.filter(p => p.bank === BANK && (list.includes(p.key) || list.includes(p.name))).forEach(p => selPapers.add(p.key));
+  }
+  if (qc) {
+    const list = qc.split(',').map(s => s.trim()).filter(Boolean);
+    META.concepts.forEach((c, i) => {
+      if (META.conceptBank[i] !== BANK) return;
+      if (list.some(q => String(i) === q || c.includes(q))) selConcepts.add(i);
+    });
+  }
+  if (qn && Number(qn) >= 5 && Number(qn) <= 30) selN = Math.round(Number(qn));
+  if (qt === '0' || qt === '1') $('timerOn').checked = qt === '1';
+  const bName = (META.banks.find(b => b.key === BANK) || {}).name || BANK;
+  $('assignBanner').innerHTML = '<b>📋 老師指定練習範圍：</b>' + esc(bName) + (selConcepts.size ? '（已選 ' + selConcepts.size + ' 個概念）' : '') + '・' + selN + ' 題。可直接點下方「開始練習」。';
+  $('assignBanner').classList.remove('hidden');
+}
 async function enterSetup(){
   $('who').textContent = NICK ? '👤 ' + NICK : '';
   if (!META) { show('vLoading'); META = await call('getMeta'); buildLog(); }
+  applyAssignParams();
+  renderClassTag();
   buildChips();
   show('vSetup');
   loadProgress();
@@ -276,7 +320,7 @@ function buildLog(){
   $('logBox').addEventListener('toggle', () => { if ($('logBox').open) { store.set('gp_log', L[0].d); $('logNew').classList.add('hidden'); } });
 }
 function chip(label, on, click){ const b = document.createElement('button'); b.className = 'chip' + (on ? ' on' : ''); b.textContent = label; b.onclick = () => { click(); b.classList.toggle('on'); }; return b; }
-const BANK_NOTE = { confuse: '高一必修：14 個易混淆主題，分理解／應用／分析卷與題組。', gsat: '108 課綱必修 28 個知識節點的分級題庫（記憶／理解／應用／分析）。', wave: '選修物理Ⅲ：波動、聲波、幾何光學與物理光學。', em: '選修物理Ⅳ：靜電學、電流磁效應與電磁感應（逐概念練習＋練習卷）。' };
+const BANK_NOTE = { confuse: '高一必修：14 個易混淆主題，分理解／應用／分析卷與題組。', gsat: '108 課綱必修 28 個知識節點的分級題庫（記憶／理解／應用／分析）。', wave: '選修物理Ⅲ：波動、聲波、幾何光學與物理光學。', em: '選修物理Ⅳ：靜電學、電流磁效應與電磁感應（逐概念練習＋練習卷）。', pv: '選修物理Ⅴ：電流與電路、近代物理重大發現、原子結構與原子核。' };
 function buildChips(){
   const bc = $('bankChips'); bc.innerHTML = '';
   if (!META.banks.some(b => b.key === BANK)) BANK = META.banks[0].key;
@@ -290,7 +334,8 @@ function buildChips(){
   const cc = $('conceptChips'); cc.innerHTML = '';
   META.concepts.forEach((c, i) => { if (META.conceptBank[i] !== BANK) return; const b = chip(c, selConcepts.has(i), () => selConcepts.has(i) ? selConcepts.delete(i) : selConcepts.add(i)); b.dataset.i = i; const n = document.createElement('span'); n.className = 'cnt'; b.appendChild(n); cc.appendChild(b); });
   const nc = $('nChips'); nc.innerHTML = '';
-  [10, 15, 20].forEach(n => { const b = document.createElement('button'); b.className = 'chip' + (n === selN ? ' on' : ''); b.textContent = n + ' 題';
+  const nOpts = [10, 15, 20]; if (!nOpts.includes(selN)) nOpts.push(selN); nOpts.sort((a, b) => a - b);
+  nOpts.forEach(n => { const b = document.createElement('button'); b.className = 'chip' + (n === selN ? ' on' : ''); b.textContent = n + ' 題';
     b.onclick = () => { selN = n; [...nc.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); }; nc.appendChild(b); });
 }
 $('startBtn').onclick = async () => {
@@ -464,14 +509,36 @@ function radarCard(rd){
     '<div class="radars"><div>' + radarSVG(rd.main) + '<p class="rd-cap">認知層次＋學習表現</p></div><div>' + radarSVG(rd.sub) + '<p class="rd-cap">學習表現細項（探究能力）</p></div></div>' +
     '<p class="note">每個向度依你在該類題目的對錯，並考慮題目難度估計能力，再和所有同學比較：G1 約前 16%、G2 約前 16～38%、G3 為中間約 24%、G4 約後 16～38%、G5 約後 16%。每個向度至少作答 ' + rd.min + ' 題才會給等級（每題以第一次作答計）；作答越多越準確。</p></div>';
 }
-function bars(list, title){
+let lectureMap = null;
+async function getLectureMap(){
+  if (lectureMap) return lectureMap;
+  lectureMap = [];
+  try { lectureMap = await (await fetch('../assets/search-index.json')).json(); } catch (e) {}
+  return lectureMap;
+}
+function lectureUrl(name){
+  if (!lectureMap || !name) return null;
+  const m = String(name).match(/^(必修|選修[ⅠⅡⅢⅣⅤ])\s+([0-9]+-[0-9]+)/);
+  if (m) {
+    const prefix = m[1] + ' ' + m[2];
+    const hit = lectureMap.find(x => x.t.startsWith(prefix));
+    if (hit) return '../' + hit.url;
+  }
+  const hit2 = lectureMap.find(x => x.t.includes(name) || name.includes(x.t));
+  return hit2 ? '../' + hit2.url : null;
+}
+function bars(list, title, withLinks){
   if (!list.length) return '';
   const todo = list.filter(o => !o.n); list = list.filter(o => o.n);
   list.sort((a, b) => (a.index == null ? a.rate - 0.5 : a.index) - (b.index == null ? b.rate - 0.5 : b.index));
+  const label = o => {
+    const u = withLinks ? lectureUrl(o.name) : null;
+    return esc(o.name) + ' <span class="note">(' + o.n + ' 題)</span>' + (u ? ' <a href="' + esc(u) + '" class="note" style="color:var(--accent);text-decoration:underline;white-space:nowrap">📖 講義</a>' : '');
+  };
   const rest = todo.map(o => '<div class="bar todo"><div>' + esc(o.name) + ' <span class="note">(0 題)</span></div><div class="track"></div><div class="v">尚未作答</div></div>').join('');
   return '<div class="card"><h2>' + title + '</h2>' + list.map(o => {
     const idx = o.index == null ? '' : '<span class="' + (o.index >= 0 ? 'pos' : 'neg') + '">' + (o.index >= 0 ? '+' : '') + o.index.toFixed(2) + '</span>';
-    return '<div class="bar"><div>' + esc(o.name) + ' <span class="note">(' + o.n + ' 題)</span></div><div class="track"><div style="width:' + Math.round(o.rate * 100) + '%"></div></div><div class="v">' + Math.round(o.rate * 100) + '% ' + idx + '</div></div>';
+    return '<div class="bar"><div>' + label(o) + '</div><div class="track"><div style="width:' + Math.round(o.rate * 100) + '%"></div></div><div class="v">' + Math.round(o.rate * 100) + '% ' + idx + '</div></div>';
   }).join('') + rest + '</div>';
 }
 let SCALE = store.get('gp_scale') || 'req';
@@ -479,17 +546,18 @@ async function openReport(scale){
   if (scale) { SCALE = scale; store.set('gp_scale', SCALE); }
   show('vLoading');
   try {
-    const r = await call('getMyReport', TOKEN, SCALE);
+    const [r] = await Promise.all([call('getMyReport', TOKEN, SCALE), getLectureMap()]);
     const weak = r.concept.filter(c => c.n >= 3).sort((a, b) => (a.index != null && b.index != null) ? a.index - b.index : a.rate - b.rate)[0];
+    const weakUrl = weak ? lectureUrl(weak.name) : null;
     $('vReport').innerHTML =
       '<div class="card"><h2>' + esc(r.nickname) + ' 的學習報告</h2>' +
       '<div class="chips" style="margin-bottom:10px">' + (META ? META.scales : [{key:'req',name:'必修'},{key:'elec',name:'選修'}]).map(s => '<button class="chip' + (s.key === SCALE ? ' on' : '') + '" data-scale="' + s.key + '">' + esc(s.name) + '</button>').join('') + '</div>' +
       '<p>累計作答 <b>' + r.answered + '</b> 題（每題以第一次作答計，含網頁裡的檢核題），答對 <b>' + r.correct + '</b> 題。</p>' +
       (r.rank ? rankHTML(r.rank) : '<p class="note">能力估計會在系統分析後顯示（有新的作答時，每小時自動更新一次）。</p>') +
-      (weak ? '<p>建議優先練習：<b>' + esc(weak.name) + '</b></p>' : '') +
+      (weak ? '<p>建議優先複習：<b>' + esc(weak.name) + '</b>' + (weakUrl ? '　<a class="ghost" style="padding:4px 10px;border-radius:999px;font-size:13px;text-decoration:none" href="' + esc(weakUrl) + '">📖 回到講義複習 →</a>' : '') + '</p>' : '') +
       '<p class="note">長條為答對率；右側 ±數字為「表現指標」：已考慮題目難度，正值表示比依你的整體能力預期的表現好，負值表示較弱。</p>' +
       '<div class="row"><button class="primary" id="rBack">回到選題</button></div></div>' +
-      radarCard(r.radar) + bars(r.concept.filter(c => c.n), '各概念')  + bars(r.ability, '各探究能力（學習表現）') + bars(r.bloom, '各認知層次');
+      radarCard(r.radar) + bars(r.concept.filter(c => c.n), '各概念', true)  + bars(r.ability, '各探究能力（學習表現）') + bars(r.bloom, '各認知層次');
     $('rBack').onclick = () => enterSetup();
     $('vReport').querySelectorAll('[data-scale]').forEach(b => b.onclick = () => openReport(b.dataset.scale));
     show('vReport');

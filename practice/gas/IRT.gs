@@ -1,6 +1,6 @@
 /****************************************************************
  * IRT 分析：Rasch 模型（1PL），以 MAP 聯合估計（JMLE＋常態先驗）
- * ・必修（易混淆概念＋學測必修複習）與選修（波動與光學）分開估計，各自一個 logit 量尺
+ * ・必修（易混淆概念＋學測必修複習）與選修（波動與光學＋電磁學）分開估計，各自一個 logit 量尺
  * ・允許每位學生作答不同題目（未作答視為未施測，不算答錯）
  * ・每位學生每題只採第一次作答（練習卷與網頁檢核題都算）
  ****************************************************************/
@@ -132,20 +132,78 @@ function irtLookup_(scale) {
 }
 
 // ====== 教師後台 API（需管理金鑰） ======
-function checkAdmin_(key) { if (!key || key !== PropertiesService.getScriptProperties().getProperty('ADMIN_KEY')) throw new Error('管理金鑰錯誤'); }
+function checkAdmin_(key) {
+  const rl = rateLimit_('rl_admin', 10, 900);
+  if (!key || key !== PropertiesService.getScriptProperties().getProperty('ADMIN_KEY')) {
+    rl.fail();
+    throw new Error('管理金鑰錯誤');
+  }
+  rl.clear();
+}
 function adminLogin(key) { checkAdmin_(key); return true; }
 function adminRunIRT(key) { checkAdmin_(key); return runIRT(); }
-function adminOverview(key, scale) {
+function adminResetPassword(key, uid, newPw) {
+  checkAdmin_(key);
+  newPw = String(newPw || '');
+  if (newPw.length < 4) throw new Error('新密碼至少 4 個字元');
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = sheet_(SH.users);
+    const v = sh.getDataRange().getValues();
+    for (let r = 1; r < v.length; r++) {
+      if (v[r][0] === uid) {
+        const salt = Utilities.getUuid();
+        sh.getRange(r + 1, 3, 1, 2).setValues([[salt, hash_(salt, newPw)]]);
+        dirty_(SH.users);
+        return { ok: true };
+      }
+    }
+    throw new Error('找不到學生帳號');
+  } finally { lock.releaseLock(); }
+}
+function adminOverview(key, scale, classFilter) {
   checkAdmin_(key); scale = scale || 'req';
+  classFilter = String(classFilter || '').trim();
   const resp = rows_(SH.resp), sess = rows_(SH.sess), users = rows_(SH.users);
   const im = itemMap_(); const day = 24 * 3600 * 1000, now = Date.now();
+  const userClass = {}, classSet = new Set();
+  users.forEach(r => {
+    const cc = String(r[6] || '').trim();
+    userClass[r[0]] = cc;
+    if (cc) classSet.add(cc);
+  });
+  const classes = [...classSet].sort();
+  const inClass = uid => !classFilter || userClass[uid] === classFilter;
   const inScale = r => im[r[3]] && im[r[3]].scale === scale;
-  const sresp = resp.filter(inScale);
+  const sresp = resp.filter(r => inScale(r) && inClass(r[2]));
+  const fUsers = classFilter ? users.filter(r => userClass[r[0]] === classFilter) : users;
   const banks = META.banks.filter(b => b.scale === scale);
   const bankKeys = banks.map(b => b.key);
+  let mastery;
+  if (!classFilter) {
+    mastery = readIRT_(SH.mastery).filter(r => r[0] === scale).map(r => ({ concept: r[1], dim: r[2], cat: r[3], n: r[4], rate: r[5], index: r[6] }));
+  } else {
+    const irt = irtLookup_(scale);
+    const first = {};
+    sresp.forEach(r => { const k = r[2] + '|' + r[3]; if (!(k in first)) first[k] = Number(r[5]); });
+    const agg = {};
+    Object.keys(first).forEach(k => {
+      const [uid, sid] = k.split('|'); const it = im[Number(sid)]; if (!it) return;
+      const x = first[k], th = irt.persons[uid] ? irt.persons[uid].theta : 0, b = irt.items[it.id] ? irt.items[it.id].b : 0;
+      const pr = 1 / (1 + Math.exp(-(th - b)));
+      [['學習表現', META.abilities[it.ab]], ['Bloom', it.bloom]].forEach(([dim, cat]) => {
+        if (!cat) return; const ak = META.concepts[it.concept] + '|' + dim + '|' + cat;
+        const o = agg[ak] = agg[ak] || { n: 0, x: 0, r: 0 }; o.n++; o.x += x; o.r += x - pr;
+      });
+    });
+    mastery = Object.keys(agg).map(ak => {
+      const [concept, dim, cat] = ak.split('|'); const o = agg[ak];
+      return { concept, dim, cat, n: o.n, rate: round_(o.x / o.n, 3), index: round_(o.r / o.n, 3) };
+    });
+  }
   return JSON.parse(JSON.stringify({
-    scale, scales: META.scales,
-    counts: { users: users.length, sessions: sess.filter(r => r[3]).length, responses: sresp.length,
+    scale, scales: META.scales, classFilter, classes,
+    counts: { users: fUsers.length, sessions: classFilter ? sess.filter(r => r[3] && inClass(r[1])).length : sess.filter(r => r[3]).length, responses: sresp.length,
       pageResponses: sresp.filter(r => String(r[1]).indexOf('page:') === 0).length,
       active7: new Set(sresp.filter(r => now - new Date(r[0]).getTime() < 7 * day).map(r => r[2])).size },
     lastRun: PropertiesService.getScriptProperties().getProperty('IRT_LAST_RUN'),
@@ -154,8 +212,8 @@ function adminOverview(key, scale) {
     abilities: Object.keys(META.abilities).map(k => META.abilities[k]),
     papers: META.papers.filter(p => bankKeys.indexOf(p.bank) >= 0).map(p => bankName_(p.bank) + '／' + p.name),
     items: readIRT_(SH.irtI).filter(r => r[1] === scale).map(r => ({ id: r[0], bank: r[2], paper: r[2] + '／' + r[3], concept: r[4], ability: r[5], bloom: r[6], b: r[7], se: r[8], n: r[9], p: r[10], disc: r[11], infit: r[12], outfit: r[13], flag: r[14], anchor: im[r[0]] && im[r[0]].anchor })),
-    persons: readIRT_(SH.irtP).filter(r => r[1] === scale).map(r => ({ uid: r[0], nick: r[2], n: r[3], correct: r[4], theta: r[5], se: r[6], t: r[7], last: r[8] })),
-    mastery: readIRT_(SH.mastery).filter(r => r[0] === scale).map(r => ({ concept: r[1], dim: r[2], cat: r[3], n: r[4], rate: r[5], index: r[6] })),
+    persons: readIRT_(SH.irtP).filter(r => r[1] === scale && inClass(r[0])).map(r => ({ uid: r[0], nick: r[2], classCode: userClass[r[0]] || '', n: r[3], correct: r[4], theta: r[5], se: r[6], t: r[7], last: r[8] })),
+    mastery,
     daily: dailyCounts_(sresp),
   }));
 }

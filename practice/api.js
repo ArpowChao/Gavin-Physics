@@ -10,14 +10,14 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
     del(k) { try { localStorage.removeItem(k); } catch (e) {} },
   };
-  const K_TOKEN = 'gp_token', K_NICK = 'gp_nick';
+  const K_TOKEN = 'gp_token', K_NICK = 'gp_nick', K_CLASS = 'gp_class';
   const listeners = [];
   const PhyAPI = {
     url() { return (store.get('gp_api') || window.PHY_API_URL || '').trim(); },
     ready() { return !!PhyAPI.url(); },
-    user() { const t = store.get(K_TOKEN); return t ? { token: t, nick: store.get(K_NICK) || '' } : null; },
-    setUser(token, nick) { store.set(K_TOKEN, token); store.set(K_NICK, nick); listeners.forEach(f => f(PhyAPI.user())); },
-    logout() { store.del(K_TOKEN); store.del(K_NICK); listeners.forEach(f => f(null)); },
+    user() { const t = store.get(K_TOKEN); return t ? { token: t, nick: store.get(K_NICK) || '', classCode: store.get(K_CLASS) || '' } : null; },
+    setUser(token, nick, classCode) { store.set(K_TOKEN, token); store.set(K_NICK, nick); if (classCode != null) store.set(K_CLASS, classCode); listeners.forEach(f => f(PhyAPI.user())); },
+    logout() { store.del(K_TOKEN); store.del(K_NICK); store.del(K_CLASS); listeners.forEach(f => f(null)); },
     onChange(f) { listeners.push(f); },
     async call(fn, ...args) {
       const url = PhyAPI.url();

@@ -73,9 +73,19 @@ h1,h2{font-family:var(--gp-serif)}
 
   <section id="vMain" class="hidden">
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <div class="row"><select id="fScale"><option value="req">必修（易混淆＋學測）</option><option value="elec">選修（波動與光學＋電磁學）</option></select><span class="note" id="lastRun"></span></div>
-      <div class="row"><button class="primary" id="runBtn">重新計算 IRT</button><button class="ghost" id="reloadBtn">重新整理</button></div>
+      <div class="row"><select id="fScale"><option value="req">必修（易混淆＋學測）</option><option value="elec">選修（波光＋電磁＋選修Ⅴ）</option></select><select id="fClass"><option value="">全部班級</option></select><span class="note" id="lastRun"></span></div>
+      <div class="row"><button class="ghost" id="linkToggle">🔗 產生課堂派卷連結</button><button class="primary" id="runBtn">重新計算 IRT</button><button class="ghost" id="reloadBtn">重新整理</button></div>
     </div>
+    <details id="linkGen" class="card hidden">
+      <summary style="cursor:pointer;font-weight:700">產生課堂指定練習連結（貼給學生直接開啟範圍）</summary>
+      <div class="row" style="margin-top:10px">
+        <select id="lgBank"></select>
+        <select id="lgN"><option value="10">10 題</option><option value="15">15 題</option><option value="20">20 題</option><option value="5">5 題</option></select>
+        <label class="row" style="gap:4px"><input type="checkbox" id="lgTimer" checked> 計時挑戰</label>
+      </div>
+      <div id="lgConcepts" class="row" style="margin:8px 0;max-height:150px;overflow:auto"></div>
+      <div class="row"><input id="lgUrl" readonly style="flex:1;min-width:240px"><button class="primary" id="lgCopy">複製連結</button></div>
+    </details>
     <div class="kpis" id="kpis"></div>
     <div class="tabs" id="tabs"></div>
 
@@ -83,6 +93,7 @@ h1,h2{font-family:var(--gp-serif)}
       <div class="row" style="margin-bottom:10px">
         <select id="fPaper"></select><select id="fConcept"></select><select id="fFlag"><option value="">全部題目</option><option value="flag">只看有提醒的題目</option><option value="anchor">只看錨題</option></select>
         <input id="fText" placeholder="搜尋題號">
+        <button class="ghost" id="csvItems">⬇ 匯出 CSV</button>
         <span class="note">點欄位標題可排序，點題目可看選項分布</span>
       </div>
       <div class="scroll"><table class="tbl" id="itemTbl"></table></div>
@@ -90,6 +101,10 @@ h1,h2{font-family:var(--gp-serif)}
     </div>
 
     <div id="tStudents" class="card hidden">
+      <div class="row" style="margin-bottom:10px;justify-content:space-between">
+        <span class="note">點學生列可查看概念表現與重設密碼</span>
+        <button class="ghost" id="csvStu">⬇ 匯出 CSV</button>
+      </div>
       <div class="scroll"><table class="tbl" id="stuTbl"></table></div>
       <p class="note">能力 θ 與題目難度同一量尺；T 分數＝50＋10θ。作答題數少者誤差（SE）較大。</p>
     </div>
@@ -117,11 +132,17 @@ const $ = id => document.getElementById(id);
 let KEY = null, D = null, sortState = {};
 const store = { get(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} } };
 function call(fn, ...a){ return PhyAPI.call(fn, ...a); }
-let SCALE = 'req';
+let SCALE = 'req', CLASS_FILTER = '', META_ALL = null;
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function fmt(v, d){ return v === '' || v == null || isNaN(v) ? '—' : Number(v).toFixed(d); }
 function math(el){ try{ renderMathInElement(el, { delimiters:[{left:'$',right:'$',display:false}], throwOnError:false, strict:'ignore' }); }catch(e){} }
 function tableHTML(t){ return t ? '<table class="data">' + t.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</table>' : ''; }
+function downloadCSV(filename, headers, rows){
+  const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const csv = '\uFEFF' + [headers.map(q).join(',')].concat(rows.map(r => r.map(q).join(','))).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = filename; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
 
 $('loginBtn').onclick = async () => { try { await call('adminLogin', $('key').value); KEY = $('key').value; store.set('adm', KEY); load(); } catch (e) { $('loginErr').textContent = e.message || e; } };
 $('reloadBtn').onclick = () => load();
@@ -131,17 +152,47 @@ const TABS = [['tItems', '題目分析'], ['tStudents', '學生能力'], ['tHeat
 function tabs(){ const t = $('tabs'); t.innerHTML = ''; TABS.forEach(([id, name], k) => { const b = document.createElement('button'); b.className = 'ghost' + (k === 0 ? ' on' : ''); b.textContent = name;
   b.onclick = () => { TABS.forEach(([x]) => $(x).classList.add('hidden')); $(id).classList.remove('hidden'); [...t.children].forEach(c => c.classList.remove('on')); b.classList.add('on'); if (id === 'tCharts') charts(); }; t.appendChild(b); }); }
 
+async function initLinkGen(){
+  if (!META_ALL) { try { META_ALL = await call('getMeta'); } catch (e) { return; } }
+  const lb = $('lgBank');
+  if (!lb.children.length) {
+    lb.innerHTML = META_ALL.banks.map(b => '<option value="' + esc(b.key) + '">' + esc(b.name) + '</option>').join('');
+    lb.onchange = renderLgConcepts; $('lgN').onchange = updateLgUrl; $('lgTimer').onchange = updateLgUrl;
+    $('lgCopy').onclick = async () => { try { await navigator.clipboard.writeText($('lgUrl').value); $('lgCopy').textContent = '已複製 ✔'; setTimeout(() => $('lgCopy').textContent = '複製連結', 1500); } catch (e) { $('lgUrl').select(); } };
+  }
+  renderLgConcepts();
+}
+function renderLgConcepts(){
+  const bk = $('lgBank').value;
+  $('lgConcepts').innerHTML = META_ALL.concepts.map((c, i) => META_ALL.conceptBank[i] === bk ? '<label class="row" style="gap:4px;font-size:13px"><input type="checkbox" value="' + i + '"> ' + esc(c) + '</label>' : '').join('');
+  $('lgConcepts').querySelectorAll('input').forEach(cb => cb.onchange = updateLgUrl);
+  updateLgUrl();
+}
+function updateLgUrl(){
+  const base = location.href.replace(/admin\.html.*$/, '');
+  const ps = new URLSearchParams({ bank: $('lgBank').value, n: $('lgN').value, timer: $('lgTimer').checked ? '1' : '0' });
+  const cs = [...$('lgConcepts').querySelectorAll('input:checked')].map(x => x.value);
+  if (cs.length) ps.set('concepts', cs.join(','));
+  $('lgUrl').value = base + '?' + ps.toString();
+}
+$('linkToggle').onclick = () => { const box = $('linkGen'); box.classList.toggle('hidden'); box.open = true; if (!box.classList.contains('hidden')) initLinkGen(); };
+
 async function load(){
   $('vLogin').classList.add('hidden'); $('vMain').classList.remove('hidden');
-  D = await call('adminOverview', KEY, SCALE);
+  D = await call('adminOverview', KEY, SCALE, CLASS_FILTER);
   $('lastRun').textContent = D.lastRun ? '最近一次 IRT 分析：' + new Date(D.lastRun).toLocaleString() : '尚未執行 IRT 分析';
+  const classes = D.classes || [];
+  $('fClass').innerHTML = '<option value="">全部班級</option>' + classes.map(cl => '<option value="' + esc(cl) + '"' + (cl === CLASS_FILTER ? ' selected' : '') + '>' + esc(cl) + '</option>').join('');
   const c = D.counts;
   $('kpis').innerHTML = [['註冊人數', c.users], ['近 7 天作答人數', c.active7], ['完成練習次數（全部）', c.sessions], ['作答紀錄', c.responses], ['其中網頁檢核題', c.pageResponses], ['已分析題目', D.items.length]]
     .map(([l, v]) => '<div class="kpi"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>').join('');
   $('fPaper').innerHTML = '<option value="">全部卷別</option>' + D.papers.map(p => '<option>' + esc(p) + '</option>').join('');
   $('fConcept').innerHTML = '<option value="">全部概念</option>' + D.concepts.map(p => '<option>' + esc(p) + '</option>').join('');
   if (!$('tabs').children.length) { tabs(); $('fScale').onchange = () => { SCALE = $('fScale').value; load(); };
+    $('fClass').onchange = () => { CLASS_FILTER = $('fClass').value; load(); };
     ['fPaper', 'fConcept', 'fFlag'].forEach(id => $(id).onchange = itemTable); $('fText').oninput = itemTable;
+    $('csvItems').onclick = () => { const rows = filteredItems(); downloadCSV('items_' + SCALE + '.csv', ['題庫編號','題庫卷別','概念','學習表現','Bloom','作答人數','答對率','難度b','鑑別度','Infit','提醒'], rows.map(r => [r.id, r.paper, r.concept, r.ability, r.bloom, r.n, r.p, r.b, r.disc, r.infit, r.flag])); };
+    $('csvStu').onclick = () => downloadCSV('students_' + SCALE + (CLASS_FILTER ? '_' + CLASS_FILTER : '') + '.csv', ['暱稱','班級','作答題數','答對題數','能力θ','SE','T分數','最後作答'], D.persons.map(r => [r.nick, r.classCode || '', r.n, r.correct, r.theta, r.se, r.t, r.last]));
     $('hDim').onchange = heat; $('hVal').onchange = heat; }
   itemTable(); stuTable(); heat();
 }
@@ -151,19 +202,23 @@ function sortable(tbl, cols, rows, key, render){
   tbl.innerHTML = '<tr>' + cols.map(([k, l]) => '<th data-k="' + k + '">' + l + (s.col === k ? (s.dir > 0 ? ' ▲' : ' ▼') : '') + '</th>').join('') + '</tr>' + rows.map(render).join('');
   tbl.querySelectorAll('th').forEach(th => th.onclick = () => { const k = th.dataset.k; sortState[key] = { col: k, dir: s.col === k ? -s.dir : 1 }; (key === 'item' ? itemTable : stuTable)(); });
 }
-function itemTable(){
+function filteredItems(){
   let rows = D.items.slice();
   if ($('fPaper').value) rows = rows.filter(r => r.paper === $('fPaper').value);
   if ($('fConcept').value) rows = rows.filter(r => r.concept === $('fConcept').value);
   if ($('fFlag').value === 'flag') rows = rows.filter(r => r.flag); if ($('fFlag').value === 'anchor') rows = rows.filter(r => r.anchor);
   if ($('fText').value) rows = rows.filter(r => String(r.id).indexOf($('fText').value) >= 0);
+  return rows;
+}
+function itemTable(){
+  const rows = filteredItems();
   sortable($('itemTbl'), [['id','題庫編號'],['paper','題庫／卷別'],['concept','概念'],['ability','學習表現'],['bloom','Bloom'],['n','作答人數'],['p','答對率'],['b','難度 b'],['disc','鑑別度'],['infit','Infit'],['flag','提醒']], rows, 'item',
     r => '<tr class="click" data-id="' + r.id + '"><td>' + r.id + (r.anchor ? ' ⚓' : '') + '</td><td>' + esc(r.paper) + '</td><td>' + esc(r.concept) + '</td><td>' + esc(r.ability) + '</td><td>' + esc(r.bloom) + '</td><td class="num">' + r.n + '</td><td class="num">' + fmt(r.p * 100, 0) + '%</td><td class="num">' + fmt(r.b, 2) + '</td><td class="num">' + fmt(r.disc, 2) + '</td><td class="num">' + fmt(r.infit, 2) + '</td><td class="flag">' + esc(r.flag) + '</td></tr>');
   $('itemTbl').querySelectorAll('tr.click').forEach(tr => tr.onclick = () => itemDetail(tr.dataset.id));
 }
 function stuTable(){
-  sortable($('stuTbl'), [['nick','暱稱'],['n','作答題數'],['correct','答對題數'],['theta','能力 θ'],['se','SE'],['t','T 分數'],['last','最後作答']], D.persons.slice(), 'stu',
-    r => '<tr class="click" data-u="' + r.uid + '"><td>' + esc(r.nick) + '</td><td class="num">' + r.n + '</td><td class="num">' + r.correct + '</td><td class="num">' + fmt(r.theta, 2) + '</td><td class="num">' + fmt(r.se, 2) + '</td><td class="num">' + r.t + '</td><td>' + (r.last ? new Date(r.last).toLocaleDateString() : '') + '</td></tr>');
+  sortable($('stuTbl'), [['nick','暱稱'],['classCode','班級'],['n','作答題數'],['correct','答對題數'],['theta','能力 θ'],['se','SE'],['t','T 分數'],['last','最後作答']], D.persons.slice(), 'stu',
+    r => '<tr class="click" data-u="' + r.uid + '"><td>' + esc(r.nick) + '</td><td>' + esc(r.classCode || '—') + '</td><td class="num">' + r.n + '</td><td class="num">' + r.correct + '</td><td class="num">' + fmt(r.theta, 2) + '</td><td class="num">' + fmt(r.se, 2) + '</td><td class="num">' + r.t + '</td><td>' + (r.last ? new Date(r.last).toLocaleDateString() : '') + '</td></tr>');
   $('stuTbl').querySelectorAll('tr.click').forEach(tr => tr.onclick = () => stuDetail(tr.dataset.u));
 }
 function heat(){
@@ -202,8 +257,15 @@ async function itemDetail(id){
 async function stuDetail(uid){
   const r = await call('adminStudentDetail', KEY, uid, SCALE); const p = D.persons.find(x => x.uid === uid) || {};
   const byC = {}; r.rows.forEach(x => { const o = byC[x.concept] = byC[x.concept] || { n: 0, c: 0, res: 0, k: 0 }; o.n++; o.c += x.x; if (x.p != null) { o.res += x.x - x.p; o.k++; } });
-  modal('<h2>' + esc(p.nick) + '｜θ ' + fmt(r.theta, 2) + '（SE ' + fmt(r.se, 2) + '）｜作答 ' + r.rows.length + ' 題（網頁檢核題 ' + r.rows.filter(x => x.src === '網頁').length + ' 題）</h2><table class="tbl"><tr><th>概念</th><th>題數</th><th>答對率</th><th>表現指標</th></tr>' +
+  modal('<h2>' + esc(p.nick) + (p.classCode ? '（' + esc(p.classCode) + '）' : '') + '｜θ ' + fmt(r.theta, 2) + '（SE ' + fmt(r.se, 2) + '）｜作答 ' + r.rows.length + ' 題（網頁檢核題 ' + r.rows.filter(x => x.src === '網頁').length + ' 題）</h2>' +
+    '<div class="row" style="margin-bottom:10px"><button class="ghost" id="resetPwBtn">🔑 重設該生密碼</button></div>' +
+    '<table class="tbl"><tr><th>概念</th><th>題數</th><th>答對率</th><th>表現指標</th></tr>' +
     Object.keys(byC).map(c => { const o = byC[c]; const idx = o.k ? o.res / o.k : null; return '<tr><td>' + esc(c) + '</td><td class="num">' + o.n + '</td><td class="num">' + Math.round(100 * o.c / o.n) + '%</td><td class="num" style="color:' + (idx == null ? '' : idx < 0 ? 'var(--bad)' : 'var(--ok)') + '">' + (idx == null ? '—' : (idx >= 0 ? '+' : '') + idx.toFixed(2)) + '</td></tr>'; }).join('') + '</table>');
+  $('resetPwBtn').onclick = async () => {
+    const pw = window.prompt('為「' + p.nick + '」設定新密碼（至少 4 字元）：');
+    if (!pw) return;
+    try { await call('adminResetPassword', KEY, uid, pw); alert('密碼已重設'); } catch (e) { alert('失敗：' + (e.message || e)); }
+  };
 }
 
 const saved = store.get('adm'); if (saved) { call('adminLogin', saved).then(() => { KEY = saved; load(); }).catch(() => {}); }

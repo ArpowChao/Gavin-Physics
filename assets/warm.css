@@ -63,10 +63,11 @@ html { accent-color: var(--gp-accent); }
 .gp-bar .gp-links a { padding: 5px 11px; border-radius: 999px; opacity: .82; white-space: nowrap; }
 .gp-bar .gp-links a:hover, .gp-bar .gp-links a:focus-visible { opacity: 1; background: rgba(255, 236, 214, .12); outline: none; }
 .gp-bar .gp-links a.on { opacity: 1; background: rgba(255, 236, 214, .18); font-weight: 700; }
-.gp-bar .gp-tools { display: flex; gap: 8px; align-items: center; }
-.gp-bar .gp-user, .gp-bar .gp-fsbtn { white-space: nowrap; font: 13px/1.3 var(--gp-sans); padding: 5px 12px; border: 1px solid rgba(255, 236, 214, .3); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.gp-bar .gp-tools { display: flex; gap: 6px 8px; align-items: center; flex-wrap: wrap; }
+.gp-bar .gp-user, .gp-bar .gp-fsbtn, .gp-bar .gp-iconbtn { white-space: nowrap; font: 13px/1.3 var(--gp-sans); padding: 5px 12px; border: 1px solid rgba(255, 236, 214, .3); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+.gp-bar .gp-iconbtn.on { background: var(--gp-honey); border-color: var(--gp-honey); color: #2b1d14; font-weight: 700; }
 .gp-bar .gp-fsbtn { background: var(--gp-accent); border-color: var(--gp-accent); color: #fff; font-weight: 700; }
-.gp-bar .gp-user:hover, .gp-bar .gp-fsbtn:hover { filter: brightness(1.08); }
+.gp-bar .gp-user:hover, .gp-bar .gp-fsbtn:hover, .gp-bar .gp-iconbtn:hover { filter: brightness(1.08); }
 .gp-side { margin: 0 0 10px; padding: 12px 12px 14px; border-bottom: 1px solid rgba(255, 236, 214, .12); background: rgba(0, 0, 0, .12); }
 .gp-side .gp-in { padding: 0; display: block; }
 .gp-side .gp-brand { margin-bottom: 8px; font-size: 14px; }
@@ -136,7 +137,41 @@ html.gp-plain h1, html.gp-plain h2 { font-family: var(--gp-serif); color: var(--
 .gp-lab-fs { position: absolute; top: 10px; right: 10px; padding: 8px 14px; border: 0; border-radius: 999px; background: rgba(58, 42, 34, .82); color: #fff3e6; font: 700 13px/1 var(--gp-sans); cursor: pointer; }
 iframe.gp-stage { padding: 0 !important; border: 0 !important; border-radius: 0 !important; height: 100vh !important; }
 
-@media print { .gp-bar, .gp-toast, .gp-pill, .gp-stage-btn { display: none !important; } }
+@media print { .gp-bar, .gp-toast, .gp-pill, .gp-stage-btn, .gp-search-backdrop, .gp-teach-badge { display: none !important; } }
+
+/* ---------- 全站概念搜尋視窗 ---------- */
+.gp-search-backdrop { position: fixed; inset: 0; z-index: 2147483400; background: rgba(30, 23, 20, .58); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; padding: min(10vh, 72px) 16px 24px; font-family: var(--gp-sans); }
+.gp-search-box { width: 100%; max-width: 640px; background: var(--gp-card); color: var(--gp-ink); border: 1px solid var(--gp-line); border-radius: 18px; box-shadow: 0 18px 48px rgba(30, 20, 12, .28); overflow: hidden; display: flex; flex-direction: column; max-height: 78vh; }
+.gp-search-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--gp-line); background: var(--gp-card-2); }
+.gp-search-head input { flex: 1; border: 0; background: transparent; color: var(--gp-ink); font: 16px/1.4 var(--gp-sans); outline: none; }
+.gp-search-head kbd { font: 12px/1 var(--gp-sans); padding: 3px 7px; border-radius: 6px; border: 1px solid var(--gp-line); color: var(--gp-muted); background: var(--gp-card); cursor: pointer; }
+.gp-search-list { overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+.gp-search-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; text-decoration: none; color: inherit; border: 1px solid transparent; }
+.gp-search-item:hover, .gp-search-item.on { background: var(--gp-accent-soft); border-color: var(--gp-accent); }
+.gp-search-item strong { display: block; font-size: 15px; color: var(--gp-ink); }
+.gp-search-item span { display: block; font-size: 13px; color: var(--gp-muted); margin-top: 2px; }
+.gp-search-book { flex-shrink: 0; font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--gp-bg-soft); color: var(--gp-accent-ink); border: 1px solid var(--gp-line); white-space: nowrap; }
+.gp-search-empty { padding: 28px 16px; text-align: center; color: var(--gp-muted); font-size: 14px; }
+
+/* ---------- 課堂授課模式（投影大字級＋點選前遮蔽解析） ---------- */
+html.gp-teach main, html.gp-teach #main, html.gp-teach #main-content { font-size: 1.12rem; line-height: 1.8; }
+html.gp-teach .worked-example p:not(.gp-revealed),
+html.gp-teach .check-feedback:not(.gp-revealed):not(.gp-cue-only),
+html.gp-teach .quiz-exp:not(.gp-revealed),
+html.gp-teach .exam-sol:not(.gp-revealed),
+html.gp-teach .exp:not(.gp-revealed),
+html.gp-teach .why:not(.gp-revealed) {
+  filter: blur(7px); user-select: none; cursor: pointer; transition: filter .15s;
+}
+html.gp-teach .worked-example p:not(.gp-revealed):hover,
+html.gp-teach .check-feedback:not(.gp-revealed):not(.gp-cue-only):hover,
+html.gp-teach .quiz-exp:not(.gp-revealed):hover,
+html.gp-teach .exam-sol:not(.gp-revealed):hover,
+html.gp-teach .exp:not(.gp-revealed):hover,
+html.gp-teach .why:not(.gp-revealed):hover { filter: blur(4px); }
+.gp-teach-badge { position: fixed; right: 14px; bottom: 14px; z-index: 2147483200; background: var(--gp-cocoa); color: #fff3e6; padding: 6px 12px; border-radius: 999px; font: 12.5px/1.3 var(--gp-sans); box-shadow: 0 4px 14px rgba(0, 0, 0, .2); display: none; align-items: center; gap: 8px; }
+html.gp-teach .gp-teach-badge { display: inline-flex; }
+.gp-teach-badge button { border: 0; background: rgba(255, 236, 214, .18); color: inherit; border-radius: 999px; padding: 2px 8px; font: inherit; cursor: pointer; }
 
 /* 範圍標籤：選修／延伸（不在必修課本內） */
 .gp-scope{display:inline-block;margin-left:.4em;padding:.05em .55em;border-radius:999px;font-size:.72em;font-weight:600;vertical-align:.1em;
