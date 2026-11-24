@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../assets/icon-192.png">
-<link rel="stylesheet" href="../assets/warm.css?v=20261124c">
+<link rel="stylesheet" href="../assets/warm.css?v=20261124e">
 <!-- /gp-head -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>給高中生的測量不確定度完整指南</title>
@@ -30,7 +30,7 @@
         }
         h1, h2, h3, h4 {
             color: #1a1a1a;
-            border-bottom: 2px solid #007bff;
+            border-bottom: 2px solid #cf5d30;
             padding-bottom: 0.4em;
             margin-top: 2.5rem;
             margin-bottom: 1.5rem;
@@ -38,7 +38,7 @@
         h1 { font-size: 2.4em; text-align: center; border-bottom: none; }
         h2 { font-size: 1.8em; }
         h3 { font-size: 1.4em; border-bottom: 1px solid #ccc; }
-        h4 { font-size: 1.2em; border-bottom: none; color: #0056b3;}
+        h4 { font-size: 1.2em; border-bottom: none; color: #914122;}
         .container {
             background-color: #ffffff;
             padding: 2rem;
@@ -46,23 +46,23 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .intro, .summary, .pro-tip, .math-note {
-            background-color: #e9f7ff;
-            border-left: 5px solid #007bff;
+            background-color: #faf4ee;
+            border-left: 5px solid #cf5d30;
             padding: 1.2rem;
             margin: 1.5rem 0;
             border-radius: 5px;
         }
         .pro-tip { background-color: #fffbe6; border-left-color: #ffc107; }
-        .math-note { background-color: #f0f0f0; border-left-color: #6c757d; font-size: 0.9em; }
+        .math-note { background-color: #f0f0f0; border-left-color: #7d736c; font-size: 0.9em; }
         .concept-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background-color: #faf9f8;
+            border: 1px solid #efece9;
             border-radius: 8px;
             padding: 1.5rem;
             margin: 1.5rem 0;
         }
         .formula {
-            background-color: #282c34; color: #f1fa8c; padding: 1rem 1.5rem;
+            background-color: #342c28; color: #f1fa8c; padding: 1rem 1.5rem;
             border-radius: 5px; font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
             overflow-x: auto; margin: 1rem 0; font-size: 1.1em; text-align: center;
         }
@@ -73,8 +73,7 @@
         }
         .ruler-bg {
             height: 120px;
-            background-image:
-                linear-gradient(to right, #ccc 1px, transparent 1px),
+            background-image: linear-gradient(to right, #ccc 1px, transparent 1px),
                 linear-gradient(to right, #888 1px, transparent 1px);
             background-size: 10% 100%, 100% 100%; /* Minor ticks every 0.1, major every 1.0 */
             background-position: 0 70px, 0 50px;
@@ -95,9 +94,9 @@
             position: absolute;
             height: 120px;
             top: 0;
-            background-color: rgba(0, 123, 255, 0.2);
-            border-left: 1px dashed #0056b3;
-            border-right: 1px dashed #0056b3;
+            background-color: rgba(207, 93, 48, 0.2);
+            border-left: 1px dashed #914122;
+            border-right: 1px dashed #914122;
         }
         .cursor-line {
             position: absolute;
@@ -119,7 +118,7 @@
             width: 180px; height: 150px; margin: 0 auto;
             transform: perspective(300px) rotateX(20deg);
         }
-        .bar { background-color: #007bff; flex-grow: 1; margin: 0 1px; opacity: 0.7; }
+        .bar { background-color: #cf5d30; flex-grow: 1; margin: 0 1px; opacity: 0.7; }
         .interactive-chart-container {
             width: 100%; max-width: 600px; margin: 2rem auto;
             text-align: center; padding: 1.5rem; background: #fafafa; border-radius: 8px;
@@ -127,7 +126,7 @@
         canvas { width: 100%; height: auto; background-color: #fff; border-radius: 4px; }
         .controls { margin-top: 1rem; }
         .controls input[type="range"] { width: 80%; }
-        .controls p { font-size: 1.2em; font-weight: bold; color: #0056b3; margin: 0.5rem 0;}
+        .controls p { font-size: 1.2em; font-weight: bold; color: #914122; margin: 0.5rem 0;}
         table { width: 100%; border-collapse: collapse; margin: 1.5em 0; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
         th { background-color: #f2f2f2; font-weight: 600; }
@@ -136,7 +135,7 @@
 /* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */
 .container{background:#fffaf3 !important}
 </style>
-<script src="../assets/site.js?v=20261124c" data-mode="pill" defer></script>
+<script src="../assets/site.js?v=20261124e" data-mode="pill" defer></script>
 </head>
 <body>
     <a href="index.html" style="position: fixed; top: 20px; left: 20px; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; z-index: 1000;">回首頁</a>

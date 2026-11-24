@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../../assets/icon-192.png">
-<link rel="stylesheet" href="../../assets/warm.css?v=20261124c">
+<link rel="stylesheet" href="../../assets/warm.css?v=20261124e">
 <!-- /gp-head -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="SPIN 投球旋轉實驗室的 VPython 版：3D 球場上看整條球路，附可直接貼到 Web VPython 執行的 Python 程式。">
@@ -20,17 +20,17 @@
   <style>
     .vp-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
     .vp-layout>*{min-inline-size:0}
-    .glow-wrap{border-radius:18px;overflow:hidden;background:#0f1c26;border:1px solid #0d1820;position:relative}
+    .glow-wrap{border-radius:18px;overflow:hidden;background: #221813;border: 1px solid #1d1410;position:relative}
     .glow-wrap .glowscript{width:100%}
     .glow-wrap canvas{display:block}
-    .glow-note{position:absolute;left:12px;bottom:10px;margin:0;font-size:11px;color:#9fb3bf;pointer-events:none}
-    .glow-result{position:absolute;right:12px;top:12px;background:#0b1620d9;border:1px solid #2a4252;color:#e6edf0;border-radius:10px;padding:8px 12px;font:12px/1.6 var(--mono);pointer-events:none;white-space:pre}
+    .glow-note{position:absolute;left:12px;bottom:10px;margin:0;font-size:11px;color: #bfac9f;pointer-events:none}
+    .glow-result{position:absolute;right:12px;top:12px;background: #0b1620d9;border: 1px solid #5a3222;color: #f0ebe6;border-radius:10px;padding:8px 12px;font:12px/1.6 var(--mono);pointer-events:none;white-space:pre}
     .code-panel{margin-top:16px}
-    .code-panel pre{margin:0;max-height:420px;overflow:auto;background:#0f1c26;color:#d8e4ea;border-radius:10px;padding:14px;font:12px/1.55 var(--mono);tab-size:4}
+    .code-panel pre{margin:0;max-height:420px;overflow:auto;background: #221813;color: #eae2d8;border-radius:10px;padding:14px;font:12px/1.55 var(--mono);tab-size:4}
     .code-actions{display:flex;gap:8px;flex-wrap:wrap}
-    .steps{margin:8px 0 0;padding-left:20px;font-size:12.5px;color:var(--muted)}
+    .steps{margin:8px 0 0;padding-left:20px;font-size:12.5px;color: var(--muted)}
     .steps li{margin:3px 0}
-    .run-button{width:100%;margin-top:12px;padding:11px;border:0;border-radius:11px;background:var(--accent);color:#fff;font-size:15px;font-weight:600;letter-spacing:.08em}
+    .run-button{width:100%;margin-top:12px;padding:11px;border: 0;border-radius:11px;background: var(--accent);color: #fff;font-size:15px;font-weight:600;letter-spacing:.08em}
     @media(max-width:860px){.vp-layout{grid-template-columns:minmax(0,1fr)}}
   </style>
   <script src="lib/glow/jquery.min.js" defer></script>
@@ -44,7 +44,7 @@ html:root{--bg:#f8f1e7;--panel:#fffaf3;--panel-alt:#fbf3e8;--ink:#3b2c24;--muted
 --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
 html body{background:#f8f1e7} h1,h2{font-family:"Noto Serif TC",serif}
 </style>
-<script src="../../assets/site.js?v=20261124c" defer></script>
+<script src="../../assets/site.js?v=20261124e" defer></script>
 </head>
 <body>
   <header class="topbar"><a href="index.html" class="back-link">← SPIN 投球旋轉實驗室</a><span>VPython / GLOWSCRIPT</span><a href="../index.html">Physics Lab ↗</a></header>

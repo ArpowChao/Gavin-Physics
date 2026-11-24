@@ -2,18 +2,18 @@
   color-scheme: light;
   --bg: #f3f5f2;
   --panel: #ffffff;
-  --panel-alt: #f7f9f8;
-  --ink: #1f3140;
-  --muted: #5d7080;
-  --line: #d9e1e4;
-  --accent: #0f766e;
-  --accent-bright: #14b8a6;
+  --panel-alt: #f9f8f7;
+  --ink: #3e2b21;
+  --muted: #806c5d;
+  --line: #e4ded9;
+  --accent: #6c3119;
+  --accent-bright: #a54b27;
   --coral: #ff6b6b;
   --amber: #f59e0b;
-  --mint: #10b981;
-  --lavender: #8b5cf6;
+  --mint: #a34926;
+  --lavender: #de9274;
   --rose: #ec4899;
-  --blue: #2563eb;
+  --blue: #d2683e;
   --red: #c92a2a;
   --body: "Segoe UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
   --mono: "Cascadia Code", Consolas, "SFMono-Regular", monospace;
@@ -186,7 +186,7 @@ h1 .hero-subtitle {
 }
 
 .story-play-btn:hover {
-  background: #2c4458;
+  background: #603524;
 }
 
 .story-play-btn.playing {
@@ -239,9 +239,9 @@ h1 .hero-subtitle {
 }
 
 .chapter-pill.highlight-pill {
-  border-color: #10b981;
-  color: #047857;
-  background: #ecfdf5;
+  border-color: #a34926;
+  color: #642d18;
+  background: #faf5ef;
 }
 
 .chapter-pill.active {
@@ -274,7 +274,7 @@ h1 .hero-subtitle {
   border-radius: 16px;
   padding: 14px 18px;
   margin-bottom: 12px;
-  box-shadow: 0 6px 20px rgba(31, 49, 64, 0.04);
+  box-shadow: 0 6px 20px rgba(62, 43, 33, 0.04);
 }
 
 .hud-metrics {
@@ -371,12 +371,12 @@ h1 .hero-subtitle {
 
 .hud-fair-badge.orbit {
   background: #d1fae5;
-  color: #047857;
+  color: #642d18;
 }
 
 .hud-fair-badge.ellipse {
-  background: #ede9fe;
-  color: #6d28d9;
+  background: #faf4ed;
+  color: #cf5f32;
 }
 
 .hud-fair-badge.escape {
@@ -527,11 +527,11 @@ h1 .hero-subtitle {
   position: relative;
   width: 100%;
   height: 580px;
-  background: radial-gradient(circle at 50% 52%, #0c192c 0%, #050a14 68%, #020409 100%);
+  background: radial-gradient(circle at 50% 52%, #241914 0%, #100b09 68%, #070504 100%);
   border-radius: 18px;
   overflow: hidden;
-  border: 1px solid #1e293b;
-  box-shadow: 0 14px 36px rgba(2, 6, 23, 0.25);
+  border: 1px solid #3a281f;
+  box-shadow: 0 14px 36px rgba(16, 11, 9, 0.25);
 }
 
 #cannon-canvas {
@@ -582,8 +582,8 @@ h1 .hero-subtitle {
 
 .shot1-key { background: #ff6b6b; }
 .shot2-key { background: #ffd166; }
-.shot3-key { background: #5eead4; }
-.shot4-key { background: #c4b5fd; }
+.shot3-key { background: #dc8c6c; }
+.shot4-key { background: #f1cfc1; }
 .shot5-key { background: #f472b6; }
 
 .stage-note {
@@ -604,7 +604,7 @@ h1 .hero-subtitle {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 16px 18px;
-  box-shadow: 0 4px 14px rgba(31, 49, 64, 0.03);
+  box-shadow: 0 4px 14px rgba(62, 43, 33, 0.03);
 }
 
 .controls {
@@ -648,18 +648,18 @@ h1 .hero-subtitle {
 }
 
 .badge-tag.accent-badge {
-  background: #ecfdf5;
-  border-color: #a7f3d0;
-  color: #047857;
+  background: #faf5ef;
+  border-color: #ecc0ae;
+  color: #642d18;
 }
 
 .chart-canvas {
   width: 100%;
   height: 230px;
   display: block;
-  background: #0b1322;
+  background: #1d1410;
   border-radius: 11px;
-  border: 1px solid #1e293b;
+  border: 1px solid #3a281f;
   cursor: pointer;
 }
 
@@ -681,12 +681,12 @@ h1 .hero-subtitle {
   margin-right: 4px;
 }
 
-.dot.mint { background: #5eead4; }
-.dot.earth-arc { background: #38bdf8; }
-.dot.flat-parabola { background: #94a3b8; }
+.dot.mint { background: #dc8c6c; }
+.dot.earth-arc { background: #d87c58; }
+.dot.flat-parabola { background: #b8a394; }
 .dot.ke { background: #fbbf24; }
-.dot.pe { background: #60a5fa; }
-.dot.te { background: #34d399; }
+.dot.pe { background: #e0977a; }
+.dot.te { background: #d06237; }
 
 /* Presets Grid */
 .presets {
@@ -723,12 +723,12 @@ h1 .hero-subtitle {
 }
 
 .presets button.active {
-  background: #ecfdf5;
+  background: #faf5ef;
   border-color: var(--accent);
 }
 
 .presets button.active strong {
-  color: #065f46;
+  color: #422d23;
 }
 
 /* Controls & Sliders with Steppers */

@@ -1,41 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-color: #0a0c10;
-  --card-bg: rgba(18, 22, 33, 0.75);
+  --bg-color: #100c0a;
+  --card-bg: rgba(33, 23, 18, 0.75);
   --card-border: rgba(255, 255, 255, 0.06);
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
+  --text-primary: #f6f5f3;
+  --text-secondary: #afa49c;
   
   /* Dynamic colors fetched by canvas script */
-  --grid-color: #1e293b;
-  --spring-color: #64748b;
+  --grid-color: #3a281f;
+  --spring-color: #8b7464;
   --com-color: #eab308;
   
   /* Color theme for particles/energies */
-  --color-a: #3b82f6; /* Blue */
-  --color-a-glow: rgba(59, 130, 246, 0.4);
+  --color-a: #d87d59; /* Blue */
+  --color-a-glow: rgba(216, 125, 89, 0.4);
   --color-b: #f43f5e; /* Rose */
   --color-b-glow: rgba(244, 63, 94, 0.4);
   
-  --color-ke: #06b6d4;   /* Kinetic Energy: Cyan */
-  --color-int: #a855f7;  /* Internal Energy: Purple */
+  --color-ke: #b15029;   /* Kinetic Energy: Cyan */
+  --color-int: #dd8e6f;  /* Internal Energy: Purple */
   --color-com: #eab308;  /* CoM Energy: Yellow */
-  --color-mech: #10b981; /* Mechanical Energy: Emerald */
+  --color-mech: #a34926; /* Mechanical Energy: Emerald */
   --color-heat: #f97316; /* Heat: Orange */
   
   --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 body.light-theme {
-  --bg-color: #f1f5f9;
+  --bg-color: #f9f5f1;
   --card-bg: rgba(255, 255, 255, 0.85);
   --card-border: rgba(0, 0, 0, 0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
+  --text-primary: #251a14;
+  --text-secondary: #695547;
   
-  --grid-color: #e2e8f0;
-  --spring-color: #94a3b8;
+  --grid-color: #f0e9e2;
+  --spring-color: #b8a394;
   --com-color: #b45309; /* Darker amber for readability */
 }
 
@@ -53,8 +53,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+  background-image: radial-gradient(circle at 10% 20%, rgba(216, 125, 89, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.08) 0%, transparent 40%);
   background-attachment: fixed;
 }
@@ -63,7 +62,7 @@ header {
   padding: 1.25rem 2rem;
   border-bottom: 1px solid var(--card-border);
   backdrop-filter: blur(12px);
-  background: rgba(10, 12, 16, 0.5);
+  background: rgba(16, 12, 10, 0.5);
   z-index: 10;
   display: flex;
   justify-content: space-between;
@@ -73,7 +72,7 @@ header {
 header h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+  background: linear-gradient(135deg, #fff 0%, #afa49c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: flex;
@@ -86,9 +85,9 @@ header h1 span {
   font-weight: 500;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #60a5fa;
+  background: rgba(216, 125, 89, 0.15);
+  border: 1px solid rgba(216, 125, 89, 0.3);
+  color: #e0977a;
   -webkit-text-fill-color: initial;
 }
 
@@ -251,7 +250,7 @@ input[id^="vel-b"]::-webkit-slider-thumb {
 
 .simulation-card {
   position: relative;
-  background: rgba(8, 10, 16, 0.95);
+  background: rgba(16, 11, 8, 0.95);
   border: 1px solid var(--card-border);
   border-radius: 20px;
   overflow: hidden;
@@ -291,7 +290,7 @@ canvas#chartCanvas {
   display: flex;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  background: rgba(12, 15, 24, 0.7);
+  background: rgba(23, 16, 13, 0.7);
   border-top: 1px solid var(--card-border);
   align-items: center;
 }
@@ -327,8 +326,8 @@ canvas#chartCanvas {
 }
 
 .btn-primary:hover {
-  background: #2563eb;
-  box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+  background: #d2683e;
+  box-shadow: 0 0 16px rgba(216, 125, 89, 0.4);
 }
 
 .btn-danger {
@@ -343,7 +342,7 @@ canvas#chartCanvas {
 /* Chart Canvas Section */
 .charts-card {
   height: 250px;
-  background: rgba(8, 10, 16, 0.95);
+  background: rgba(16, 11, 8, 0.95);
   border: 1px solid var(--card-border);
   border-radius: 20px;
   padding: 1.5rem;
@@ -447,7 +446,7 @@ canvas#chartCanvas {
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
   font-family: monospace;
-  color: #cbd5e1;
+  color: #e8cec4;
   font-size: 0.8rem;
   margin: 0.3rem 0;
   display: inline-block;
@@ -477,7 +476,7 @@ footer {
   color: var(--text-secondary);
   font-size: 0.85rem;
   letter-spacing: 0.03em;
-  background: rgba(10, 12, 16, 0.4);
+  background: rgba(16, 12, 10, 0.4);
   width: 100%;
   position: relative;
   z-index: 5;
@@ -485,19 +484,18 @@ footer {
 
 /* Light Theme Specific Components Overrides */
 body.light-theme {
-  background-image: 
-    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+  background-image: radial-gradient(circle at 10% 20%, rgba(216, 125, 89, 0.05) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, rgba(244, 63, 94, 0.05) 0%, transparent 40%);
 }
 
 body.light-theme .simulation-card,
 body.light-theme .charts-card {
   background: #ffffff;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 30px rgba(37, 26, 20, 0.08);
 }
 
 body.light-theme .action-bar {
-  background: rgba(241, 245, 249, 0.85);
+  background: rgba(249, 245, 241, 0.85);
 }
 
 body.light-theme .stat-box {
@@ -507,13 +505,13 @@ body.light-theme .stat-box {
 
 body.light-theme .formula {
   background: rgba(0, 0, 0, 0.04);
-  color: #1e293b;
+  color: #3a281f;
 }
 
 body.light-theme .btn {
   background: rgba(0, 0, 0, 0.03);
   border-color: rgba(0, 0, 0, 0.08);
-  color: #0f172a;
+  color: #251a14;
 }
 
 body.light-theme .btn:hover {
@@ -528,8 +526,8 @@ body.light-theme .btn-primary {
 }
 
 body.light-theme .btn-primary:hover {
-  background: #2563eb;
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
+  background: #d2683e;
+  box-shadow: 0 0 12px rgba(216, 125, 89, 0.25);
 }
 
 body.light-theme .view-selector {
@@ -538,7 +536,7 @@ body.light-theme .view-selector {
 
 body.light-theme .view-btn.active {
   background: #ffffff;
-  color: #0f172a;
+  color: #251a14;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
@@ -547,11 +545,11 @@ body.light-theme input[type="range"] {
 }
 
 body.light-theme footer {
-  background: rgba(241, 245, 249, 0.5);
+  background: rgba(249, 245, 241, 0.5);
 }
 
 body.light-theme .view-indicator {
   background: rgba(255, 255, 255, 0.85);
-  color: #0f172a;
+  color: #251a14;
   border-color: rgba(0, 0, 0, 0.08);
 }

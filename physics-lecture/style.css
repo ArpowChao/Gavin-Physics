@@ -1,31 +1,31 @@
 /* Premium Physics Lecture CSS - White Clean Style */
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
+    --primary-color: #d2683e;
+    --primary-hover: #c65a2f;
     --accent-gold: #d97706;
-    --accent-emerald: #10b981;
-    --accent-purple: #7c3aed;
+    --accent-emerald: #a34926;
+    --accent-purple: #d67751;
     --accent-pink: #db2777;
     
     /* Concept hierarchy colors */
-    --bg-key: rgba(16, 185, 129, 0.05);
-    --border-key: #10b981;
-    --bg-support: rgba(37, 99, 235, 0.04);
-    --border-support: #2563eb;
-    --bg-detail: rgba(124, 58, 237, 0.04);
-    --border-detail: #7c3aed;
+    --bg-key: rgba(163, 73, 38, 0.05);
+    --border-key: #a34926;
+    --bg-support: rgba(210, 104, 62, 0.04);
+    --border-support: #d2683e;
+    --bg-detail: rgba(214, 119, 81, 0.04);
+    --border-detail: #d67751;
     --bg-supplement: rgba(217, 119, 6, 0.04);
     --border-supplement: #d97706;
 
     /* Light Theme Palette */
-    --bg-body: #f8fafc;
+    --bg-body: #fcfaf8;
     --bg-card: #ffffff;
     --bg-sidebar: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --text-light: #64748b;
-    --border-color: rgba(148, 163, 184, 0.16);
-    --border-focus: #3b82f6;
+    --text-main: #251a14;
+    --text-muted: #695547;
+    --text-light: #8b7464;
+    --border-color: rgba(184, 163, 148, 0.16);
+    --border-focus: #d87d59;
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
     --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
@@ -137,7 +137,7 @@ body {
 .nav-item-btn.active {
     background-color: var(--bg-body);
     color: var(--primary-color);
-    border-color: rgba(37, 99, 235, 0.12);
+    border-color: rgba(210, 104, 62, 0.12);
     font-weight: 600;
 }
 
@@ -145,18 +145,18 @@ body {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #cbd5e1;
+    background-color: #e8cec4;
     transition: var(--transition-base);
 }
 
 .nav-item-btn.completed .nav-status {
     background-color: var(--accent-emerald);
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 8px rgba(163, 73, 38, 0.6);
 }
 
 .nav-item-btn.active .nav-status {
     background-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+    box-shadow: 0 0 8px rgba(210, 104, 62, 0.6);
 }
 
 /* Sidebar progress */
@@ -246,7 +246,7 @@ body {
 .chapter-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background-color: rgba(37, 99, 235, 0.08);
+    background-color: rgba(210, 104, 62, 0.08);
     color: var(--primary-color);
     border-radius: 12px;
     font-size: 0.8rem;
@@ -280,7 +280,7 @@ body {
 
 .concept-card:hover {
     box-shadow: var(--shadow-md);
-    border-color: rgba(148, 163, 184, 0.24);
+    border-color: rgba(184, 163, 148, 0.24);
 }
 
 .concept-header {
@@ -311,7 +311,7 @@ body {
     background-color: var(--bg-key);
 }
 .card-key .concept-type-tag {
-    background-color: rgba(16, 185, 129, 0.12);
+    background-color: rgba(163, 73, 38, 0.12);
     color: var(--accent-emerald);
 }
 
@@ -320,7 +320,7 @@ body {
     background-color: var(--bg-support);
 }
 .card-support .concept-type-tag {
-    background-color: rgba(37, 99, 235, 0.1);
+    background-color: rgba(210, 104, 62, 0.1);
     color: var(--primary-color);
 }
 
@@ -329,7 +329,7 @@ body {
     background-color: var(--bg-detail);
 }
 .card-detail .concept-type-tag {
-    background-color: rgba(124, 58, 237, 0.1);
+    background-color: rgba(214, 119, 81, 0.1);
     color: var(--accent-purple);
 }
 
@@ -366,7 +366,7 @@ body {
 
 /* Simulation Section styling */
 .simulation-container {
-    background-color: #0f172a; /* Premium dark background for simulation */
+    background-color: #251a14; /* Premium dark background for simulation */
     border-radius: var(--radius-md);
     padding: 1.5rem;
     margin-top: 1.5rem;
@@ -378,7 +378,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #e2e8f0;
+    color: #f0e9e2;
     margin-bottom: 1rem;
     font-size: 0.9rem;
     font-weight: 600;
@@ -387,7 +387,7 @@ body {
 .simulation-canvas-wrapper {
     position: relative;
     width: 100%;
-    background-color: #020617;
+    background-color: #100b09;
     border-radius: var(--radius-sm);
     overflow: hidden;
     margin-bottom: 1.25rem;
@@ -403,10 +403,10 @@ canvas.simulation-canvas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.25rem;
-    background-color: #1e293b;
+    background-color: #3a281f;
     padding: 1.25rem;
     border-radius: var(--radius-sm);
-    color: #f1f5f9;
+    color: #f9f5f1;
 }
 
 .control-item {
@@ -418,7 +418,7 @@ canvas.simulation-canvas {
 .control-item label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #cbd5e1;
+    color: #e8cec4;
     display: flex;
     justify-content: space-between;
 }
@@ -426,7 +426,7 @@ canvas.simulation-canvas {
 .control-item input[type="range"] {
     width: 100%;
     height: 6px;
-    background: #475569;
+    background: #695547;
     border-radius: 3px;
     outline: none;
     -webkit-appearance: none;
@@ -451,8 +451,8 @@ canvas.simulation-canvas {
 }
 
 .control-item select {
-    background-color: #334155;
-    border: 1px solid #475569;
+    background-color: #554133;
+    border: 1px solid #695547;
     border-radius: 6px;
     padding: 0.5rem;
     color: white;
@@ -469,7 +469,7 @@ canvas.simulation-canvas {
 }
 
 .sim-stat-box {
-    background-color: #1e293b;
+    background-color: #3a281f;
     border-radius: 8px;
     padding: 0.75rem 1rem;
     text-align: center;
@@ -478,7 +478,7 @@ canvas.simulation-canvas {
 
 .sim-stat-label {
     font-size: 0.75rem;
-    color: #94a3b8;
+    color: #b8a394;
     display: block;
     margin-bottom: 0.25rem;
 }
@@ -486,14 +486,14 @@ canvas.simulation-canvas {
 .sim-stat-val {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #f1f5f9;
+    color: #f9f5f1;
     font-family: monospace;
 }
 
 /* Interactive Student Form Input */
 .interactive-input-section {
-    background-color: #f1f5f9;
-    border: 1px dashed rgba(148, 163, 184, 0.4);
+    background-color: #f9f5f1;
+    border: 1px dashed rgba(184, 163, 148, 0.4);
     border-radius: var(--radius-md);
     padding: 1.5rem;
     margin: 1.5rem 0;
@@ -517,7 +517,7 @@ canvas.simulation-canvas {
     flex-grow: 1;
     min-width: 150px;
     padding: 0.6rem 0.85rem;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #e8cec4;
     border-radius: var(--radius-sm);
     font-size: 0.95rem;
     outline: none;
@@ -527,7 +527,7 @@ canvas.simulation-canvas {
 
 .interactive-text-input:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px rgba(210, 104, 62, 0.15);
 }
 
 .interactive-submit-btn {
@@ -593,7 +593,7 @@ canvas.simulation-canvas {
 .bloom-icon-badge {
     width: 40px;
     height: 40px;
-    background-color: rgba(124, 58, 237, 0.08);
+    background-color: rgba(214, 119, 81, 0.08);
     color: var(--accent-purple);
     border-radius: 50%;
     display: flex;
@@ -633,10 +633,10 @@ canvas.simulation-canvas {
     letter-spacing: 0.05em;
 }
 
-.level-memory { background-color: rgba(226, 232, 240, 1); color: #475569; }
-.level-understanding { background-color: rgba(219, 234, 254, 1); color: #1e40af; }
-.level-application { background-color: rgba(209, 250, 229, 1); color: #065f46; }
-.level-analysis { background-color: rgba(243, 232, 255, 1); color: #6b21a8; }
+.level-memory { background-color: rgba(240, 233, 226, 1); color: #695547; }
+.level-understanding { background-color: rgba(247, 237, 226, 1); color: #a64b27; }
+.level-application { background-color: rgba(209, 250, 229, 1); color: #422d23; }
+.level-analysis { background-color: rgba(250, 244, 237, 1); color: #a34926; }
 .level-evaluation { background-color: rgba(254, 226, 226, 1); color: #991b1b; }
 
 .bloom-q-text {
@@ -655,7 +655,7 @@ canvas.simulation-canvas {
 
 .bloom-option-item {
     background-color: var(--bg-card);
-    border: 1px solid rgba(148, 163, 184, 0.24);
+    border: 1px solid rgba(184, 163, 148, 0.24);
     border-radius: var(--radius-sm);
     padding: 0.85rem 1.25rem;
     cursor: pointer;
@@ -671,7 +671,7 @@ canvas.simulation-canvas {
 
 .bloom-option-item:hover {
     border-color: var(--primary-color);
-    background-color: rgba(37, 99, 235, 0.02);
+    background-color: rgba(210, 104, 62, 0.02);
     transform: translateX(4px);
     color: var(--primary-color);
 }
@@ -691,9 +691,9 @@ canvas.simulation-canvas {
 }
 
 .bloom-option-item.correct {
-    background-color: rgba(16, 185, 129, 0.08) !important;
+    background-color: rgba(163, 73, 38, 0.08) !important;
     border-color: var(--accent-emerald) !important;
-    color: #065f46 !important;
+    color: #422d23 !important;
 }
 
 .bloom-option-item.correct .bloom-option-badge {
@@ -719,7 +719,7 @@ canvas.simulation-canvas {
 
 .bloom-option-item.selected {
     border-color: var(--accent-purple) !important;
-    background-color: rgba(124, 58, 237, 0.03) !important;
+    background-color: rgba(214, 119, 81, 0.03) !important;
     color: var(--accent-purple) !important;
 }
 
@@ -746,7 +746,7 @@ canvas.simulation-canvas {
 
 .bloom-textarea-input:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px rgba(210, 104, 62, 0.15);
 }
 
 .bloom-fill-container {
@@ -771,7 +771,7 @@ canvas.simulation-canvas {
 
 .bloom-text-input:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 0 3px rgba(210, 104, 62, 0.15);
 }
 
 .bloom-submit-btn {

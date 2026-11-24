@@ -1,41 +1,41 @@
 :root {
   color-scheme: light;
-  --bg: #f2f5f4;
+  --bg: #f5f4f2;
   --panel: #ffffff;
-  --panel-alt: #f7faf9;
-  --ink: #1b2a38;
-  --muted: #586c7d;
-  --line: #d5e0e3;
-  --accent: #0f766e;
-  --accent-soft: rgba(15, 118, 110, 0.10);
-  --on: #059669;
-  --on-soft: rgba(5, 150, 105, 0.14);
+  --panel-alt: #faf9f7;
+  --ink: #36251d;
+  --muted: #7d6758;
+  --line: #e3dbd5;
+  --accent: #6c3119;
+  --accent-soft: rgba(108, 49, 25, 0.1);
+  --on: #7e391d;
+  --on-soft: rgba(126, 57, 29, 0.14);
   --off: #e11d48;
   --off-soft: rgba(225, 29, 72, 0.12);
   --warn: #d97706;
   --warn-soft: rgba(217, 119, 6, 0.14);
-  --stage-bg: #071222;
+  --stage-bg: #1b120e;
   --body: "Segoe UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
   --mono: "Cascadia Code", Consolas, "SFMono-Regular", monospace;
 }
 
 body.dark-theme {
   color-scheme: dark;
-  --bg: #08101c;
-  --panel: #0f1b2e;
-  --panel-alt: #15243b;
-  --ink: #e8eff7;
-  --muted: #93a7be;
-  --line: #233754;
-  --accent: #2dd4bf;
-  --accent-soft: rgba(45, 212, 191, 0.12);
-  --on: #34d399;
-  --on-soft: rgba(52, 211, 153, 0.15);
+  --bg: #17100d;
+  --panel: #281b15;
+  --panel-alt: #34241c;
+  --ink: #f7f0e8;
+  --muted: #bea593;
+  --line: #563021;
+  --accent: #cf5f32;
+  --accent-soft: rgba(207, 95, 50, 0.12);
+  --on: #d06237;
+  --on-soft: rgba(208, 98, 55, 0.15);
   --off: #fb7185;
   --off-soft: rgba(251, 113, 133, 0.16);
   --warn: #fbbf24;
   --warn-soft: rgba(251, 191, 36, 0.15);
-  --stage-bg: #040a14;
+  --stage-bg: #100b08;
 }
 
 * {
@@ -181,7 +181,7 @@ main {
 .mode-tab.active {
   border-color: var(--accent);
   background: var(--accent-soft);
-  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.10);
+  box-shadow: 0 4px 12px rgba(108, 49, 25, 0.1);
 }
 
 .control-bar {
@@ -229,7 +229,7 @@ main {
 }
 
 body.dark-theme .state-btn.active {
-  color: #05161e;
+  color: #17100c;
 }
 
 .sliders-row {
@@ -340,7 +340,7 @@ body.dark-theme .state-btn.active {
   border: 1px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 28px rgba(7, 17, 31, 0.16);
+  box-shadow: 0 12px 28px rgba(25, 17, 13, 0.16);
 }
 
 #sim-canvas {
@@ -382,10 +382,10 @@ body.dark-theme .state-btn.active {
   display: inline-block;
 }
 
-.dot.e { background: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
+.dot.e { background: #d87c58; box-shadow: 0 0 6px #d87c58; }
 .dot.h { background: #fb7185; box-shadow: 0 0 6px #fb7185; }
 .dot.wall { background: #f59e0b; border-radius: 3px; }
-.dot.bridge { background: #22d3ee; border-radius: 3px; }
+.dot.bridge { background: #d2683e; border-radius: 3px; }
 
 .play-btn {
   padding: 4px 12px;

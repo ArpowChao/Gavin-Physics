@@ -1,13 +1,13 @@
 :root {
   --bg1: #e6f8ec;
-  --bg2: #d8e6fb;
-  --ink: #1d2b3a;
-  --muted: #5b6b7c;
+  --bg2: #f5eade;
+  --ink: #39271e;
+  --muted: #7c695b;
   --hole: #ec2a1f;
   --elec: #12a0f5;
   --accent: #b2372d;
   --card: rgba(255, 255, 255, 0.82);
-  --line: #c9d6e3;
+  --line: #e8cec4;
   font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }

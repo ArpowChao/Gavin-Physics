@@ -8,7 +8,7 @@
 import os, re, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-VER = '20261124c'   # 改版時更新，避免瀏覽器用到舊的快取
+VER = '20261124e'   # 改版時更新，避免瀏覽器用到舊的快取
 
 L = dict(bg='#f8f1e7', soft='#f2e7d8', card='#fffaf3', card2='#fbf3e8', ink='#3b2c24', muted='#7d6a5c', line='#e7d6c3',
          acc='#c0603a', acc2='#9f4a28', accs='#f7e3d6', honey='#d4962e', sage='#5f8a5c', rose='#b4484d', plum='#86587f', teal='#3b8b86',
@@ -36,6 +36,11 @@ html body{{background:{L['bg']}}} h1,h2{{font-family:"Noto Serif TC",serif}}"""
 DARK_A = f"""html:root{{--bg:{D['bg']};--panel:{D['panel']};--panel2:{D['panel2']};--panel-alt:{D['panel2']};--ink:{D['ink']};--text:{D['ink']};--muted:{D['muted']};--line:{D['line']};--border:{D['line']};--accent:{D['acc']};--stage:#17110e}}
 html body{{background:{D['bg']}}}"""
 
+BB_L = f"--bg:{L['bg']};--panel:{L['card']};--panel2:{L['card2']};--ink:{L['ink']};--muted:{L['muted']};--line:{L['line']};--stage:{L['card']}"
+BB_D = f"--bg:{D['bg']};--panel:{D['panel']};--panel2:{D['panel2']};--ink:{D['ink']};--muted:{D['muted']};--line:{D['line']};--accent:{D['acc']};--stage:#17110e;--hudbg:#1f1813e6;--tbbg:#2a201be6;--hudline:#4a3a30;--tbline:#5a4638"
+BB = (f"html:root{{{BB_D}}} html:root[data-theme='dark']{{{BB_D}}} html:root[data-theme='light']{{{BB_L}}}"
+      f" @media (prefers-color-scheme: light){{html:root:not([data-theme='dark']){{{BB_L}}}}}")
+
 PAGES = {
     'gsat/gsat_physics_review.html': (STUDY, 'bar', ''),
     'wave-optics/wave_optics_review.html': (STUDY + f"\nhtml:root{{--bg-body:{L['bg']}}}", 'bar', ''),
@@ -57,12 +62,12 @@ PAGES = {
     'apps/inquiry_and_practice.html': (f"html:root{{--primary-color:{L['acc']};--primary-hover-color:{L['acc2']};--bg-color:{L['bg']};--surface-color:{L['card']};--text-primary:{L['ink']};--text-secondary:{L['muted']};--border-color:{L['line']}}} html body{{background:{L['bg']} !important}} h1,h2{{font-family:'Noto Serif TC',serif}}", 'bar', ''),
     'apps/single-slit-diffraction/index.html': (f"html:root{{--primary:{L['ink']};--secondary:{L['acc']};--highlight:{L['honey']};--nav-bg:{L['cocoa']};--nav-text:#fff3e6;--tab-active-bg:#5a4034;--tab-active-text:#ffc9a6;--border-color:#5a4034}} html body{{background:{L['cocoa']} !important}}", 'pill', ''),
     # 深色模擬：改成可可棕的暖色深底
-    'apps/baseball-cfd/index.html': (DARK_A + "\nhtml:root{--hudbg:#1f1813e6;--tbbg:#2a201be6;--hudline:#4a3a30;--tbline:#5a4638}", 'bar', ''),
-    'apps/charged-spheres/index.html': (DARK_A + f"\nhtml:root{{--insight:#3a2a22;--grid:rgba(240,200,160,.07)}}", 'bar', ''),
+    'apps/baseball-cfd/index.html': (BB, 'bar', ''),
+    'apps/charged-spheres/index.html': (f"html:root{{--bg:{D['bg']};--panel:{D['panel']};--panel-alt:{D['panel2']};--text:{D['ink']};--muted:{D['muted']};--border:{D['line']};--accent:{D['honey']}}}\nbody.light{{--bg:{L['bg']};--panel:{L['card']};--panel-alt:{L['card2']};--text:{L['ink']};--muted:{L['muted']};--border:{L['line']};--accent:{L['acc2']}}}", 'bar', ''),
     'apps/semiconductor-process/index.html': (f"html:root{{--bg:{D['bg']};--panel:{D['panel']};--line:{D['line']};--text:{D['ink']};--muted:{D['muted']};--gold:{D['honey']}}} html body{{background:radial-gradient(ellipse at 45% 0,#3a2a20,{D['bg']} 55%) !important}}", 'bar', ''),
-    'apps/simulation/index.html': (f"html:root{{--bg-color:{D['bg']};--card-bg:rgba(42,32,27,.8);--card-border:rgba(255,230,200,.08);--text-primary:{D['ink']};--text-secondary:{D['muted']};--grid-color:#3a2d25}} html body{{background:{D['bg']} !important}}", 'bar', ''),
-    'apps/orbit_transfer/index.html': (f"html:root{{--bg-dark:{D['bg']};--card-bg:rgba(42,32,27,.66);--card-border:rgba(240,180,90,.18);--card-border-glow:rgba(240,180,90,.45)}} html body{{background:{D['bg']} !important}}", 'pill', ''),
-    'apps/orbital_decay/index.html': (f"html:root{{--bg-dark:{D['bg']};--bg-card:rgba(42,32,27,.75);--border-color:rgba(255,230,200,.09);--border-glow:rgba(240,180,90,.2);--text-primary:{D['ink']};--text-secondary:{D['muted']}}} html body{{background:{D['bg']} !important}}", 'pill', ''),
+    'apps/simulation/index.html': (f"html:root{{--bg-color:{D['bg']};--card-bg:rgba(42,32,27,.8);--card-border:rgba(255,230,200,.08);--text-primary:{D['ink']};--text-secondary:{D['muted']};--grid-color:#3a2d25}} html body:not(.light-theme){{background:{D['bg']} !important}} body.light-theme{{--bg-color:{L['bg']}}}", 'bar', ''),
+    'apps/orbit_transfer/index.html': (f"html:root{{--bg-dark:{D['bg']};--card-bg:rgba(42,32,27,.66);--card-border:rgba(240,180,90,.18);--card-border-glow:rgba(240,180,90,.45)}} html body:not(.light-mode){{background:{D['bg']} !important}} body.light-mode{{--bg-dark:{L['bg']}}}", 'pill', ''),
+    'apps/orbital_decay/index.html': (f"html:root{{--bg-dark:{D['bg']};--bg-card:rgba(42,32,27,.75);--border-color:rgba(255,230,200,.09);--border-glow:rgba(240,180,90,.2);--text-primary:{D['ink']};--text-secondary:{D['muted']}}} html body:not(.light-mode){{background:{D['bg']} !important}} body.light-mode{{--bg-dark:{L['bg']}}}", 'pill', ''),
     'apps/center-of-mass.html': (f"html:root{{--primary:{D['acc']};--accent:{D['honey']};--bg:{D['bg']};--card-bg:rgba(42,32,27,.92);--text:{D['ink']}}} html body{{background:{D['bg']} !important}}", 'bar', ''),
     # Tailwind／一般頁面
     'apps/alpha.html': ('', 'bar', 'gp-tw'),
@@ -76,7 +81,7 @@ PAGES = {
     'apps/phy-vpython-baseball.html': ('', 'pill', 'gp-plain'),
 }
 for k in ['theme1', 'theme2', 'theme3', 'theme4']:
-    PAGES[f'apps/single-slit-diffraction/{k}.html'] = (f"html:root{{--primary:{L['ink']};--secondary:{L['acc']};--highlight:{L['honey']};--bg-color:{L['bg']};--panel-bg:{L['card']}}} html body{{background:{L['bg']} !important}}", 'pill', '')
+    PAGES[f'apps/single-slit-diffraction/{k}.html'] = (f"html:root{{--primary:{L['ink']};--secondary:{L['acc']};--highlight:{L['honey']};--bg-color:{L['bg']};--panel-bg:{L['card']};--btn-play:{L['sage']};--btn-pause:{L['honey']};--btn-calm:{L['acc']};--btn-reset:#a8978a}} html body{{background:{L['bg']} !important}}", 'pill', '')
 # 自己做的首頁、目錄頁、練習頁直接使用 warm.css 的變數
 HUBS = ['index.html', 'apps/index.html', 'practice/index.html', 'practice/admin.html']
 

@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../../assets/icon-192.png">
-<link rel="stylesheet" href="../../assets/warm.css?v=20261124c">
+<link rel="stylesheet" href="../../assets/warm.css?v=20261124e">
 <!-- /gp-head -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>學測物理全概念互動複習講義 | Arpow Deep-Learning</title>
@@ -37,22 +37,22 @@
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 
             /* Light mode palette with Twilight/Dusk hues adapted */
-            --sunset-blue: #1e6091; /* legible dark blue */
+            --sunset-blue: #8e4021; /* legible dark blue */
             --sunset-purple: #7209b7; /* violet */
-            --emerald-glass: rgba(16, 185, 129, 0.08); 
-            --barley-glow: #0f172a; /* dark slate for headings */
+            --emerald-glass: rgba(163, 73, 38, 0.08); 
+            --barley-glow: #251a14; /* dark slate for headings */
             --action-orange: #ea580c; 
             --action-gold: #d97706; 
             
-            --bg-primary: #f1f5f9;
+            --bg-primary: #f9f5f1;
             --bg-card: #ffffff;
             --bg-sidebar: #ffffff;
-            --text-primary: #0f172a;
-            --text-content: #334155;
-            --text-muted: #64748b;
+            --text-primary: #251a14;
+            --text-content: #554133;
+            --text-muted: #8b7464;
             
             --bg-glass: rgba(255, 255, 255, 0.85);
-            --border-glass: rgba(148, 163, 184, 0.2);
+            --border-glass: rgba(184, 163, 148, 0.2);
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
@@ -134,9 +134,9 @@
         }
 
         .nav-item:hover, .nav-item.active {
-            background: rgba(30, 96, 145, 0.08) !important;
+            background: rgba(142, 64, 33, 0.08) !important;
             color: var(--sunset-blue) !important;
-            border-color: rgba(30, 96, 145, 0.15);
+            border-color: rgba(142, 64, 33, 0.15);
             transform: translateX(6px);
         }
 
@@ -250,7 +250,7 @@
         }
 
         .chapter-section:hover {
-            border-color: rgba(30, 96, 145, 0.15);
+            border-color: rgba(142, 64, 33, 0.15);
             box-shadow: var(--shadow-xl);
         }
 
@@ -303,12 +303,12 @@
         }
 
         th {
-            background: rgba(30, 96, 145, 0.05);
+            background: rgba(142, 64, 33, 0.05);
             color: var(--sunset-blue);
             font-weight: 700;
             text-align: left;
             padding: 0.8rem 1.2rem;
-            border-bottom: 2px solid rgba(30, 96, 145, 0.15);
+            border-bottom: 2px solid rgba(142, 64, 33, 0.15);
         }
 
         td {
@@ -383,7 +383,7 @@
         .input-group input:focus, .input-group select:focus {
             outline: none;
             border-color: var(--sunset-blue);
-            box-shadow: 0 0 0 3px rgba(30, 96, 145, 0.15);
+            box-shadow: 0 0 0 3px rgba(142, 64, 33, 0.15);
         }
 
         .btn-calc {
@@ -404,7 +404,7 @@
         }
 
         .calc-result {
-            background: rgba(30, 96, 145, 0.03);
+            background: rgba(142, 64, 33, 0.03);
             border-radius: 8px;
             padding: 1.2rem;
             font-size: 1.05rem;
@@ -421,7 +421,7 @@
 
         /* --- Canvas for Waves Sim --- */
         .sim-canvas {
-            background: #0f172a;
+            background: #251a14;
             border-radius: var(--radius-md);
             width: 100%;
             height: 300px;
@@ -431,7 +431,7 @@
 
         /* --- Quiz Section --- */
         .quiz-panel {
-            background: rgba(30, 96, 145, 0.02);
+            background: rgba(142, 64, 33, 0.02);
             border: 1px solid var(--border-glass);
             border-radius: var(--radius-md);
             padding: 2rem;
@@ -478,7 +478,7 @@
 
         .option-item {
             background: #ffffff;
-            border: 1px solid rgba(148, 163, 184, 0.3);
+            border: 1px solid rgba(184, 163, 148, 0.3);
             border-radius: 8px;
             padding: 0.9rem 1.2rem;
             cursor: pointer;
@@ -491,8 +491,8 @@
         }
 
         .option-item:hover {
-            background: rgba(30, 96, 145, 0.04);
-            border-color: rgba(30, 96, 145, 0.2);
+            background: rgba(142, 64, 33, 0.04);
+            border-color: rgba(142, 64, 33, 0.2);
             transform: translateX(4px);
         }
 
@@ -540,7 +540,7 @@
         }
 
         .explanation {
-            background: rgba(30, 96, 145, 0.03);
+            background: rgba(142, 64, 33, 0.03);
             border-radius: 8px;
             padding: 1.2rem;
             margin-top: 1rem;
@@ -583,7 +583,7 @@
             width: 44px;
             height: 44px;
             border-radius: 10px;
-            background: rgba(30, 96, 145, 0.1);
+            background: rgba(142, 64, 33, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -663,7 +663,7 @@
             font-weight: 700;
             color: var(--sunset-blue);
             cursor: pointer;
-            background: rgba(30, 96, 145, 0.03);
+            background: rgba(142, 64, 33, 0.03);
             border-bottom: 1px solid transparent;
             transition: var(--transition);
         }
@@ -680,7 +680,7 @@
         /* --- Screenshot Note Tool styling --- */
         .btn-note {
             background: #ffffff;
-            border: 1px solid rgba(30, 96, 145, 0.3);
+            border: 1px solid rgba(142, 64, 33, 0.3);
             color: var(--sunset-blue) !important;
             padding: 0.5rem 1rem;
             border-radius: var(--radius-sm);
@@ -697,7 +697,7 @@
             color: #ffffff !important;
             border-color: var(--sunset-blue);
             transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(30, 96, 145, 0.2);
+            box-shadow: 0 4px 10px rgba(142, 64, 33, 0.2);
         }
 
         /* --- Screenshot Note-taking Modal --- */
@@ -706,7 +706,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(37, 26, 20, 0.95);
             z-index: 10000;
             flex-direction: column;
             align-items: center;
@@ -717,7 +717,7 @@
 
         .note-toolbar {
             width: 100%;
-            background: #1e293b;
+            background: #3a281f;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding: 1rem 2rem;
             display: flex;
@@ -731,7 +731,7 @@
         .toolbar-title {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #f8fafc;
+            color: #fcfaf8;
         }
 
         .toolbar-actions {
@@ -744,7 +744,7 @@
         .tool-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #f8fafc;
+            color: #fcfaf8;
             padding: 0.5rem 1rem;
             border-radius: 8px;
             cursor: pointer;
@@ -757,8 +757,8 @@
         }
 
         .tool-btn:hover, .tool-btn.active {
-            background: #3b82f6;
-            border-color: #3b82f6;
+            background: #d87d59;
+            border-color: #d87d59;
             transform: translateY(-1px);
         }
 
@@ -820,7 +820,7 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.9rem;
-            color: #cbd5e1;
+            color: #e8cec4;
         }
 
         .brush-size-container input {
@@ -835,7 +835,7 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
-            background: #0f172a;
+            background: #251a14;
         }
 
         #note-canvas {
@@ -868,7 +868,7 @@
 /* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */
 html:root{--sunset-blue:#9f4a28;--bg-primary:#f8f1e7;--bg-card:#fffaf3;--bg-sidebar:#fffaf3;--text-primary:#3b2c24;--text-content:#4a3a30;--text-muted:#7d6a5c;--bg-glass:rgba(255,250,243,.88);--border-glass:#e7d6c3} html{background:#f8f1e7 !important} h1,h2{font-family:'Noto Serif TC',serif}
 </style>
-<script src="../../assets/site.js?v=20261124c" defer></script>
+<script src="../../assets/site.js?v=20261124e" defer></script>
 </head>
 
 <body>

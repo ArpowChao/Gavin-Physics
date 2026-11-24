@@ -128,7 +128,7 @@
     return media;
   }
   function decorate() {
-    document.querySelectorAll('canvas, svg[viewBox]').forEach(m => {
+    document.querySelectorAll('canvas, svg[viewBox], iframe').forEach(m => {
       if (m.__gpStage || m.closest('.gp-bar, .gp-pill, button, a, .gp-stage-btn, [data-gp-nostage]')) return;
       if (m.tagName.toLowerCase() === 'svg' && m.parentElement && m.parentElement.closest('svg')) return;
       const r = m.getBoundingClientRect(); if (r.width < MIN_W || r.height < MIN_H) return;
@@ -169,7 +169,9 @@
     const path = location.pathname;
     const isApp = /\/apps\/.+/.test(path) && !/\/apps\/(index\.html)?$/.test(path);
     const withFS = isApp || /water_interference/.test(path);
-    if (MODE === 'pill') {
+    let embedded = false; try { embedded = window.self !== window.top && !!window.top.__GP_SITE__; } catch (e) {}
+    if (embedded) {}   // 嵌在本站其他頁面的 iframe 裡：導覽交給外層頁面
+    else if (MODE === 'pill') {
       const p = document.createElement('div'); p.className = 'gp-pill';
       p.innerHTML = '<a href="' + ROOT + 'apps/">◂ 實驗室</a><button type="button" class="gp-fsbtn">⛶ 全螢幕</button>';
       document.body.appendChild(p);

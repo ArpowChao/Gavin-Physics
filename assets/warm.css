@@ -51,6 +51,8 @@
   }
 }
 
+html { accent-color: var(--gp-accent); }
+
 /* ---------- 全站導覽列 ---------- */
 .gp-bar { font: 14px/1.4 var(--gp-sans); background: var(--gp-cocoa); color: #f6ebdd; position: relative; z-index: 60; }
 .gp-bar a { color: inherit; text-decoration: none; }

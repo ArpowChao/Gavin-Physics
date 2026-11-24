@@ -1,16 +1,16 @@
 /* Orbit Transfer Game Style System */
 
 :root {
-    --bg-dark: #070913;
-    --card-bg: rgba(16, 20, 38, 0.6);
-    --card-border: rgba(0, 242, 254, 0.15);
-    --card-border-glow: rgba(0, 242, 254, 0.4);
+    --bg-dark: #110c09;
+    --card-bg: rgba(35, 24, 19, 0.6);
+    --card-border: rgba(206, 93, 48, 0.15);
+    --card-border-glow: rgba(206, 93, 48, 0.4);
     
     /* Neon Palettes */
-    --cyan: #00f2fe;
-    --cyan-glow: rgba(0, 242, 254, 0.4);
-    --blue: #4facfe;
-    --purple: #7f00ff;
+    --cyan: #ce5d30;
+    --cyan-glow: rgba(206, 93, 48, 0.4);
+    --blue: #dd8f70;
+    --purple: #cf5d30;
     --pink: #ff007f;
     --green: #39ff14;
     --green-glow: rgba(57, 255, 20, 0.4);
@@ -20,9 +20,9 @@
     --amber-glow: rgba(255, 170, 0, 0.4);
     
     /* Typography colors */
-    --text-main: #f0f3ff;
-    --text-muted: #8fa0c5;
-    --text-dark: #0c0f1d;
+    --text-main: #fcf8f3;
+    --text-muted: #d09984;
+    --text-dark: #1b120e;
     
     /* Fonts */
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -55,8 +55,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background-image: 
-        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+    background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
         radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
         radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
     background-size: 550px 550px, 350px 350px, 250px 250px;
@@ -90,7 +89,7 @@ body {
     border: 1px solid var(--card-border);
     border-radius: 16px;
     backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 242, 254, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(206, 93, 48, 0.05);
 }
 
 .logo-area {
@@ -137,7 +136,7 @@ body {
     padding: 0.5rem 1rem;
     border-radius: 30px;
     border: 1px dashed var(--cyan);
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    box-shadow: 0 0 10px rgba(206, 93, 48, 0.1);
 }
 
 .badge-label {
@@ -185,7 +184,7 @@ body {
     width: 440px; /* Increased from 360px for better layout spacing and larger fonts */
     height: 100%;
     z-index: 10;
-    background: rgba(10, 14, 30, 0.6); /* Darker overlay for better contrast */
+    background: rgba(26, 18, 14, 0.6); /* Darker overlay for better contrast */
     border: 1px solid var(--card-border);
     border-radius: 20px;
     backdrop-filter: blur(12px);
@@ -264,9 +263,9 @@ body {
 }
 
 .camera-badge {
-    background: rgba(0, 242, 254, 0.12);
+    background: rgba(206, 93, 48, 0.12);
     color: var(--cyan);
-    border: 1px solid rgba(0, 242, 254, 0.25);
+    border: 1px solid rgba(206, 93, 48, 0.25);
     padding: 0.35rem 0.75rem;
     border-radius: 8px;
     font-size: 0.75rem;
@@ -278,7 +277,7 @@ body {
 .canvas-container {
     position: relative;
     flex: 1;
-    background: radial-gradient(circle at center, #0e1227 0%, #03040a 100%);
+    background: radial-gradient(circle at center, #221813 0%, #080605 100%);
     overflow: hidden;
 }
 
@@ -306,7 +305,7 @@ body {
 }
 
 .pe-tag, .ap-tag {
-    background: rgba(7, 9, 19, 0.75);
+    background: rgba(17, 12, 9, 0.75);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-left: 4px solid var(--cyan);
     padding: 0.35rem 0.75rem;
@@ -328,7 +327,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(5, 7, 18, 0.85);
+    background: rgba(15, 10, 8, 0.85);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
@@ -343,14 +342,14 @@ body {
 }
 
 .modal-content {
-    background: rgba(20, 24, 45, 0.95);
+    background: rgba(42, 29, 23, 0.95);
     border: 2px solid var(--cyan);
     border-radius: 20px;
     padding: 2.5rem;
     max-width: 480px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 0 40px rgba(0, 242, 254, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 40px rgba(206, 93, 48, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.05);
     transform: scale(0.9);
     transition: transform 0.3s ease;
 }
@@ -494,7 +493,7 @@ body.light-mode .tel-group-card {
 }
 
 body.light-mode .tel-group-header {
-    color: #334155;
+    color: #554133;
 }
 
 .tel-group-row {
@@ -523,7 +522,7 @@ body.light-mode .tel-group-header {
 }
 
 body.light-mode .tel-lbl {
-    color: #475569;
+    color: #695547;
 }
 
 .tel-val {
@@ -640,9 +639,9 @@ body.light-mode .ke-color {
 }
 
 .binding-card.escaped {
-    background: rgba(0, 242, 254, 0.06);
-    border-color: rgba(0, 242, 254, 0.3);
-    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.05);
+    background: rgba(206, 93, 48, 0.06);
+    border-color: rgba(206, 93, 48, 0.3);
+    box-shadow: 0 4px 15px rgba(206, 93, 48, 0.05);
 }
 
 .binding-label {
@@ -701,7 +700,7 @@ body.light-mode .ke-color {
 .tooltip-text {
     visibility: hidden;
     width: 240px;
-    background-color: rgba(7, 9, 19, 0.95);
+    background-color: rgba(17, 12, 9, 0.95);
     color: var(--text-main);
     text-align: left;
     border: 1px solid var(--card-border);
@@ -799,7 +798,7 @@ body.light-mode .ke-color {
     margin-top: 1.2rem;
     position: relative;
     height: 260px; /* Increased from 160px to fill empty bottom space */
-    background: rgba(7, 9, 19, 0.45);
+    background: rgba(17, 12, 9, 0.45);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 0 12px;
@@ -822,7 +821,7 @@ body.light-mode .ke-color {
     position: absolute;
     right: 6px;
     top: -7px;
-    background: #0f1225;
+    background: #221712;
     padding: 0 5px;
     font-family: var(--font-mono);
     font-size: 0.82rem; /* Increased from 0.65rem */
@@ -862,13 +861,13 @@ body.light-mode .ke-color {
 
 /* Dynamically styled ME bar states */
 .bar-me.negative {
-    background: linear-gradient(180deg, rgba(0, 242, 254, 0.35) 0%, var(--cyan) 100%);
+    background: linear-gradient(180deg, rgba(206, 93, 48, 0.35) 0%, var(--cyan) 100%);
     box-shadow: 0 0 10px var(--cyan-glow);
     border-radius: 0 0 4px 4px;
 }
 
 .bar-me.positive {
-    background: linear-gradient(0deg, rgba(0, 242, 254, 0.35) 0%, var(--cyan) 100%);
+    background: linear-gradient(0deg, rgba(206, 93, 48, 0.35) 0%, var(--cyan) 100%);
     box-shadow: 0 0 10px var(--cyan-glow);
     border-radius: 4px 4px 0 0;
 }
@@ -1048,12 +1047,12 @@ body.light-mode .ke-color {
     color: white;
     padding: 0.75rem 1.5rem;
     font-size: 0.95rem;
-    box-shadow: 0 4px 15px rgba(127, 0, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(207, 93, 48, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(127, 0, 255, 0.45);
+    box-shadow: 0 6px 20px rgba(207, 93, 48, 0.45);
 }
 
 .btn-secondary {
@@ -1091,16 +1090,16 @@ body.light-mode .ke-color {
 }
 
 .btn-prograde {
-    background: rgba(0, 242, 254, 0.12);
+    background: rgba(206, 93, 48, 0.12);
     color: var(--cyan);
-    border-color: rgba(0, 242, 254, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.05);
+    border-color: rgba(206, 93, 48, 0.2);
+    box-shadow: 0 4px 15px rgba(206, 93, 48, 0.05);
 }
 
 .btn-prograde:hover {
-    background: rgba(0, 242, 254, 0.2);
+    background: rgba(206, 93, 48, 0.2);
     border-color: var(--cyan);
-    box-shadow: 0 6px 20px rgba(0, 242, 254, 0.2);
+    box-shadow: 0 6px 20px rgba(206, 93, 48, 0.2);
     transform: translateY(-2px);
 }
 
@@ -1158,7 +1157,7 @@ body.light-mode .ke-color {
 
 /* Mission Dropdown Selector Style */
 .mission-dropdown {
-    background: rgba(7, 9, 19, 0.8);
+    background: rgba(17, 12, 9, 0.8);
     color: var(--cyan);
     border: 1px solid var(--card-border);
     border-radius: 8px;
@@ -1178,7 +1177,7 @@ body.light-mode .ke-color {
 }
 
 .mission-dropdown option {
-    background: #0f1225;
+    background: #221712;
     color: var(--text-main);
     font-weight: 500;
     padding: 0.5rem;
@@ -1203,7 +1202,7 @@ body.light-mode .ke-color {
 }
 
 .btn-warp.active {
-    background: rgba(0, 242, 254, 0.12);
+    background: rgba(206, 93, 48, 0.12);
     color: var(--cyan);
     border-color: var(--cyan);
     box-shadow: 0 0 10px var(--cyan-glow);
@@ -1212,16 +1211,16 @@ body.light-mode .ke-color {
 
 /* Premium Light Mode Styles */
 body.light-mode {
-    --bg-dark: #f0f2f5;
+    --bg-dark: #f5f3f0;
     --card-bg: rgba(255, 255, 255, 0.82);
-    --card-border: rgba(15, 23, 42, 0.08);
-    --card-border-glow: rgba(2, 132, 199, 0.18);
+    --card-border: rgba(37, 26, 20, 0.08);
+    --card-border-glow: rgba(163, 73, 38, 0.18);
     
     /* Light Mode Palette (Higher Contrast) */
-    --cyan: #0284c7;
-    --cyan-glow: rgba(2, 132, 199, 0.15);
-    --blue: #1d4ed8;
-    --purple: #6d28d9;
+    --cyan: #a34926;
+    --cyan-glow: rgba(163, 73, 38, 0.15);
+    --blue: #c65a2f;
+    --purple: #cf5f32;
     --pink: #be185d;
     --green: #15803d;
     --green-glow: rgba(21, 128, 61, 0.15);
@@ -1231,9 +1230,9 @@ body.light-mode {
     --amber-glow: rgba(180, 83, 9, 0.15);
     
     /* Typography colors */
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --text-dark: #f8fafc;
+    --text-main: #251a14;
+    --text-muted: #695547;
+    --text-dark: #fcfaf8;
 }
 
 body.light-mode .stars-bg {
@@ -1242,11 +1241,11 @@ body.light-mode .stars-bg {
 }
 
 body.light-mode .canvas-container {
-    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+    background: radial-gradient(circle at center, #ffffff 0%, #f9f5f1 100%);
 }
 
 body.light-mode .app-header {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), inset 0 0 15px rgba(2, 132, 199, 0.02);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), inset 0 0 15px rgba(163, 73, 38, 0.02);
 }
 
 body.light-mode .left-sidebar-card, 
@@ -1280,9 +1279,9 @@ body.light-mode .binding-card {
 }
 
 body.light-mode .binding-card.escaped {
-    background: rgba(2, 132, 199, 0.03);
-    border-color: rgba(2, 132, 199, 0.12);
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.02);
+    background: rgba(163, 73, 38, 0.03);
+    border-color: rgba(163, 73, 38, 0.12);
+    box-shadow: 0 2px 8px rgba(163, 73, 38, 0.02);
 }
 
 body.light-mode .checklist {
@@ -1332,7 +1331,7 @@ body.light-mode .btn-warp {
 }
 
 body.light-mode .check-item {
-    color: #1e293b;
+    color: #3a281f;
     font-weight: 500;
 }
 
@@ -1361,7 +1360,7 @@ body.light-mode .mission-dropdown {
 
 body.light-mode .mission-dropdown option {
     background: #ffffff;
-    color: #0f172a;
+    color: #251a14;
 }
 
 /* Light Mode Overlays */
@@ -1410,14 +1409,14 @@ body.light-mode .right-sidebar-card {
 
 .zoom-btn:hover {
     border-color: var(--cyan);
-    background: rgba(2, 132, 199, 0.15);
+    background: rgba(163, 73, 38, 0.15);
     color: var(--cyan);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px var(--cyan-glow);
 }
 
 body.light-mode .zoom-btn:hover {
-    background: rgba(2, 132, 199, 0.08);
+    background: rgba(163, 73, 38, 0.08);
 }
 
 .zoom-btn:active {

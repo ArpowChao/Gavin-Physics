@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../assets/icon-192.png">
-<link rel="stylesheet" href="../assets/warm.css?v=20261124c">
+<link rel="stylesheet" href="../assets/warm.css?v=20261124e">
 <!-- /gp-head -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>水的三態實驗台 | Arpow Deep-Learning</title>
@@ -22,26 +22,26 @@
   /* ── tokens ─────────────────────────────────────────────── */
   :root{
     color-scheme:light;
-    --bg:#ECF0F2; --surface:#FFFFFF; --surface-2:#E3E9EC; --sunken:#F4F7F8;
-    --line:#C9D4D9; --line-soft:#DFE7EA;
-    --ink:#0D1A20; --ink-2:#44595F; --ink-3:#71868F;
+    --bg: #f2efec; --surface: #FFFFFF; --surface-2: #ece8e3; --sunken: #f8f6f4;
+    --line: #d9d0c9; --line-soft: #eae5df;
+    --ink: #1d1410; --ink-2: #5f4f44; --ink-3: #8f7e71;
     --ice:#16A99B;   --ice-ink:#0F7D72;
     --water:#2B62D9; --water-ink:#2453BC;
     --vapor:#E07A2F; --vapor-ink:#A8571A;
     /* 放大鏡視野固定用深色場：白色的氫原子在白底上會消失 */
     --field:#141F27; --field-line:#2E3E4A; --field-ink:#93A9B5;
     --field-ice:#3FD0BE; --field-water:#8AB0F7;
-    --o-fill:#E05548; --o-line:#7E211A; --h-fill:#EFF4F7; --h-line:#68818D;
-    --glass:#8FA5AF; --glass-soft:#CBD8DE;
-    --shadow:0 1px 2px rgba(13,26,32,.07), 0 8px 22px -14px rgba(13,26,32,.35);
-    --font-d:"Archivo","Noto Sans TC",system-ui,sans-serif;
-    --font-b:"Noto Sans TC",system-ui,"Segoe UI",sans-serif;
-    --font-m:"IBM Plex Mono","Noto Sans TC",ui-monospace,monospace;
+    --o-fill: #E05548; --o-line: #7E211A; --h-fill: #f7f3ef; --h-line: #8d7768;
+    --glass: #af9c8f; --glass-soft: #ded3cb;
+    --shadow: 0 1px 2px rgba(29, 20, 16, 0.07), 0 8px 22px -14px rgba(29, 20, 16, 0.35);
+    --font-d: "Archivo","Noto Sans TC",system-ui,sans-serif;
+    --font-b: "Noto Sans TC",system-ui,"Segoe UI",sans-serif;
+    --font-m: "IBM Plex Mono","Noto Sans TC",ui-monospace,monospace;
   }
 
   *{box-sizing:border-box}
   body{
-    margin:0; background:var(--bg); color:var(--ink);
+    margin:0; background: var(--bg); color: var(--ink);
     font-family:var(--font-b); font-size:15px; line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
@@ -52,170 +52,170 @@
   .back-link{
     display:inline-flex; align-items:center;
     font-family:var(--font-m); font-size:12.5px; font-weight:600;
-    color:var(--ink-2); text-decoration:none;
-    background:var(--surface); border:1px solid var(--line);
-    padding:5px 12px; border-radius:7px; box-shadow:0 1px 2px rgba(13,26,32,.04);
+    color: var(--ink-2); text-decoration:none;
+    background: var(--surface); border: 1px solid var(--line);
+    padding:5px 12px; border-radius:7px; box-shadow: 0 1px 2px rgba(29, 20, 16, 0.04);
     transition:all .2s ease;
   }
   .back-link:hover{
-    background:var(--surface-2); color:var(--water-ink);
-    border-color:var(--water); transform:translateX(-2px);
+    background: var(--surface-2); color: var(--water-ink);
+    border-color: var(--water); transform:translateX(-2px);
   }
   h1{
     font-family:var(--font-d); font-weight:700; font-size:clamp(25px,4.2vw,36px);
     letter-spacing:-.015em; line-height:1.1; margin:0; text-wrap:balance;
   }
-  .tagline{margin:0; color:var(--ink-2); font-size:14px; max-width:46ch}
+  .tagline{margin:0; color: var(--ink-2); font-size:14px; max-width:46ch}
   .spec{
-    font-family:var(--font-m); font-size:11px; color:var(--ink-3);
+    font-family:var(--font-m); font-size:11px; color: var(--ink-3);
     letter-spacing:.06em; margin-left:auto; white-space:nowrap;
   }
 
   /* ── readout rail ───────────────────────────────────────── */
   .rail{
     display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-    background:var(--line); border:1px solid var(--line);
+    background: var(--line); border: 1px solid var(--line);
     border-radius:10px; overflow:hidden; margin-bottom:16px;
   }
-  .cell{background:var(--surface); padding:11px 14px 12px; min-width:0}
+  .cell{background: var(--surface); padding:11px 14px 12px; min-width:0}
   .cell .k{
     font-family:var(--font-d); font-size:10.5px; font-weight:600; letter-spacing:.1em;
-    text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:2px;
+    text-transform:uppercase; color: var(--ink-3); display:block; margin-bottom:2px;
   }
   .cell .v{
     font-family:var(--font-m); font-size:clamp(17px,2.6vw,23px); font-weight:600;
     font-variant-numeric:tabular-nums; letter-spacing:-.01em; display:block;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .cell .v small{font-size:.62em; font-weight:400; color:var(--ink-3); margin-left:2px}
+  .cell .v small{font-size:.62em; font-weight:400; color: var(--ink-3); margin-left:2px}
   #r-state .v{font-family:var(--font-b); font-weight:700; font-size:clamp(15px,2.2vw,19px)}
 
   /* ── panels ─────────────────────────────────────────────── */
   .grid{display:grid; grid-template-columns:minmax(0,37fr) minmax(0,63fr); gap:16px; align-items:start}
   .col{display:flex; flex-direction:column; gap:16px; min-width:0}
   .panel{
-    background:var(--surface); border:1px solid var(--line);
-    border-radius:12px; box-shadow:var(--shadow); overflow:hidden;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius:12px; box-shadow: var(--shadow); overflow:hidden;
   }
   .phead{
     display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
-    padding:11px 15px 9px; border-bottom:1px solid var(--line-soft);
+    padding:11px 15px 9px; border-bottom: 1px solid var(--line-soft);
   }
   .phead h2{
     font-family:var(--font-d); font-weight:600; font-size:13px; letter-spacing:.07em;
-    text-transform:uppercase; margin:0; color:var(--ink);
+    text-transform:uppercase; margin:0; color: var(--ink);
   }
-  .phead .note{font-family:var(--font-m); font-size:11px; color:var(--ink-3); margin-left:auto}
+  .phead .note{font-family:var(--font-m); font-size:11px; color: var(--ink-3); margin-left:auto}
   .pbody{padding:13px 15px 15px}
   canvas{display:block; width:100%; border-radius:6px; touch-action:none}
-  .c-vessel{aspect-ratio:420/480; background:var(--sunken)}
-  .c-mol{aspect-ratio:640/330; background:var(--field)}
-  .c-curve{aspect-ratio:640/250; background:transparent; cursor:ew-resize}
+  .c-vessel{aspect-ratio:420/480; background: var(--sunken)}
+  .c-mol{aspect-ratio:640/330; background: var(--field)}
+  .c-curve{aspect-ratio:640/250; background: transparent; cursor:ew-resize}
 
   /* ── legend ─────────────────────────────────────────────── */
   .legend{display:flex; flex-wrap:wrap; gap:6px 16px; padding:0 0 10px}
-  .lg{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-2)}
+  .lg{display:flex; align-items:center; gap:6px; font-size:12.5px; color: var(--ink-2)}
   .sw{width:11px; height:11px; border-radius:3px; flex:none}
-  .sw.i{background:var(--ice)} .sw.w{background:var(--water)} .sw.v{background:var(--vapor)}
+  .sw.i{background: var(--ice)} .sw.w{background: var(--water)} .sw.v{background: var(--vapor)}
 
   /* ── molecule caption ───────────────────────────────────── */
   .mcap{
     margin:12px 0 0; padding:10px 13px; border-radius:8px;
-    background:var(--surface-2); border-left:3px solid var(--line);
-    font-size:13.5px; color:var(--ink-2); min-height:62px;
+    background: var(--surface-2); border-left: 3px solid var(--line);
+    font-size:13.5px; color: var(--ink-2); min-height:62px;
   }
-  .mcap b{color:var(--ink)}
-  .mcap.is-ice{border-left-color:var(--ice)}
-  .mcap.is-water{border-left-color:var(--water)}
-  .mcap.is-vapor{border-left-color:var(--vapor)}
+  .mcap b{color: var(--ink)}
+  .mcap.is-ice{border-left-color: var(--ice)}
+  .mcap.is-water{border-left-color: var(--water)}
+  .mcap.is-vapor{border-left-color: var(--vapor)}
 
   /* ── controls ───────────────────────────────────────────── */
   .ctl{display:flex; flex-direction:column; gap:13px}
   .slabel{display:flex; justify-content:space-between; align-items:baseline; gap:8px}
   .slabel .k{
     font-family:var(--font-d); font-size:10.5px; font-weight:600; letter-spacing:.1em;
-    text-transform:uppercase; color:var(--ink-3);
+    text-transform:uppercase; color: var(--ink-3);
   }
   .slabel .pw{font-family:var(--font-m); font-size:14px; font-weight:600; font-variant-numeric:tabular-nums}
   input[type=range]{
-    width:100%; margin:0; height:26px; background:transparent;
+    width:100%; margin:0; height:26px; background: transparent;
     -webkit-appearance:none; appearance:none;
   }
   input[type=range]::-webkit-slider-runnable-track{
     height:8px; border-radius:4px;
-    background:linear-gradient(90deg,var(--ice) 0%,var(--surface-2) 50%,var(--vapor) 100%);
-    border:1px solid var(--line);
+    background: linear-gradient(90deg,var(--ice) 0%,var(--surface-2) 50%,var(--vapor) 100%);
+    border: 1px solid var(--line);
   }
   input[type=range]::-moz-range-track{
     height:8px; border-radius:4px;
-    background:linear-gradient(90deg,var(--ice) 0%,var(--surface-2) 50%,var(--vapor) 100%);
-    border:1px solid var(--line);
+    background: linear-gradient(90deg,var(--ice) 0%,var(--surface-2) 50%,var(--vapor) 100%);
+    border: 1px solid var(--line);
   }
   input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none; appearance:none; width:20px; height:20px; border-radius:50%;
-    background:var(--surface); border:2.5px solid var(--ink); margin-top:-7px; cursor:grab;
+    background: var(--surface); border: 2.5px solid var(--ink); margin-top:-7px; cursor:grab;
   }
   input[type=range]::-moz-range-thumb{
-    width:20px; height:20px; border-radius:50%; border:2.5px solid var(--ink);
-    background:var(--surface); cursor:grab;
+    width:20px; height:20px; border-radius:50%; border: 2.5px solid var(--ink);
+    background: var(--surface); cursor:grab;
   }
-  input[type=range]:focus-visible{outline:none}
-  input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--water)}
-  input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 3px var(--water)}
-  .ends{display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-3); margin-top:-6px}
+  input[type=range]:focus-visible{outline: none}
+  input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow: 0 0 0 3px var(--water)}
+  input[type=range]:focus-visible::-moz-range-thumb{box-shadow: 0 0 0 3px var(--water)}
+  .ends{display:flex; justify-content:space-between; font-size:11.5px; color: var(--ink-3); margin-top:-6px}
   .row{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
   .row .k{
     font-family:var(--font-d); font-size:10.5px; font-weight:600; letter-spacing:.1em;
-    text-transform:uppercase; color:var(--ink-3); width:100%;
+    text-transform:uppercase; color: var(--ink-3); width:100%;
   }
   button{
-    font-family:var(--font-b); font-size:13px; font-weight:500; color:var(--ink);
-    background:var(--surface); border:1px solid var(--line); border-radius:7px;
+    font-family:var(--font-b); font-size:13px; font-weight:500; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--line); border-radius:7px;
     padding:6px 11px; cursor:pointer; line-height:1.3;
   }
-  button:hover{background:var(--surface-2)}
-  button:focus-visible{outline:2px solid var(--water); outline-offset:2px}
-  button[aria-pressed=true]{background:var(--ink); color:var(--surface); border-color:var(--ink)}
+  button:hover{background: var(--surface-2)}
+  button:focus-visible{outline: 2px solid var(--water); outline-offset:2px}
+  button[aria-pressed=true]{background: var(--ink); color: var(--surface); border-color: var(--ink)}
   button.go{font-weight:700}
 
   /* ── transition progress ────────────────────────────────── */
   .trans{
     display:none; gap:9px; align-items:center; margin-top:12px; padding:9px 12px;
-    border-radius:8px; background:var(--surface-2); border:1px solid var(--line-soft);
+    border-radius:8px; background: var(--surface-2); border: 1px solid var(--line-soft);
   }
   .trans.on{display:flex}
   .trans .tag{
     font-family:var(--font-d); font-size:10.5px; font-weight:700; letter-spacing:.08em;
     text-transform:uppercase; white-space:nowrap;
   }
-  .bar{flex:1; height:7px; border-radius:4px; background:var(--line); overflow:hidden; min-width:50px}
+  .bar{flex:1; height:7px; border-radius:4px; background: var(--line); overflow:hidden; min-width:50px}
   .bar i{display:block; height:100%; width:0; border-radius:4px; transition:width .12s linear}
-  .trans .pc{font-family:var(--font-m); font-size:12.5px; font-variant-numeric:tabular-nums; color:var(--ink-2)}
+  .trans .pc{font-family:var(--font-m); font-size:12.5px; font-variant-numeric:tabular-nums; color: var(--ink-2)}
 
   /* ── volume + facts ─────────────────────────────────────── */
   .foot{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; margin-top:16px}
   .vol{display:flex; flex-direction:column; gap:9px}
   .vrow{display:grid; grid-template-columns:64px minmax(0,1fr) 74px; align-items:center; gap:10px}
-  .vrow .n{font-size:13px; color:var(--ink-2)}
-  .vrow .t{height:16px; border-radius:4px; background:var(--sunken); border:1px solid var(--line-soft); overflow:hidden}
+  .vrow .n{font-size:13px; color: var(--ink-2)}
+  .vrow .t{height:16px; border-radius:4px; background: var(--sunken); border: 1px solid var(--line-soft); overflow:hidden}
   .vrow .t i{display:block; height:100%; border-radius:3px 0 0 3px}
-  .vrow .q{font-family:var(--font-m); font-size:12.5px; font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2)}
-  .vscale{display:flex; justify-content:space-between; font-family:var(--font-m); font-size:10.5px; color:var(--ink-3); margin:2px 84px 0 74px}
+  .vrow .q{font-family:var(--font-m); font-size:12.5px; font-variant-numeric:tabular-nums; text-align:right; color: var(--ink-2)}
+  .vscale{display:flex; justify-content:space-between; font-family:var(--font-m); font-size:10.5px; color: var(--ink-3); margin:2px 84px 0 74px}
   .callout{
     margin-top:11px; padding:10px 13px; border-radius:8px;
-    background:var(--surface-2); border-left:3px solid var(--vapor); font-size:13px; color:var(--ink-2);
+    background: var(--surface-2); border-left: 3px solid var(--vapor); font-size:13px; color: var(--ink-2);
   }
-  .callout b{font-family:var(--font-m); font-weight:600; color:var(--vapor-ink); font-size:14px}
-  .facts{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line-soft)}
-  .fact{background:var(--surface); padding:10px 14px 11px}
-  .fact .k{font-size:12px; color:var(--ink-3); display:block}
+  .callout b{font-family:var(--font-m); font-weight:600; color: var(--vapor-ink); font-size:14px}
+  .facts{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background: var(--line-soft)}
+  .fact{background: var(--surface); padding:10px 14px 11px}
+  .fact .k{font-size:12px; color: var(--ink-3); display:block}
   .fact .v{font-family:var(--font-m); font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; display:block}
-  .why{padding:12px 15px 14px; font-size:13px; color:var(--ink-2); border-top:1px solid var(--line-soft)}
-  .why b{color:var(--ink)}
+  .why{padding:12px 15px 14px; font-size:13px; color: var(--ink-2); border-top: 1px solid var(--line-soft)}
+  .why b{color: var(--ink)}
 
   footer{
-    margin-top:26px; padding-top:14px; border-top:1px solid var(--line);
-    font-size:12px; color:var(--ink-3); display:flex; flex-wrap:wrap; gap:6px 18px;
+    margin-top:26px; padding-top:14px; border-top: 1px solid var(--line);
+    font-size:12px; color: var(--ink-3); display:flex; flex-wrap:wrap; gap:6px 18px;
   }
   footer code{font-family:var(--font-m); font-size:11.5px}
 
@@ -233,7 +233,7 @@
 /* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */
 html:root{--bg:#f8f1e7;--surface:#fffaf3;--surface-2:#f2e7d8;--sunken:#fbf3e8;--line:#e7d6c3;--line-soft:#efe2d3;--ink:#3b2c24;--ink-2:#5a4638;--ink-3:#7d6a5c} h1,h2{font-family:'Noto Serif TC',serif}
 </style>
-<script src="../assets/site.js?v=20261124c" defer></script>
+<script src="../assets/site.js?v=20261124e" defer></script>
 </head>
 <body>
 <div class="wrap">
