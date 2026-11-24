@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上練習｜Gavin Physics</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="config.js"></script>
+<script src="api.js"></script>
+<script src="../assets/site.js" defer></script>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2330;--muted:#667085;--line:#e3e6ec;--accent:#2f6fde;--accent-ink:#fff;--ok:#1f8a4c;--ok-bg:#e6f4ec;--bad:#c2410c;--bad-bg:#fdeee6;--chip:#eef2fb}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e7e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#6c9cf0;--accent-ink:#0b1220;--ok:#5cc489;--ok-bg:#163223;--bad:#f0915c;--bad-bg:#3a2116;--chip:#232b38}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0 16px}
+header h1{font-size:19px;margin:0}
+.who{font-size:14px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 10px}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=password]{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:16px}
+button{font:inherit;border:0;border-radius:8px;padding:10px 16px;cursor:pointer}
+.primary{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:14px}
+.chip.on{background:var(--chip);border-color:var(--accent);color:var(--accent);font-weight:600}
+.note{font-size:13px;color:var(--muted)}
+.err{color:var(--bad);font-size:14px;min-height:1.2em}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1}
+.ctx{background:var(--chip);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:15px}
+.ctx .theme{font-weight:700;margin-bottom:4px}
+.q{margin:14px 0}
+.qno{font-weight:700;margin-right:4px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--chip);color:var(--accent);margin-left:6px;vertical-align:middle}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;cursor:pointer;background:var(--card)}
+.opt input{margin-top:5px}
+.opt.sel{border-color:var(--accent);background:var(--chip)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.fig{text-align:center;margin:10px 0}.fig img{max-width:100%;height:auto;background:#fff;border-radius:6px}
+table.data{border-collapse:collapse;margin:8px auto;font-size:14px;max-width:100%;display:block;overflow-x:auto}
+table.data td{border:1px solid var(--line);padding:4px 8px;text-align:center;white-space:nowrap}
+table.data tr td:first-child{background:var(--chip)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:12px}.progress div{height:100%;background:var(--accent)}
+.score{font-size:34px;font-weight:700}
+.bar{display:grid;grid-template-columns:minmax(110px,40%) 1fr 104px;gap:8px;align-items:center;font-size:14px;margin:6px 0}
+.bar .track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar .track div{height:100%;background:var(--accent)}
+.bar .v{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar.todo{opacity:.6}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.hidden{display:none!important}
+.res{border-left:4px solid var(--line);padding-left:10px;margin:14px 0}
+.res.ok{border-color:var(--ok)}.res.no{border-color:var(--bad)}
+.opt .why{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.55}
+.opt.wrong .why{color:var(--bad);font-weight:600}
+.opt.pickwrong{border-color:var(--bad);background:var(--bad-bg)}
+.exp{background:var(--chip);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;margin:8px 0;font-size:15px;line-height:1.6}
+.exp b{color:var(--accent)}
+.rank{margin:10px 0}
+.rk-big{font-size:17px;margin-bottom:4px}
+.rk-big b{font-size:26px;color:var(--accent)}
+.bell{width:100%;max-width:420px;display:block;margin:4px 0}
+.fb{margin:6px 0 2px;font-size:13px}
+.fb>a{color:var(--muted);cursor:pointer;text-decoration:underline}
+.fbform{margin-top:6px;padding:10px;border:1px dashed var(--line);border-radius:8px;background:var(--card)}
+.fbform select,.fbform textarea{font:inherit;width:100%;box-sizing:border-box;margin:4px 0;padding:6px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink)}
+.fbform textarea{min-height:60px}
+.spin{text-align:center;color:var(--muted);padding:30px}
+.timer{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.timer .clock{font-size:22px;font-weight:700;min-width:96px}
+.timer .tbar{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}.timer .tbar div{height:100%;background:var(--ok);transition:width .25s linear}
+.timer.warn .clock{color:#d97706}.timer.warn .tbar div{background:#d97706}
+.timer.danger .clock,.timer.over .clock{color:var(--bad)}.timer.danger .tbar div{background:var(--bad)}
+.timer.danger .clock{animation:pulse 1s infinite}
+.timer.over .tbar div{width:0!important}
+@keyframes pulse{50%{opacity:.3}}
+.otag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--bad-bg);color:var(--bad);margin-left:6px}
+.tswitch{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:15px;margin:12px 0 0}
+.pg-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.pg-num{font-size:15px}.pg-num b{font-size:26px;color:var(--accent);font-variant-numeric:tabular-nums}
+.pg-bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 10px}.pg-bar div{height:100%;background:var(--accent)}
+.chip .cnt{font-size:12px;color:var(--muted);margin-left:4px;font-variant-numeric:tabular-nums}
+.chip.on .cnt{color:var(--accent)}
+.badge{display:inline-block;min-width:20px;padding:0 6px;border-radius:99px;background:var(--bad);color:#fff;font-size:12px;line-height:20px;text-align:center;margin-left:6px}
+.wb-head .chips{margin:8px 0}
+.wb-meta{font-size:13px;color:var(--muted);margin-top:6px}
+.fixtag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--ok-bg);color:var(--ok);margin-left:6px}
+.wb-con{font-size:12.5px;color:var(--muted);margin-bottom:2px}
+details.log summary{cursor:pointer;font-weight:700;font-size:16px}
+details.log .newdot{display:inline-block;font-size:11px;padding:0 7px;border-radius:99px;background:var(--bad);color:#fff;margin-left:6px;vertical-align:middle;font-weight:600}
+.log-d{font-weight:700;margin:12px 0 2px;font-variant-numeric:tabular-nums}
+.log ul{margin:0;padding-left:20px;font-size:14.5px}.log li{margin:2px 0}
+.radars{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;align-items:start}
+.radar{width:100%;max-width:390px;display:block;margin:0 auto}
+.radar h3{font-size:15px;margin:0}
+.rd-cap{text-align:center;font-weight:700;font-size:15px;margin:4px 0 0}
+.glegend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:13px;color:var(--muted);margin:8px 0}
+.glegend b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>線上練習</h1><div class="who" id="who"></div></header>
+
+  <!-- 登入／註冊 -->
+  <section id="vAuth" class="card hidden">
+    <div class="tabs"><button class="primary" id="tLogin">登入</button><button class="ghost" id="tReg">註冊新帳號</button></div>
+    <label>暱稱</label><input type="text" id="nick" maxlength="16" autocomplete="username">
+    <label>密碼</label><input type="password" id="pw" autocomplete="current-password">
+    <p class="note">原本「物理易混淆概念練習」的帳號可以直接登入。請勿使用真實姓名或學號作為暱稱。系統只記錄暱稱與作答，不收集任何個人資料；密碼以雜湊方式儲存。</p>
+    <div class="err" id="authErr"></div>
+    <button class="primary" id="authBtn" style="width:100%">登入</button>
+  </section>
+
+  <!-- 選題 -->
+  <section id="vSetup" class="hidden">
+    <div class="card" id="pgCard">
+      <div class="pg-top"><div class="pg-num">已作答 <b id="pgDone">–</b> ／ <span id="pgTotal">–</span> 題</div>
+        <button class="ghost" id="wrongBtn">📕 錯題本<span class="badge hidden" id="wrongBadge"></span></button></div>
+      <div class="pg-bar"><div id="pgFill" style="width:0"></div></div>
+      <p class="note" id="pgNote">每題第一次作答就算「已作答」；答錯的題目會自動收進錯題本。</p>
+    </div>
+    <div class="card">
+      <h2>1. 選擇題庫</h2>
+      <div class="chips" id="bankChips"></div>
+      <p class="note" id="bankNote"></p>
+    </div>
+    <div class="card">
+      <h2>2. 選擇題型（可複選，不選表示全部）</h2>
+      <div class="chips" id="paperChips"></div>
+      <p class="note" id="paperNote">理解／應用／分析：依認知層次分類的單題；題組：一段情境配 3 題。</p>
+    </div>
+    <div class="card">
+      <h2>3. 選擇概念（可複選，不選表示全部）</h2>
+      <div class="chips" id="conceptChips"></div>
+    </div>
+    <div class="card">
+      <h2>4. 題數</h2>
+      <div class="chips" id="nChips"></div>
+      <label class="tswitch"><input type="checkbox" id="timerOn" checked> ⏱ 計時挑戰：每題 2 分鐘（題組 3 題共 6 分鐘）</label>
+      <p class="note">系統會優先抽你還沒做過的題目，必修題庫另外加入 2 題「共同題」，讓大家的成績能放在同一把尺上比較。</p>
+      <div class="err" id="setupErr"></div>
+      <div class="row"><button class="primary" id="startBtn">開始練習</button><button class="ghost" id="reportBtn">我的學習報告</button><button class="ghost" id="logoutBtn">登出</button></div>
+    </div>
+    <div class="card"><details class="log" id="logBox"><summary>更新日誌<span class="newdot hidden" id="logNew">新</span></summary><div id="logBody"></div></details></div>
+  </section>
+
+  <!-- 錯題本 -->
+  <section id="vWrong" class="hidden"></section>
+
+  <!-- 作答 -->
+  <section id="vQuiz" class="card hidden">
+    <div class="progress"><div id="prog"></div></div>
+    <div class="timer hidden" id="timer"><span class="clock" id="clock"></span><div class="tbar"><div id="tfill"></div></div><span class="note" id="tlabel"></span></div>
+    <div id="page"></div>
+    <div class="nav"><button class="ghost" id="prevBtn">上一頁</button><span class="note" id="pageNo"></span><button class="primary" id="nextBtn">下一頁</button></div>
+  </section>
+
+  <!-- 結果 -->
+  <section id="vResult" class="hidden"></section>
+
+  <!-- 報告 -->
+  <section id="vReport" class="hidden"></section>
+
+  <div id="vLoading" class="spin hidden">處理中…</div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }, del(k){ try{ localStorage.removeItem(k); }catch(e){} } };
+let TOKEN = (PhyAPI.user() || {}).token || null, NICK = (PhyAPI.user() || {}).nick || null, META = null;
+let BANK = store.get('gp_bank') || 'confuse';
+let mode = 'login', selPapers = new Set(), selConcepts = new Set(), selN = 10;
+let S = null; // 目前練習
+const PER_Q = 120; let TIMER = null; // 每題限時（秒）
+const mmss = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+function show(v){ ['vAuth','vSetup','vQuiz','vResult','vReport','vWrong','vLoading'].forEach(x => $(x).classList.toggle('hidden', x !== v)); window.scrollTo(0,0); }
+async function call(fn, ...args){
+  try { return await PhyAPI.call(fn, ...args); }
+  catch (e) { if (String(e.message || e).indexOf('逾時') >= 0) { logout(); } throw e; }
+}
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function math(el){ try{ renderMathInElement(el, { delimiters:[{left:'$',right:'$',display:false}], throwOnError:false, strict:'ignore' }); }catch(e){} }
+const FB_KINDS = ['答案可能有誤', '題目敘述不清楚', '選項有問題', '圖或表格看不清楚', '詳解有誤或看不懂', '其他'];
+function fbBox(it){
+  const d = document.createElement('div'); d.className = 'fb';
+  d.innerHTML = '<a>⚑ 回報這題有問題</a>';
+  d.querySelector('a').onclick = () => {
+    if (d.querySelector('.fbform')) return;
+    const f = document.createElement('div'); f.className = 'fbform';
+    f.innerHTML = '<select><option value="">請選擇問題類型</option>' + FB_KINDS.map(k => '<option>' + k + '</option>').join('') + '</select>' +
+      '<textarea maxlength="500" placeholder="說明哪裡有問題（選填，請勿填寫個人資料）"></textarea>' +
+      '<div class="row"><button class="primary">送出回報</button><button class="ghost">取消</button><span class="note"></span></div>';
+    const [send, cancel] = f.querySelectorAll('button'); const msg = f.querySelector('.note');
+    cancel.onclick = () => f.remove();
+    send.onclick = async () => {
+      const kind = f.querySelector('select').value; if (!kind) { msg.textContent = '請先選擇問題類型'; return; }
+      send.disabled = true; msg.textContent = '送出中…';
+      try { await call('reportIssue', TOKEN, it.id, kind, f.querySelector('textarea').value); d.innerHTML = '<span class="note">✔ 已送出，謝謝你的回報！老師會檢查這一題。</span>'; }
+      catch (e) { send.disabled = false; msg.textContent = e.message || String(e); }
+    };
+    d.appendChild(f);
+  };
+  return d;
+}
+function tableHTML(t){ if(!t) return ''; return '<table class="data">' + t.map(r => '<tr>' + r.map(c => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</table>'; }
+const figCache = {};
+async function loadFig(el, name){
+  if (!name) return;
+  if (!figCache[name]) figCache[name] = call('getFigure', name).catch(() => null);
+  const uri = await figCache[name];
+  if (uri) el.innerHTML = '<img alt="附圖" src="' + uri + '">'; else el.innerHTML = '<span class="note">（附圖尚未匯入）</span>';
+}
+
+// ---------- 登入 ----------
+function setMode(m){ mode = m; $('tLogin').className = m === 'login' ? 'primary' : 'ghost'; $('tReg').className = m === 'reg' ? 'primary' : 'ghost'; $('authBtn').textContent = m === 'login' ? '登入' : '註冊並登入'; $('authErr').textContent = ''; }
+$('tLogin').onclick = () => setMode('login'); $('tReg').onclick = () => setMode('reg');
+$('authBtn').onclick = async () => {
+  $('authErr').textContent = '';
+  try {
+    const r = await call(mode === 'login' ? 'login' : 'register', $('nick').value, $('pw').value);
+    TOKEN = r.token; NICK = r.nickname; PhyAPI.setUser(TOKEN, NICK); $('pw').value = '';
+    const back = new URLSearchParams(location.search).get('back');
+    if (back && /^\/[^/]/.test(back)) { location.href = back; return; }
+    enterSetup();
+  } catch (e) { $('authErr').textContent = e.message || e; }
+};
+function logout(){ TOKEN = null; NICK = null; PhyAPI.logout(); $('who').textContent = ''; show('vAuth'); }
+$('logoutBtn').onclick = logout;
+
+// ---------- 選題 ----------
+async function enterSetup(){
+  $('who').textContent = NICK ? '👤 ' + NICK : '';
+  if (!META) { show('vLoading'); META = await call('getMeta'); buildLog(); }
+  buildChips();
+  show('vSetup');
+  loadProgress();
+}
+async function loadProgress(){
+  try {
+    const p = await call('getProgress', TOKEN, BANK);
+    $('pgDone').textContent = p.answered; $('pgTotal').textContent = p.total;
+    $('pgFill').style.width = (100 * p.answered / Math.max(1, p.total)) + '%';
+    const b = $('wrongBadge'); b.textContent = p.wrong; b.classList.toggle('hidden', !p.wrong);
+    $('pgNote').textContent = p.answered ? ('還有 ' + (p.total - p.answered) + ' 題沒做過；錯題本有 ' + p.wrong + ' 題待訂正' + (p.fixed ? '、' + p.fixed + ' 題已訂正' : '') + '。') : '每題第一次作答就算「已作答」；答錯的題目會自動收進錯題本。';
+    document.querySelectorAll('#conceptChips .chip').forEach(c => { const o = p.byConcept[Number(c.dataset.i)]; if (o) c.querySelector('.cnt').textContent = o.done + '/' + o.total; });
+  } catch (e) {}
+}
+function buildLog(){
+  const L = META.changelog || []; if (!L.length) { $('logBox').parentNode.classList.add('hidden'); return; }
+  $('logBody').innerHTML = L.map(x => '<div class="log-d">' + esc(x.d) + '</div><ul>' + x.t.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>').join('');
+  if (store.get('gp_log') !== L[0].d) $('logNew').classList.remove('hidden');
+  $('logBox').addEventListener('toggle', () => { if ($('logBox').open) { store.set('gp_log', L[0].d); $('logNew').classList.add('hidden'); } });
+}
+function chip(label, on, click){ const b = document.createElement('button'); b.className = 'chip' + (on ? ' on' : ''); b.textContent = label; b.onclick = () => { click(); b.classList.toggle('on'); }; return b; }
+const BANK_NOTE = { confuse: '高一必修：14 個易混淆主題，分理解／應用／分析卷與題組。', gsat: '108 課綱必修 28 個知識節點的分級題庫（記憶／理解／應用／分析）。', wave: '選修物理 III：波動、聲波、幾何光學與物理光學。' };
+function buildChips(){
+  const bc = $('bankChips'); bc.innerHTML = '';
+  if (!META.banks.some(b => b.key === BANK)) BANK = META.banks[0].key;
+  META.banks.forEach(b => { const n = META.papers.filter(p => p.bank === b.key).reduce((s, p) => s + Object.keys(META.counts).filter(k => k.split('|')[0] === p.key).reduce((a, k) => a + META.counts[k], 0), 0);
+    const x = document.createElement('button'); x.className = 'chip' + (b.key === BANK ? ' on' : ''); x.innerHTML = esc(b.name) + '<span class="cnt">' + n + ' 題</span>';
+    x.onclick = () => { if (BANK === b.key) return; BANK = b.key; store.set('gp_bank', BANK); selPapers.clear(); selConcepts.clear(); buildChips(); loadProgress(); }; bc.appendChild(x); });
+  $('bankNote').textContent = BANK_NOTE[BANK] || '';
+  $('paperNote').textContent = BANK === 'confuse' ? '理解／應用／分析：依認知層次分類的單題；題組：一段情境配 3 題。' : '依認知層次（Bloom）分級；不選表示全部層次。';
+  const pc = $('paperChips'); pc.innerHTML = '';
+  META.papers.filter(p => p.bank === BANK).forEach(p => pc.appendChild(chip(p.name, selPapers.has(p.key), () => selPapers.has(p.key) ? selPapers.delete(p.key) : selPapers.add(p.key))));
+  const cc = $('conceptChips'); cc.innerHTML = '';
+  META.concepts.forEach((c, i) => { if (META.conceptBank[i] !== BANK) return; const b = chip(c, selConcepts.has(i), () => selConcepts.has(i) ? selConcepts.delete(i) : selConcepts.add(i)); b.dataset.i = i; const n = document.createElement('span'); n.className = 'cnt'; b.appendChild(n); cc.appendChild(b); });
+  const nc = $('nChips'); nc.innerHTML = '';
+  [10, 15, 20].forEach(n => { const b = document.createElement('button'); b.className = 'chip' + (n === selN ? ' on' : ''); b.textContent = n + ' 題';
+    b.onclick = () => { selN = n; [...nc.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); }; nc.appendChild(b); });
+}
+$('startBtn').onclick = async () => {
+  $('setupErr').textContent = '';
+  show('vLoading');
+  try {
+    const r = await call('startSession', TOKEN, { bank: BANK, papers: [...selPapers], concepts: [...selConcepts], n: selN });
+    if (!r.items.length) { show('vSetup'); $('setupErr').textContent = '這個組合沒有題目，請換個選擇。'; return; }
+    startQuiz(r);
+  } catch (e) { show('vSetup'); $('setupErr').textContent = e.message || e; }
+};
+$('reportBtn').onclick = () => openReport();
+$('wrongBtn').onclick = () => openWrong();
+
+// ---------- 作答 ----------
+function startQuiz(r){
+  const groups = {}; r.groups.forEach(g => groups[g.gid] = g);
+  const pages = []; const seen = {};
+  r.items.forEach(it => {
+    if (it.gid) { if (seen[it.gid] == null) { seen[it.gid] = pages.length; pages.push({ group: groups[it.gid], items: [] }); } pages[seen[it.gid]].items.push(it); }
+    else pages.push({ group: null, items: [it] });
+  });
+  let no = 0; pages.forEach(p => p.items.forEach(it => it.no = ++no));
+  S = { id: r.sessionId, mode: r.mode || 'normal', pages, idx: 0, ans: {}, sec: {}, t0: Date.now(), total: no, pageSec: pages.map(() => 0), timed: $('timerOn').checked };
+  show('vQuiz'); renderPage();
+  $('timer').classList.toggle('hidden', !S.timed);
+  clearInterval(TIMER); if (S.timed) { TIMER = setInterval(drawTimer, 250); drawTimer(); }
+}
+function drawTimer(){
+  if (!S || !S.timed) return;
+  const p = S.pages[S.idx], lim = PER_Q * p.items.length;
+  const left = lim - (S.pageSec[S.idx] + (Date.now() - S.t0) / 1000);
+  const t = $('timer'); t.classList.toggle('warn', left <= 30 && left > 10); t.classList.toggle('danger', left <= 10 && left > 0); t.classList.toggle('over', left <= 0);
+  $('tfill').style.width = Math.max(0, 100 * left / lim) + '%';
+  $('clock').textContent = left > 0 ? mmss(left) : '超時 +' + mmss(-left);
+  $('tlabel').textContent = left > 0 ? (p.items.length > 1 ? '本頁 ' + p.items.length + ' 題，限時 ' + mmss(lim) : '本題限時 ' + mmss(lim)) : '時間到！盡快作答';
+}
+function tick(){ if (!S) return; const p = S.pages[S.idx]; const el = (Date.now() - S.t0) / 1000, dt = el / p.items.length; p.items.forEach(it => S.sec[it.id] = (S.sec[it.id] || 0) + dt); S.pageSec[S.idx] += el; S.t0 = Date.now(); }
+function updateProg(){
+  const n = Object.values(S.ans).filter(a => a).length;
+  $('prog').style.width = (100 * n / S.total) + '%';
+  $('pageNo').textContent = '第 ' + (S.idx + 1) + ' / ' + S.pages.length + ' 頁・已答 ' + n + ' / ' + S.total + ' 題';
+}
+function renderPage(){
+  const p = S.pages[S.idx]; const box = $('page'); box.innerHTML = '';
+  if (p.group) {
+    const c = document.createElement('div'); c.className = 'ctx';
+    c.innerHTML = (p.group.theme ? '<div class="theme">' + esc(p.group.theme) + '</div>' : '') + esc(p.group.stem).replace(/\n/g, '<br>') + tableHTML(p.group.table) + (p.group.fig ? '<div class="fig" id="gf"></div>' : '');
+    box.appendChild(c); if (p.group.fig) loadFig(c.querySelector('#gf'), p.group.fig);
+  }
+  p.items.forEach(it => {
+    const q = document.createElement('div'); q.className = 'q';
+    q.innerHTML = '<div><span class="qno">' + it.no + '.</span>' + esc(it.stem) + (it.type === 'M' ? '<span class="tag">多選</span>' : '') + (it.anchor ? '<span class="tag">加測題</span>' : '') + '</div>' + (it.anchor ? '<div class="note">必修練習都會隨機加入 2 題共同題（不限你選的題庫與卷別），讓不同同學的能力估計能放在同一把尺上比較。</div>' : '') + tableHTML(it.table) + (it.fig ? '<div class="fig"></div>' : '');
+    if (it.fig) loadFig(q.querySelector('.fig'), it.fig);
+    it.opts.forEach((o, k) => {
+      const L = 'ABCDE'[k]; const cur = S.ans[it.id] || '';
+      const lab = document.createElement('label'); lab.className = 'opt' + (cur.indexOf(L) >= 0 ? ' sel' : '');
+      lab.innerHTML = '<input type="' + (it.type === 'M' ? 'checkbox' : 'radio') + '" name="q' + it.id + '"' + (cur.indexOf(L) >= 0 ? ' checked' : '') + '><div><b>(' + L + ')</b> ' + esc(o) + '</div>';
+      lab.querySelector('input').onchange = e => {
+        let a = S.ans[it.id] || '';
+        if (it.type === 'M') a = e.target.checked ? (a + L).split('').sort().join('') : a.replace(L, ''); else a = L;
+        S.ans[it.id] = a;
+        updateProg();
+        q.querySelectorAll('.opt').forEach((x, j) => x.classList.toggle('sel', a.indexOf('ABCDE'[j]) >= 0));
+      };
+      q.appendChild(lab);
+    });
+    q.appendChild(fbBox(it));
+    box.appendChild(q);
+  });
+  math(box);
+  updateProg();
+  $('prevBtn').disabled = S.idx === 0;
+  $('nextBtn').textContent = S.idx === S.pages.length - 1 ? '交卷' : '下一頁';
+  drawTimer();
+}
+$('prevBtn').onclick = () => { tick(); if (S.idx > 0) { S.idx--; renderPage(); window.scrollTo(0,0); } };
+$('nextBtn').onclick = async () => {
+  tick();
+  if (S.idx < S.pages.length - 1) { S.idx++; renderPage(); window.scrollTo(0,0); return; }
+  const blank = S.pages.flatMap(p => p.items).filter(it => !S.ans[it.id]).length;
+  if (blank && !window.confirm('還有 ' + blank + ' 題未作答，確定交卷？')) return;
+  clearInterval(TIMER);
+  show('vLoading');
+  try { const r = await call('submitSession', TOKEN, S.id, S.ans, S.sec); renderResult(r); }
+  catch (e) { show('vQuiz'); if (S.timed) TIMER = setInterval(drawTimer, 250); alert(e.message || e); }
+};
+
+// ---------- 結果 ----------
+function renderResult(r){
+  const map = {}; r.results.forEach(x => map[x.id] = x);
+  const over = {}; let inTime = 0; S.pages.forEach((p, k) => p.items.forEach(it => { over[it.id] = S.pageSec[k] > PER_Q * p.items.length; if (!over[it.id]) inTime++; }));
+  const v = $('vResult'); v.innerHTML = '';
+  const head = document.createElement('div'); head.className = 'card';
+  head.innerHTML = '<h2>本次成績</h2><div class="score">' + r.score + ' / ' + r.total + '</div>' + (S.timed ? '<p>⏱ 限時內完成 <b>' + inTime + ' / ' + S.total + '</b> 題（每題 2 分鐘）</p>' : '') + '<p class="note">多選題：全對 1 分；錯 1 個選項 0.6 分、錯 2 個 0.2 分。</p><div class="row"><button class="primary" id="againBtn">' + (S.mode === 'wrong' ? '回到錯題本' : '再練一回') + '</button><button class="ghost" id="toWrong">📕 錯題本</button><button class="ghost" id="toReport">我的學習報告</button></div>' + (S.mode === 'wrong' ? '<p class="note">這回答對的題目已標為「已訂正」；重練不影響能力估計（只採第一次作答）。</p>' : '');
+  v.appendChild(head);
+  const body = document.createElement('div'); body.className = 'card'; body.innerHTML = '<h2>逐題檢討</h2>';
+  S.pages.forEach(p => {
+    if (p.group) { const c = document.createElement('div'); c.className = 'ctx'; c.innerHTML = (p.group.theme ? '<div class="theme">' + esc(p.group.theme) + '</div>' : '') + esc(p.group.stem) + tableHTML(p.group.table); body.appendChild(c); }
+    p.items.forEach(it => {
+      const x = map[it.id]; const d = document.createElement('div'); d.className = 'res ' + (x.correct ? 'ok' : 'no');
+      d.innerHTML = '<div><span class="qno">' + it.no + '.</span>' + esc(it.stem) + (it.type === 'M' ? '<span class="tag">多選</span>' : '') + (it.anchor ? '<span class="tag">加測題</span>' : '') + '</div>' + (it.anchor ? '<div class="note">必修練習都會隨機加入 2 題共同題（不限你選的題庫與卷別），讓不同同學的能力估計能放在同一把尺上比較。</div>' : '') + tableHTML(it.table) + (it.fig ? '<div class="fig"></div>' : '');
+      if (it.fig) loadFig(d.querySelector('.fig'), it.fig);
+      const why = (x.exp && x.exp.why) || {};
+      it.opts.forEach((o, k) => { const L = 'ABCDE'[k]; const isAns = x.answer.indexOf(L) >= 0, picked = x.response.indexOf(L) >= 0;
+        const e = document.createElement('div'); e.className = 'opt' + (isAns ? ' right' : picked ? ' wrong' : '') + (isAns && it.type === 'M' && !picked && x.response ? ' miss' : '');
+        const r = String(why[L] || '').replace(/^[✔✘]\s*/, '');
+        const tip = isAns ? (it.type === 'M' && !picked && x.response ? '　✔（你漏選了）' : '　✔') : picked ? '　✘（你選了這個）' : '';
+        e.innerHTML = '<div><div><b>(' + L + ')</b> ' + esc(o) + tip + '</div>' + (r ? '<div class="why">' + (isAns ? '正確：' : '錯誤：') + esc(r) + '</div>' : '') + '</div>'; d.appendChild(e); });
+      if (x.exp && x.exp.text) { const ex = document.createElement('div'); ex.className = 'exp'; ex.innerHTML = '<b>解析</b>　' + esc(x.exp.text); d.appendChild(ex); }
+      const s = document.createElement('p'); s.className = 'note';
+      s.textContent = '你的答案：' + (x.response || '未作答') + '　正確答案：' + x.answer + (it.type === 'M' ? '　得分：' + x.partial : '') + (S.timed ? '　用時 ' + mmss(S.sec[it.id] || 0) : '');
+      if (S.timed && over[it.id]) { const o = document.createElement('span'); o.className = 'otag'; o.textContent = '超時'; s.appendChild(o); }
+      d.appendChild(s); d.appendChild(fbBox(it)); body.appendChild(d);
+    });
+  });
+  v.appendChild(body); math(v); show('vResult');
+  $('againBtn').onclick = () => S.mode === 'wrong' ? openWrong() : enterSetup(); $('toReport').onclick = () => openReport(); $('toWrong').onclick = () => openWrong();
+}
+
+// ---------- 學習報告 ----------
+// 常態分布圖：曲線下塗色面積＝贏過的人數比例；淺色帶為估計誤差範圍
+function rankHTML(k){
+  const W = 320, H = 130, X0 = 16, X1 = 304, Y0 = 104, top = 18, zc = z => Math.max(-3, Math.min(3, z));
+  const x = z => X0 + (zc(z) + 3) / 6 * (X1 - X0), y = z => Y0 - (Y0 - top) * Math.exp(-z * z / 2);
+  const path = (a, b) => { let d = 'M' + x(a).toFixed(1) + ' ' + Y0; for (let z = a; z <= b + 1e-9; z += 0.05) d += ' L' + x(z).toFixed(1) + ' ' + y(z).toFixed(1); return d + ' L' + x(b).toFixed(1) + ' ' + Y0 + ' Z'; };
+  const z = zc(k.z), lo = zc(k.zLo), hi = zc(k.zHi);
+  const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="bell" role="img" aria-label="常態分布圖：你大約贏過 ' + k.pct + '% 的同學">' +
+    '<path d="' + path(-3, z) + '" fill="var(--accent)" opacity=".28"/>' +
+    '<rect x="' + x(lo) + '" y="' + top + '" width="' + Math.max(0, x(hi) - x(lo)) + '" height="' + (Y0 - top) + '" fill="var(--accent)" opacity=".10"/>' +
+    '<path d="' + path(-3, 3).replace(/ Z$/, '') + '" fill="none" stroke="var(--ink)" stroke-width="1.5"/>' +
+    '<line x1="' + X0 + '" y1="' + Y0 + '" x2="' + X1 + '" y2="' + Y0 + '" stroke="var(--muted)"/>' +
+    '<line x1="' + x(z) + '" y1="' + (top - 6) + '" x2="' + x(z) + '" y2="' + Y0 + '" stroke="var(--accent)" stroke-width="2.5"/>' +
+    '<text x="' + x(z) + '" y="' + (top - 9) + '" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)">你</text>' +
+    '<text x="' + x(0) + '" y="' + (Y0 + 14) + '" text-anchor="middle" font-size="11" fill="var(--muted)">平均</text>' +
+    '<text x="' + X0 + '" y="' + (Y0 + 14) + '" font-size="11" fill="var(--muted)">能力較低</text>' +
+    '<text x="' + X1 + '" y="' + (Y0 + 14) + '" text-anchor="end" font-size="11" fill="var(--muted)">能力較高</text></svg>';
+  const few = k.n < 10 ? '目前只有 ' + k.n + ' 位同學有能力估計，比較結果僅供參考。' : '和目前 ' + k.n + ' 位有能力估計的同學比較。';
+  return '<div class="rank"><div class="rk-big">如果有 100 位同學一起練習，你大約贏過 <b>' + k.pct + '</b> 位</div>' + svg +
+    '<p class="note">塗色面積就是你贏過的同學比例；淺色帶是估計誤差，大約介於贏過 ' + k.lo + '～' + k.hi + ' 位之間，作答越多題範圍越窄、越準確。' + few + '</p></div>';
+}
+// 雷達圖：同心多邊形為 1～5 分（G5～G1），資料不足的向度以虛線標示
+function radarSVG(axes){
+  const W = 390, H = 300, cx = W / 2, cy = 150, R = 90, N = axes.length;
+  const ang = i => -Math.PI / 2 + 2 * Math.PI * i / N;
+  const pt = (i, r) => [cx + r * Math.cos(ang(i)), cy + r * Math.sin(ang(i))];
+  const poly = r => axes.map((_, i) => pt(i, r).map(v => v.toFixed(1)).join(',')).join(' ');
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="radar" role="img" aria-label="' + esc(axes.map(a => a.name + (a.g ? ' G' + a.g : ' 資料不足')).join('、')) + '">';
+  for (let k = 1; k <= 5; k++) s += '<polygon points="' + poly(R * k / 5) + '" fill="' + (k === 5 ? 'var(--chip)' : 'none') + '" stroke="var(--line)" stroke-width="1"/>';
+  axes.forEach((a, i) => { const [x, y] = pt(i, R); s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '" stroke="var(--line)"/>'; });
+  for (let k = 1; k <= 5; k++) s += '<text x="' + (cx + 3) + '" y="' + (cy - R * k / 5 + 4).toFixed(1) + '" font-size="9" fill="var(--muted)">' + k + '</text>';
+  const has = axes.filter(a => a.score != null).length;
+  if (has >= 2) {
+    const v = axes.map((a, i) => pt(i, R * (a.score || 0) / 5).map(x => x.toFixed(1)).join(',')).join(' ');
+    s += '<polygon points="' + v + '" fill="var(--accent)" fill-opacity=".22" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>';
+  }
+  axes.forEach((a, i) => { if (a.score != null) { const [x, y] = pt(i, R * a.score / 5); s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="3.5" fill="var(--accent)"/>'; } });
+  axes.forEach((a, i) => {
+    const [x, y] = pt(i, R + 16); const c = Math.cos(ang(i));
+    const anc = Math.abs(c) < 0.2 ? 'middle' : c > 0 ? 'start' : 'end';
+    const dy = Math.sin(ang(i)) < -0.5 ? -6 : Math.sin(ang(i)) > 0.5 ? 10 : 0;
+    s += '<text x="' + x.toFixed(1) + '" y="' + (y + dy).toFixed(1) + '" text-anchor="' + anc + '" font-size="12.5" fill="var(--ink)">' + esc(a.name) + '</text>';
+    s += '<text x="' + x.toFixed(1) + '" y="' + (y + dy + 15).toFixed(1) + '" text-anchor="' + anc + '" font-size="12" font-weight="700" fill="' + (a.g ? 'var(--accent)' : 'var(--muted)') + '">' + (a.g ? 'G' + a.g + '（' + a.score + ' 分）' : '尚需 ' + Math.max(0, 3 - a.n) + ' 題') + '</text>';
+  });
+  return s + '</svg>';
+}
+function radarCard(rd){
+  if (!rd) return '';
+  return '<div class="card"><h2>能力雷達圖</h2>' +
+    '<div class="glegend"><span><b>G1</b> 5 分</span><span><b>G2</b> 4 分</span><span><b>G3</b> 3 分</span><span><b>G4</b> 2 分</span><span><b>G5</b> 1 分</span></div>' +
+    '<div class="radars"><div>' + radarSVG(rd.main) + '<p class="rd-cap">認知層次＋學習表現</p></div><div>' + radarSVG(rd.sub) + '<p class="rd-cap">學習表現細項（探究能力）</p></div></div>' +
+    '<p class="note">每個向度依你在該類題目的對錯，並考慮題目難度估計能力，再和所有同學比較：G1 約前 16%、G2 約前 16～38%、G3 為中間約 24%、G4 約後 16～38%、G5 約後 16%。每個向度至少作答 ' + rd.min + ' 題才會給等級（每題以第一次作答計）；作答越多越準確。</p></div>';
+}
+function bars(list, title){
+  if (!list.length) return '';
+  const todo = list.filter(o => !o.n); list = list.filter(o => o.n);
+  list.sort((a, b) => (a.index == null ? a.rate - 0.5 : a.index) - (b.index == null ? b.rate - 0.5 : b.index));
+  const rest = todo.map(o => '<div class="bar todo"><div>' + esc(o.name) + ' <span class="note">(0 題)</span></div><div class="track"></div><div class="v">尚未作答</div></div>').join('');
+  return '<div class="card"><h2>' + title + '</h2>' + list.map(o => {
+    const idx = o.index == null ? '' : '<span class="' + (o.index >= 0 ? 'pos' : 'neg') + '">' + (o.index >= 0 ? '+' : '') + o.index.toFixed(2) + '</span>';
+    return '<div class="bar"><div>' + esc(o.name) + ' <span class="note">(' + o.n + ' 題)</span></div><div class="track"><div style="width:' + Math.round(o.rate * 100) + '%"></div></div><div class="v">' + Math.round(o.rate * 100) + '% ' + idx + '</div></div>';
+  }).join('') + rest + '</div>';
+}
+let SCALE = store.get('gp_scale') || 'req';
+async function openReport(scale){
+  if (scale) { SCALE = scale; store.set('gp_scale', SCALE); }
+  show('vLoading');
+  try {
+    const r = await call('getMyReport', TOKEN, SCALE);
+    const weak = r.concept.filter(c => c.n >= 3).sort((a, b) => (a.index != null && b.index != null) ? a.index - b.index : a.rate - b.rate)[0];
+    $('vReport').innerHTML =
+      '<div class="card"><h2>' + esc(r.nickname) + ' 的學習報告</h2>' +
+      '<div class="chips" style="margin-bottom:10px">' + (META ? META.scales : [{key:'req',name:'必修'},{key:'elec',name:'選修'}]).map(s => '<button class="chip' + (s.key === SCALE ? ' on' : '') + '" data-scale="' + s.key + '">' + esc(s.name) + '</button>').join('') + '</div>' +
+      '<p>累計作答 <b>' + r.answered + '</b> 題（每題以第一次作答計，含網頁裡的檢核題），答對 <b>' + r.correct + '</b> 題。</p>' +
+      (r.rank ? rankHTML(r.rank) : '<p class="note">能力估計會在系統分析後顯示（有新的作答時，每小時自動更新一次）。</p>') +
+      (weak ? '<p>建議優先練習：<b>' + esc(weak.name) + '</b></p>' : '') +
+      '<p class="note">長條為答對率；右側 ±數字為「表現指標」：已考慮題目難度，正值表示比依你的整體能力預期的表現好，負值表示較弱。</p>' +
+      '<div class="row"><button class="primary" id="rBack">回到選題</button></div></div>' +
+      radarCard(r.radar) + bars(r.concept.filter(c => c.n), '各概念')  + bars(r.ability, '各探究能力（學習表現）') + bars(r.bloom, '各認知層次');
+    $('rBack').onclick = () => enterSetup();
+    $('vReport').querySelectorAll('[data-scale]').forEach(b => b.onclick = () => openReport(b.dataset.scale));
+    show('vReport');
+  } catch (e) { show('vSetup'); $('setupErr').textContent = e.message || e; }
+}
+
+// ---------- 錯題本 ----------
+let WB = null, wbFilter = 'todo', wbConcept = 'all';
+async function openWrong(){
+  show('vLoading');
+  try { WB = await call('getWrongBook', TOKEN, BANK); if (!META) { META = await call('getMeta'); buildChips(); buildLog(); } renderWrong(); show('vWrong'); }
+  catch (e) { show('vSetup'); $('setupErr').textContent = e.message || e; }
+}
+function renderWrong(){
+  const v = $('vWrong'); v.innerHTML = '';
+  const todo = WB.items.filter(x => !x.fixed), done = WB.items.filter(x => x.fixed);
+  const cons = [...new Set(WB.items.map(x => x.concept))].sort((a, b) => a - b);
+  const head = document.createElement('div'); head.className = 'card wb-head';
+  head.innerHTML = '<h2>📕 錯題本（' + esc((META.banks.find(b => b.key === BANK) || {}).name || '') + '）</h2>' +
+    (WB.items.length ? '<p>待訂正 <b>' + todo.length + '</b> 題・已訂正 <b>' + done.length + '</b> 題</p>' : '<p>目前沒有錯題。繼續練習，答錯的題目會自動收進來；網頁裡的檢核題答錯也會收進來。</p>') +
+    '<div class="chips" id="wbF"></div>' +
+    (cons.length > 1 ? '<div class="chips" id="wbC"></div>' : '') +
+    '<div class="row" style="margin-top:8px"><button class="primary" id="wbRetry">重練待訂正的題目</button><button class="ghost" id="wbBack">回到選題</button></div>' +
+    '<p class="note">重練時每次最多 10 題，只抽「最後一次仍答錯」的題目；若上面選了概念，就只抽該概念。答對後會改標為「已訂正」。</p>' +
+    '<div class="err" id="wbErr"></div>';
+  v.appendChild(head);
+  const fc = head.querySelector('#wbF');
+  [['todo', '待訂正 ' + todo.length], ['fixed', '已訂正 ' + done.length], ['all', '全部 ' + WB.items.length]].forEach(([k, t]) => {
+    const b = document.createElement('button'); b.className = 'chip' + (wbFilter === k ? ' on' : ''); b.textContent = t; b.onclick = () => { wbFilter = k; renderWrong(); }; fc.appendChild(b); });
+  const cc = head.querySelector('#wbC');
+  if (cc) [['all', '全部概念']].concat(cons.map(c => [String(c), META.concepts[c]])).forEach(([k, t]) => {
+    const b = document.createElement('button'); b.className = 'chip' + (wbConcept === k ? ' on' : ''); b.textContent = t; b.onclick = () => { wbConcept = k; renderWrong(); }; cc.appendChild(b); });
+  $('wbBack').onclick = () => enterSetup();
+  const retryPool = todo.filter(x => wbConcept === 'all' || String(x.concept) === wbConcept);
+  $('wbRetry').disabled = !retryPool.length;
+  $('wbRetry').onclick = async () => {
+    show('vLoading');
+    try {
+      const r = await call('startSession', TOKEN, { mode: 'wrong', bank: BANK, concepts: wbConcept === 'all' ? [] : [Number(wbConcept)], n: 10 });
+      if (!r.items.length) { show('vWrong'); $('wbErr').textContent = '沒有待訂正的題目。'; return; }
+      startQuiz(r);
+    } catch (e) { show('vWrong'); $('wbErr').textContent = e.message || e; }
+  };
+  const list = WB.items.filter(x => (wbFilter === 'all' || (wbFilter === 'fixed') === x.fixed) && (wbConcept === 'all' || String(x.concept) === wbConcept));
+  if (!list.length) { if (WB.items.length) { const e = document.createElement('div'); e.className = 'card note'; e.textContent = '這個篩選條件下沒有題目。'; v.appendChild(e); } return; }
+  const groups = {}; (WB.groups || []).forEach(g => groups[g.gid] = g);
+  const body = document.createElement('div'); body.className = 'card';
+  list.forEach((it, k) => {
+    const d = document.createElement('div'); d.className = 'res ' + (it.fixed ? 'ok' : 'no');
+    const g = it.gid ? groups[it.gid] : null;
+    d.innerHTML = '<div class="wb-con">' + esc(META.concepts[it.concept] || '') + '</div>' +
+      (g ? '<div class="ctx">' + (g.theme ? '<div class="theme">' + esc(g.theme) + '</div>' : '') + esc(g.stem).replace(/\n/g, '<br>') + tableHTML(g.table) + (g.fig ? '<div class="fig gfig"></div>' : '') + '</div>' : '') +
+      '<div><span class="qno">' + (k + 1) + '.</span>' + esc(it.stem) + (it.type === 'M' ? '<span class="tag">多選</span>' : '') + (it.fixed ? '<span class="fixtag">已訂正</span>' : '') + '</div>' +
+      tableHTML(it.table) + (it.fig ? '<div class="fig ifig"></div>' : '');
+    if (g && g.fig) loadFig(d.querySelector('.gfig'), g.fig);
+    if (it.fig) loadFig(d.querySelector('.ifig'), it.fig);
+    const why = (it.exp && it.exp.why) || {};
+    const showResp = !it.fixed ? it.resp : '';
+    it.opts.forEach((o, j) => { const L = 'ABCDE'[j]; const isAns = it.ans.indexOf(L) >= 0, picked = showResp.indexOf(L) >= 0;
+      const e = document.createElement('div'); e.className = 'opt' + (isAns ? ' right' : picked ? ' wrong' : '');
+      const r = String(why[L] || '').replace(/^[✔✘]\s*/, '');
+      const tip = isAns ? '　✔' : picked ? '　✘（你上次選這個）' : '';
+      e.innerHTML = '<div><div><b>(' + L + ')</b> ' + esc(o) + tip + '</div>' + (r ? '<div class="why">' + (isAns ? '正確：' : '錯誤：') + esc(r) + '</div>' : '') + '</div>'; d.appendChild(e); });
+    if (it.exp && it.exp.text) { const ex = document.createElement('div'); ex.className = 'exp'; ex.innerHTML = '<b>解析</b>　' + esc(it.exp.text); d.appendChild(ex); }
+    const m = document.createElement('div'); m.className = 'wb-meta';
+    const at = it.at ? new Date(it.at) : null;
+    m.textContent = '作答 ' + it.tries + ' 次・答錯 ' + it.wrong + ' 次' + (it.fixed ? '・最後一次已答對' : '・你上次的答案：' + (it.resp || '未作答')) + (at && !isNaN(at) ? '・' + (at.getMonth() + 1) + '/' + at.getDate() : '');
+    d.appendChild(m); d.appendChild(fbBox(it)); body.appendChild(d);
+  });
+  v.appendChild(body); math(v);
+}
+
+// ---------- 啟動 ----------
+setMode('login');
+if (!PhyAPI.ready()) { $('vLoading').textContent = '線上練習尚未開放（後端網址未設定）。'; show('vLoading'); }
+else if (TOKEN) enterSetup().catch(e => { show('vAuth'); $('authErr').textContent = e.message || e; }); else show('vAuth');
+</script>
+</body>
+</html>

@@ -5314,6 +5314,7 @@
             .doppler-media-frame, .doppler-cues-grid { display: none !important; }
         }
     </style>
+<script src="../assets/site.js" defer></script>
 </head>
 <body>
 
@@ -17029,6 +17030,8 @@
             if (!bankScored[uid]) {          // 同一題只計分一次，重播不重複記錄
                 bankScored[uid] = true;
                 recordResult('bank', bankKey(q), isCorrect, q.node);
+                // 登入線上練習時，同步記錄到 Gavin Physics 練習系統（IRT 只採第一次作答）
+                if (window.GPRecord) window.GPRecord('gsat', q.node, q.q, [...sel].sort().map(i => 'ABCDE'[i]).join(''), 'gsat ' + q.node);
             }
 
             q.opts.forEach((o, i) => {

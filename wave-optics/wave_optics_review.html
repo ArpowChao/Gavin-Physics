@@ -706,6 +706,7 @@
     </style>
     <link rel="stylesheet" href="assets/css/learner.css?v=resonance_20261005">
     <link rel="stylesheet" href="assets/css/swing-work.css?v=swing_20261005">
+<script src="../assets/site.js" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#main-content" onclick="event.preventDefault();document.getElementById('main-content').focus();document.getElementById('main-content').scrollIntoView()">跳到學習內容</a>
@@ -1477,6 +1478,8 @@
                 b.querySelector('.quiz-why').style.display = 'block';
             });
             const saved = forceReveal ? true : allRight ? unmarkWrong(qid) : markWrong(qid);
+            // 登入線上練習時，同步記錄到 Gavin Physics 練習系統（IRT 只採第一次作答；只看答案不記錄）
+            if (!forceReveal && window.GPRecord) window.GPRecord('wave', q.node, q.q, picked.slice().sort().map(i => 'ABCDE'[i]).join(''), 'wave ' + q.node);
             host.querySelector('.quiz-result').textContent = forceReveal ? '答案已展開，這次不計入錯題紀錄。' : allRight ? '答對了。看看解析，確認你的理由。' : saved ? '再看一次解析；這題已收進錯題本，可按「重做」再試。' : '再看一次解析，可按「重做」再試。目前瀏覽器無法儲存錯題。';
             host.querySelector('.quiz-exp').style.display = 'block';
             host.dataset.done = '1';

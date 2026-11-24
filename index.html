@@ -3,67 +3,118 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>高中物理教材總入口</title>
+<title>Gavin Physics｜高中物理</title>
+<meta name="description" content="高中物理互動教材：學測必修複習、選修波動與光學、互動實驗室與線上練習。">
 <style>
-  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; } }
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; --soft:#eef3fd; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; --soft:#1f2a3b; } }
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; }
-  main { max-width:880px; margin:0 auto; padding:56px 20px 40px; }
-  h1 { font-size:1.9rem; margin:0 0 6px; }
-  .lead { color:var(--muted); margin:0 0 32px; }
-  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-  a.card { display:flex; flex-direction:column; gap:6px; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s, transform .15s; }
+  main { max-width:980px; margin:0 auto; padding:40px 20px 48px; }
+  h1 { font-size:2rem; margin:0 0 6px; }
+  .lead { color:var(--muted); margin:0 0 28px; }
+  h2 { font-size:1.15rem; margin:36px 0 4px; }
+  .sub { color:var(--muted); font-size:.93rem; margin:0 0 14px; }
+  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); }
+  a.card { display:flex; flex-direction:column; gap:4px; padding:18px 20px; background:var(--card); border:1px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s, transform .15s; }
   a.card:hover, a.card:focus-visible { border-color:var(--accent); transform:translateY(-2px); outline:none; }
-  .tag { font-size:.8rem; color:var(--accent); font-weight:600; letter-spacing:.04em; }
-  .card h2 { font-size:1.15rem; margin:0; }
-  .card p { margin:0; color:var(--muted); font-size:.93rem; }
-  footer { margin-top:40px; font-size:.85rem; color:var(--muted); }
+  a.card.big { grid-column:span 2; }
+  @media (max-width:560px) { a.card.big { grid-column:auto; } }
+  .tag { font-size:.78rem; color:var(--accent); font-weight:700; letter-spacing:.04em; }
+  .card h3 { font-size:1.08rem; margin:0; }
+  .card p { margin:0; color:var(--muted); font-size:.92rem; }
+  .practice { display:flex; flex-wrap:wrap; align-items:center; gap:14px 24px; padding:20px 22px; background:var(--soft); border:1px solid var(--line); border-radius:16px; }
+  .practice div { flex:1 1 320px; }
+  .practice h2 { margin:0 0 4px; }
+  .practice p { margin:0; color:var(--muted); font-size:.93rem; }
+  .btn { display:inline-block; padding:10px 18px; border-radius:10px; background:var(--accent); color:#fff; font-weight:600; text-decoration:none; white-space:nowrap; }
+  .btn.ghost { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  .topics { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .topics span { font-size:.8rem; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:1px 9px; }
+  footer { margin-top:44px; font-size:.85rem; color:var(--muted); }
   footer a { color:var(--accent); }
 </style>
+<script src="assets/site.js" defer></script>
 </head>
 <body>
 <main>
-  <h1>高中物理教材</h1>
-  <p class="lead">純前端互動教材，不需註冊或安裝，選一個開始。</p>
+  <h1>高中物理</h1>
+  <p class="lead">互動教材、實驗模擬與線上練習。不需安裝，打開就能用。</p>
+
+  <section class="practice" aria-labelledby="pr">
+    <div>
+      <h2 id="pr">線上練習</h2>
+      <p>易混淆概念、學測必修、波動與光學三個題庫，共約 580 題。暱稱登入，交卷看詳解，錯題自動收進錯題本，學習報告用 IRT 估計能力。</p>
+    </div>
+    <a class="btn" href="practice/">開始練習</a>
+  </section>
+
+  <h2>必修物理（高一・學測）</h2>
+  <p class="sub">108 課綱必修範圍：從尺度與運動到量子現象。</p>
   <div class="grid">
-    <a class="card" href="gsat/">
-      <span class="tag">必修・學測</span>
-      <h2>學測物理 SOIL 核心複習系統</h2>
-      <p>108 課綱必修物理 28 個知識節點、互動實驗、分級題庫與歷屆試題。</p>
+    <a class="card big" href="gsat/">
+      <span class="tag">複習系統</span>
+      <h3>學測物理 SOIL 核心複習系統</h3>
+      <p>28 個知識節點、互動實驗、分級題庫、歷屆試題與命題統計。登入練習帳號後，節點檢核題也會記錄。</p>
     </a>
-    <a class="card" href="wave-optics/">
-      <span class="tag">選修物理 III</span>
-      <h2>波動與光學・學習筆記</h2>
-      <p>波動、聲波、幾何光學與物理光學，附 16 個互動實驗與題庫。</p>
-    </a>
-    <a class="card" href="apps/">
-      <span class="tag">互動實驗室</span>
-      <h2>互動物理實驗室</h2>
-      <p>30 個模擬與課堂工具：拋體、軌道、棒球、都卜勒、半導體、不確定度等。</p>
+    <a class="card" href="apps/physics-review/">
+      <span class="tag">講義</span>
+      <h3>學測物理全概念互動複習講義</h3>
+      <p>一頁看完必修概念，搭配各模擬連結。</p>
     </a>
     <a class="card" href="physics-lecture/">
       <span class="tag">講義</span>
-      <h2>線上講義：量子現象</h2>
-      <p>108 課綱必修物理「量子現象」章節的互動講義。</p>
+      <h3>線上講義：量子現象</h3>
+      <p>量子現象章節的互動講義。</p>
     </a>
     <a class="card" href="textbooks/Ch05-Energy-Textbook.pdf">
       <span class="tag">課本 PDF</span>
-      <h2>第五章 能量</h2>
-      <p>課本 PDF（約 16 MB）。</p>
+      <h3>第五章 能量</h3>
+      <p>約 16 MB。</p>
     </a>
     <a class="card" href="textbooks/Ch06-Quantum-Phenomena-Textbook.pdf">
       <span class="tag">課本 PDF</span>
-      <h2>第六章 量子現象</h2>
-      <p>課本 PDF（約 13 MB）。</p>
-    </a>
-    <a class="card" href="embark-6th/">
-      <span class="tag">活動</span>
-      <h2>Embark 啟程｜專題成果展</h2>
-      <p>三民高中 114 學年度專題成果展：活動計畫、成果、照片與賓果。</p>
+      <h3>第六章 量子現象</h3>
+      <p>約 13 MB。</p>
     </a>
   </div>
-  <footer>原始碼：<a href="https://github.com/ArpowChao">github.com/ArpowChao</a></footer>
+
+  <h2>選修物理（高三）</h2>
+  <p class="sub">選修物理 III：波動、聲波、幾何光學與物理光學。</p>
+  <div class="grid">
+    <a class="card big" href="wave-optics/">
+      <span class="tag">學習筆記</span>
+      <h3>波動與光學・學習筆記</h3>
+      <p>21 個知識節點、16 個互動實驗與 107 題題庫。登入練習帳號後，檢核題也會記錄。</p>
+    </a>
+    <a class="card" href="wave-optics/water_interference.html">
+      <span class="tag">實驗</span>
+      <h3>水波干涉實驗</h3>
+      <p>2D／3D／1D 雙波源干涉，可量測與隨機出題。</p>
+    </a>
+  </div>
+
+  <h2>互動實驗室</h2>
+  <p class="sub">30 個模擬與課堂工具，依主題分類。</p>
+  <div class="grid">
+    <a class="card big" href="apps/">
+      <span class="tag">實驗室</span>
+      <h3>全部互動實驗</h3>
+      <div class="topics"><span>力學與運動</span><span>萬有引力與軌道</span><span>波動與聲音</span><span>電磁與半導體</span><span>熱與近代物理</span><span>課堂工具</span></div>
+    </a>
+    <a class="card" href="apps/orbit/">
+      <span class="tag">熱門</span>
+      <h3>ORBIT 軌道實驗室</h3>
+      <p>拖曳創造星體，觀察圓、橢圓與拋物線軌道。</p>
+    </a>
+    <a class="card" href="apps/doppler/">
+      <span class="tag">熱門</span>
+      <h3>都卜勒・水波實驗</h3>
+      <p>排出水波、量測，作答直接送給老師。</p>
+    </a>
+  </div>
+
+  <footer>原始碼：<a href="https://github.com/ArpowChao/Gavin-Physics">ArpowChao/Gavin-Physics</a></footer>
 </main>
 </body>
 </html>
