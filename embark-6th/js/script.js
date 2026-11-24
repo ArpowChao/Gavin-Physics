@@ -1,0 +1,376 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // 0. Helper to parse ISO dates robustly in GMT+8 (Taipei Time) for older browsers
+    function parseGMT8Date(dateStr) {
+        const parsed = new Date(dateStr);
+        if (!isNaN(parsed.getTime())) {
+            return parsed;
+        }
+        
+        // Manual fallback for older Safari / Android WebViews
+        const regex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:[+-](\d{2}):(\d{2}))?$/;
+        const parts = dateStr.match(regex);
+        if (parts) {
+            const year = parseInt(parts[1], 10);
+            const month = parseInt(parts[2], 10) - 1; // 0-based
+            const day = parseInt(parts[3], 10);
+            const hour = parseInt(parts[4], 10);
+            const minute = parseInt(parts[5], 10);
+            const second = parseInt(parts[6], 10);
+            
+            const utcTime = Date.UTC(year, month, day, hour, minute, second);
+            const offsetMs = 8 * 60 * 60 * 1000; // Taipei time is UTC+8
+            return new Date(utcTime - offsetMs);
+        }
+        return parsed;
+    }
+
+    // 1. Navigation background change on scroll
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // 2. Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const navItems = document.querySelectorAll('.nav-links a');
+
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        navbar.classList.toggle('menu-open');
+        
+        // Change icon
+        const icon = hamburger.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+
+    // Close mobile menu when a link is clicked
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                navbar.classList.remove('menu-open');
+                const icon = hamburger.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    });
+
+    // 3. Scroll Reveal Animation using Intersection Observer (with fallback)
+    const fadeElements = document.querySelectorAll('.fade-in');
+
+    if (!('IntersectionObserver' in window)) {
+        // Fallback: make elements visible immediately if IntersectionObserver is not supported
+        fadeElements.forEach(element => {
+            element.classList.add('visible');
+        });
+    } else {
+        const appearOptions = {
+            threshold: 0.02, // Lowered from 0.15 to ensure tall sections reveal correctly on mobile
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, appearOptions);
+
+        fadeElements.forEach(element => {
+            appearOnScroll.observe(element);
+        });
+    }
+
+    // 4. Smooth Scrolling for Anchor Links (fallback/enhancement)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Adjust scroll position for fixed header
+                const headerOffset = 80;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  
+                window.scrollTo({
+                     top: offsetPosition,
+                     behavior: "smooth"
+                });
+            }
+        });
+    });
+
+    // 5. Dynamic Countdown & Timeline Logic
+    const timelineData = [
+        { date: parseGMT8Date('2026-04-27T00:00:00+08:00'), name: '開放報名與檔案上傳' },
+        { date: parseGMT8Date('2026-05-15T23:59:59+08:00'), name: '報名截止收件' },
+        { date: parseGMT8Date('2026-05-20T08:00:00+08:00'), name: '公告初賽審查時間' },
+        { date: parseGMT8Date('2026-05-27T08:00:00+08:00'), name: '校內實體初賽' },
+        { date: parseGMT8Date('2026-06-01T12:00:00+08:00'), name: '公告入選決賽名單' },
+        { date: parseGMT8Date('2026-06-05T20:00:00+08:00'), name: '決賽與研討會檔案繳交截止' },
+        { date: parseGMT8Date('2026-06-22T09:00:00+08:00'), name: '決賽場地預演' },
+        { date: parseGMT8Date('2026-06-29T09:00:00+08:00'), name: '海報決賽與成果展總決賽' },
+        { date: parseGMT8Date('2026-06-30T12:00:00+08:00'), name: '公布獲獎名單' }
+    ];
+
+    const currentPhaseEl = document.getElementById('current-phase');
+    const timerEl = document.getElementById('countdown-timer');
+    const timelineItems = document.querySelectorAll('.timeline-item');
+
+    function updateCountdown() {
+        const now = new Date();
+        let nextEvent = null;
+        let eventIndex = -1;
+
+        // Find the next upcoming future event
+        for (let i = 0; i < timelineData.length; i++) {
+            if (timelineData[i].date > now) {
+                nextEvent = timelineData[i];
+                eventIndex = i;
+                break;
+            }
+        }
+
+        // Map the abstract event array logic to the 6 physical HTML timeline nodes
+        let activeDomIndex = -1;
+        if (eventIndex === 0 || eventIndex === 1) activeDomIndex = 0; // HTML node 0: 報名與檔案上傳
+        else if (eventIndex === 2 || eventIndex === 3) activeDomIndex = 1; // HTML node 1: 校內實體初賽
+        else if (eventIndex === 4 || eventIndex === 5) activeDomIndex = 2; // HTML node 2: 公布決賽與終繳
+        else if (eventIndex === 6) activeDomIndex = 3; // HTML node 3: 場地預演
+        else if (eventIndex === 7) activeDomIndex = 4; // HTML node 4: 總決賽
+        else if (eventIndex === 8) activeDomIndex = 5; // HTML node 5: 公告獲獎
+        else if (eventIndex === -1 && now > timelineData[8].date) activeDomIndex = 6; // All passed
+
+        // Update DOM classes for active and past timeline bubbles
+        timelineItems.forEach((item, index) => {
+            item.classList.remove('active', 'past');
+            if (index < activeDomIndex) {
+                item.classList.add('past'); // Greyed out
+            } else if (index === activeDomIndex) {
+                item.classList.add('active'); // Pulsing orange
+            }
+        });
+
+        if (nextEvent) {
+            currentPhaseEl.innerHTML = `<strong>目前進度：</strong> 等待 ${nextEvent.name}`;
+            
+            const diff = nextEvent.date - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const mins = Math.floor((diff / 1000 / 60) % 60);
+            const secs = Math.floor((diff / 1000) % 60);
+
+            // Using inline flex layout boxes
+            timerEl.innerHTML = `
+                <div class="time-box">${days.toString().padStart(2, '0')} <span>天</span></div>
+                <div class="time-box">${hours.toString().padStart(2, '0')} <span>時</span></div>
+                <div class="time-box">${mins.toString().padStart(2, '0')} <span>分</span></div>
+                <div class="time-box">${secs.toString().padStart(2, '0')} <span>秒</span></div>
+            `;
+        } else {
+            currentPhaseEl.innerHTML = '第六屆 Embark 啟程已圓滿落幕';
+            timerEl.innerHTML = '<div class="time-box">完成 <span>Finish</span></div>';
+        }
+    }
+
+    if(timerEl && currentPhaseEl) {
+        updateCountdown(); // Run immediately
+        setInterval(updateCountdown, 1000); // Update every second
+    }
+
+    // 6. Registration & Correction Button Visibility Control
+    function checkVisibilityPeriods() {
+        const now = new Date();
+        
+        // Registration Period
+        const regStart = parseGMT8Date('2026-04-27T00:00:00+08:00');
+        const regEnd = parseGMT8Date('2026-05-15T23:59:59+08:00');
+        
+        const registerBtnHero = document.getElementById('register-btn-hero');
+        const registerLinkSchedule = document.getElementById('register-link-schedule');
+        
+        const isRegistrationOpen = now >= regStart && now <= regEnd;
+        
+        if (registerBtnHero) {
+            registerBtnHero.style.display = isRegistrationOpen ? 'inline-flex' : 'none';
+        }
+        
+        if (registerLinkSchedule) {
+            if (isRegistrationOpen) {
+                registerLinkSchedule.style.display = 'inline';
+            } else {
+                registerLinkSchedule.innerText = '（報名已截止）';
+                registerLinkSchedule.style.color = '#999';
+                registerLinkSchedule.style.pointerEvents = 'none';
+            }
+        }
+
+        // Correction Period: 5/16 23:00 - 5/18 23:59
+        const corrStart = parseGMT8Date('2026-05-16T23:00:00+08:00');
+        const corrEnd = parseGMT8Date('2026-05-18T23:59:59+08:00');
+        
+        const correctionSection = document.getElementById('correction-announcement');
+        const isCorrectionPeriod = now >= corrStart && now <= corrEnd;
+        const isAfterCorrection = now > corrEnd;
+
+        if (correctionSection) {
+            if (isAfterCorrection) {
+                // If past the correction period, we can either hide it or change the button
+                const corrBtn = correctionSection.querySelector('.btn');
+                const corrTime = correctionSection.querySelector('.time-range');
+                if (corrBtn) {
+                    corrBtn.innerText = '補件已截止';
+                    corrBtn.classList.remove('primary-btn', 'pulse-anim');
+                    corrBtn.style.background = '#999';
+                    corrBtn.style.pointerEvents = 'none';
+                }
+                if (corrTime) {
+                    corrTime.innerHTML = '<i class="fas fa-calendar-times"></i> 補件時段已結束';
+                }
+            } else if (!isCorrectionPeriod && now < corrStart) {
+                // If before correction period, maybe hide or show "Coming soon"
+                correctionSection.style.display = 'none';
+            } else {
+                correctionSection.style.display = 'block';
+            }
+        }
+        
+        // Selection Announcement Period: Always show the details
+        const selectionDetails = document.getElementById('selection-details');
+        if (selectionDetails) {
+            selectionDetails.style.display = '';
+        }
+
+        // Results Announcement Period: Reveals after 6/01 12:00 PM
+        const resultsAnnounceTime = parseGMT8Date('2026-06-01T12:00:00+08:00');
+        const resultsDetails = document.getElementById('results-details');
+        const finalsDetails = document.getElementById('finals-details');
+        const isPreview = new URLSearchParams(window.location.search).has('preview');
+        
+        if (resultsDetails) {
+            if (now < resultsAnnounceTime && !isPreview) {
+                resultsDetails.style.display = 'none';
+            } else {
+                resultsDetails.style.display = 'block';
+            }
+        }
+
+        if (finalsDetails) {
+            if (now < resultsAnnounceTime && !isPreview) {
+                finalsDetails.style.display = 'none';
+            } else {
+                finalsDetails.style.display = 'block';
+            }
+        }
+    }
+
+    checkVisibilityPeriods();
+    // Re-check every minute to update status dynamically
+    setInterval(checkVisibilityPeriods, 60000);
+
+    // 7. Lightbox Modal for Zooming Images
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    if (lightboxModal && lightboxImg) {
+        // Collect all images that should be zoomable
+        const zoomImages = document.querySelectorAll('.zoomable-img, .status-table-img, .group-list-img, .gallery-item img, .about-image img');
+        
+        zoomImages.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                lightboxModal.classList.add('show');
+                lightboxImg.src = img.src;
+                lightboxCaption.textContent = img.alt || '圖片放大檢視';
+                document.body.style.overflow = 'hidden'; // Disable page scrolling
+            });
+        });
+
+        // Close functions
+        const closeLightbox = () => {
+            lightboxModal.classList.remove('show');
+            document.body.style.overflow = ''; // Enable page scrolling
+        };
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxModal.addEventListener('click', closeLightbox);
+        
+        // Prevent closing when clicking the image itself
+        lightboxImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Escape key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightboxModal.classList.contains('show')) {
+                closeLightbox();
+            }
+        });
+    }
+
+    // 8. Fix iOS/Android Details click behavior and card-level clicking
+    document.querySelectorAll('.timeline-content').forEach(content => {
+        const details = content.querySelector('.timeline-details');
+        if (!details) return;
+
+        // Make the entire timeline card clickable (except links, buttons and already expanded details content)
+        content.addEventListener('click', (e) => {
+            if (e.target.closest('a') || e.target.closest('button') || e.target.closest('.details-content')) {
+                return;
+            }
+            
+            e.preventDefault();
+            if (details.hasAttribute('open')) {
+                details.removeAttribute('open');
+            } else {
+                details.setAttribute('open', '');
+            }
+        });
+    });
+
+    // 9. Gallery Tabs Switcher
+    const galleryTabs = document.querySelectorAll('.gallery-tab');
+    const galleryPanels = document.querySelectorAll('.gallery-panel');
+
+    if (galleryTabs.length > 0) {
+        galleryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+
+                // Switch active class on tabs
+                galleryTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Switch active class on panels
+                galleryPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                    if (panel.id === `panel-${targetTab}`) {
+                        panel.classList.add('active');
+                    }
+                });
+            });
+        });
+    }
+});

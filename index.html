@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高中物理教材總入口</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; }
+  main { max-width:880px; margin:0 auto; padding:56px 20px 40px; }
+  h1 { font-size:1.9rem; margin:0 0 6px; }
+  .lead { color:var(--muted); margin:0 0 32px; }
+  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  a.card { display:flex; flex-direction:column; gap:6px; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s, transform .15s; }
+  a.card:hover, a.card:focus-visible { border-color:var(--accent); transform:translateY(-2px); outline:none; }
+  .tag { font-size:.8rem; color:var(--accent); font-weight:600; letter-spacing:.04em; }
+  .card h2 { font-size:1.15rem; margin:0; }
+  .card p { margin:0; color:var(--muted); font-size:.93rem; }
+  footer { margin-top:40px; font-size:.85rem; color:var(--muted); }
+  footer a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>高中物理教材</h1>
+  <p class="lead">純前端互動教材，不需註冊或安裝，選一個開始。</p>
+  <div class="grid">
+    <a class="card" href="gsat/">
+      <span class="tag">必修・學測</span>
+      <h2>學測物理 SOIL 核心複習系統</h2>
+      <p>108 課綱必修物理 28 個知識節點、互動實驗、分級題庫與歷屆試題。</p>
+    </a>
+    <a class="card" href="wave-optics/">
+      <span class="tag">選修物理 III</span>
+      <h2>波動與光學・學習筆記</h2>
+      <p>波動、聲波、幾何光學與物理光學，附 16 個互動實驗與題庫。</p>
+    </a>
+    <a class="card" href="embark-6th/">
+      <span class="tag">活動</span>
+      <h2>Embark 啟程｜專題成果展</h2>
+      <p>三民高中 114 學年度專題成果展：活動計畫、成果、照片與賓果。</p>
+    </a>
+  </div>
+  <footer>原始碼：<a href="https://github.com/ArpowChao">github.com/ArpowChao</a></footer>
+</main>
+</body>
+</html>

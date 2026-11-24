@@ -1,0 +1,106 @@
+/* Shared interaction/runtime presentation kept outside the monolithic handout. */
+.lab-model-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+}
+
+.lab-model-card {
+    padding: 0.8rem 0.9rem;
+    color: #304f59;
+    background: #f4f9f8;
+    border: 1px solid #d7e6e3;
+    border-radius: 10px;
+}
+
+.lab-model-card span {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #698087;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.lab-model-card strong {
+    display: block;
+    line-height: 1.55;
+}
+
+.wave-analysis {
+    margin-top: 0.8rem;
+    padding: 0.65rem;
+    background: linear-gradient(145deg, #071923 0%, #0a2029 100%);
+    border: 1px solid #203d47;
+    border-radius: 12px;
+}
+
+.wave-analysis canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 4;
+}
+
+.exam-year-placeholder {
+    display: grid;
+    place-items: center;
+    gap: 0.45rem;
+    min-height: 92px;
+    padding: 1rem;
+    color: var(--text-muted);
+    background: rgba(244, 249, 248, 0.72);
+    border: 1px dashed #cbdedb;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.exam-year-load {
+    min-height: 42px;
+    padding: 0.55rem 1rem;
+    color: #235f67;
+    background: #ffffff;
+    border: 1px solid #bcd6d3;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .lab-switcher {
+        flex-wrap: nowrap !important;
+        gap: 0.4rem;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .lab-switch-btn {
+        flex: 0 0 auto !important;
+        min-width: 132px;
+        min-height: 44px;
+        scroll-snap-align: start;
+        white-space: nowrap;
+    }
+
+    .lab-model-strip { grid-template-columns: 1fr; }
+    .wave-analysis canvas { aspect-ratio: 4 / 3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .charge-group,
+    .dipole-wave-group,
+    .lab-panel.active {
+        animation: none !important;
+    }
+
+    .exam-body,
+    .exam-chev {
+        transition: none !important;
+    }
+}

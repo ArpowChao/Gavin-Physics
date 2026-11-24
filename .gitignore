@@ -1,0 +1,17 @@
+# IDE / Editor
+.claude/
+*.code-workspace
+skills-lock.json
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temp files
+*.tmp
+*~
+*.log
+node_modules/
+.venv/
+__pycache__/
+**/scratch/temp_pdfs/
