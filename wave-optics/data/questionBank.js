@@ -993,7 +993,7 @@ const questionBank = [
       ],
       exp: "相鄰細縫相位差 $\\delta = 2\\pi d\\sin\\theta/\\lambda$，$d = a/N$，所以 N 根箭頭共轉 $2\\pi a\\sin\\theta/\\lambda$。$a\\sin\\theta = m\\lambda$ 時繞 m 整圈，合成為零 → 暗紋；N → ∞ 時就是單狹縫的強度分布。可在「多狹縫 → 單狹縫」模式驗證。" },
 
-    // ========== N21 都卜勒效應（延伸） ==========
+    // ========== N21 都卜勒效應 ==========
     { node: "N21", level: "記憶", type: "single", perf: "科學認知（記憶）",
       q: "救護車鳴著警笛從你身邊呼嘯而過，你聽到的音調變化為何？",
       opts: [

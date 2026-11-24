@@ -30,14 +30,23 @@
     charged: ['apps/charged-spheres/', '帶電球的近距離電力', '均勻帶電球與點電荷庫侖力比較'],
     alpha: ['apps/alpha.html', '拉塞福散射公式推導', 'α 粒子散射與原子核模型'],
   };
+  // 只放「課本這一節有教」的實驗（依 108 課綱與現行課本核對）。
+  //   超出必修的（拋體、質心、動量、人造衛星軌道…）放首頁「選修物理Ⅰ・Ⅱ 力學」；
+  //   超出課綱的（空氣阻力、馬格努斯力、數位取樣、散射公式推導…）放首頁「延伸專題」。
   const MAP = {
     gsat: {
-      N01: ['uncertainty', 'sampler', 'dataLab', 'inquiry'], N03: ['lidToss', 'barrel'], N04: ['pulley', 'com', 'pitch', 'cfd'],
-      N05: ['friction', 'rod'], N07: ['orbit', 'transfer'], N08: ['cannon', 'orbit', 'decay'], N09: ['spring', 'decay', 'rod'],
-      N10: ['water'], N11: ['water'], N15: ['doppler', 'audio'], N17: ['slit'], N19: ['charged'], N24: ['alpha'],
+      N01: ['inquiry'],        // 必修 1-2 科學的方法
+      N05: ['friction'],       // 必修 3-2 摩擦力
+      N07: ['orbit'],          // 必修 3-3 克卜勒定律：橢圓軌道
+      N10: ['water'],          // 必修 5-2（國中熱學複習：溫度、熱量、三態）
+      N15: ['doppler'],        // 必修 4-5 都卜勒效應
     },
-    wave: { N20: ['slit'], N21: ['doppler'], N08: ['audio'] },
-    em: { '1-1': ['charged'] },
+    wave: {
+      N12: ['uncertainty', 'sampler', 'dataLab'],   // 選修Ⅲ 2-3 共鳴管實驗：波長最佳估計值與不確定度
+      N20: ['slit'],           // 選修Ⅲ 4-2 光的繞射
+      N21: ['doppler'],        // 必修 4-5 都卜勒效應
+    },
+    em: {},
   };
   const course = /\/gsat\//.test(location.pathname) ? 'gsat' : /\/wave-optics\/wave_optics_review/.test(location.pathname) ? 'wave' : /\/electromag\//.test(location.pathname) ? 'em' : null;
   if (!course) return;

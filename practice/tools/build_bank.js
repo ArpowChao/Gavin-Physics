@@ -57,6 +57,7 @@ confuse.META.papers.forEach(p => META.papers.push({ key: p.key, name: p.name, ba
 const ITEMS = confuse.ITEMS.map(i => Object.assign({}, i, { bank: 'confuse', scale: 'req', key: 'confuse:' + i.id }));
 const GROUPS = confuse.GROUPS.map(g => Object.assign({}, g, { bank: 'confuse' }));
 
+require(path.join(ROOT, 'assets/node-sections.js')); const NS = globalThis.GP_NODE_SEC;
 const SOURCES = [
   { bank: 'gsat', scale: 'req', file: 'gsat/data/questionBank.js', prefix: '學測' },
   { bank: 'wave', scale: 'elec', file: 'wave-optics/data/questionBank.js', prefix: '波光' },
@@ -67,7 +68,10 @@ SOURCES.forEach(src => {
   const bank = loadJs(file, 'questionBank'); const titles = nodeTitles(file);
   LEVELS.forEach(l => META.papers.push({ key: src.bank + ':' + l, name: l + '題', bank: src.bank }));
   const cIdx = {};
-  Object.keys(titles).sort().forEach(n => { cIdx[n] = META.concepts.length; META.concepts.push(n + ' ' + titles[n]); META.conceptBank.push(src.bank); });
+  // 概念名稱用課本章節（例：「必修 3-3 克卜勒行星運動定律」），依章節排序；N01 只當內部鍵值
+  const secName = n => { const t = NS.tag(src.bank, n); return (/^必修/.test(t) ? t : NS.BOOK[src.bank].short + ' ' + t) + ' ' + titles[n]; };
+  Object.keys(titles).sort((a, b) => NS.sortKey(src.bank, a) < NS.sortKey(src.bank, b) ? -1 : 1)
+    .forEach(n => { cIdx[n] = META.concepts.length; META.concepts.push(secName(n)); META.conceptBank.push(src.bank); });
   let used = 0, skipped = 0; const pno = {};
   bank.forEach(q => {
     if (!Array.isArray(q.opts) || !q.opts.length) { skipped++; return; }   // 非選擇題（簡答）不納入
@@ -84,7 +88,7 @@ SOURCES.forEach(src => {
       type: q.type === 'multi' ? 'M' : 'S', gid: null,
       stem: q.q, opts: q.opts.map(o => o.t.replace(/^\([A-E]\)\s*/, '')),
       ans: q.opts.map((o, k) => o.c ? L[k] : '').join(''),
-      table: null, fig: null, sec: src.prefix + ' ' + q.node + ' ' + (titles[q.node] || ''), focus: q.perf || '',
+      table: null, fig: null, sec: src.prefix + ' ' + secName(q.node), focus: q.perf || '',
       anchor: false, exp: { text: q.exp || '', why },
     });
     used++;
@@ -99,7 +103,7 @@ SOURCES.forEach(src => {
   const L = 'ABCDE';
   ['記憶', '理解', '應用', '分析'].forEach(l => META.papers.push({ key: 'em:' + l, name: l + '題', bank: 'em' }));
   const cIdx = {};
-  EM.sections.forEach(s => { cIdx[s.id] = META.concepts.length; META.concepts.push(s.id + ' ' + s.name); META.conceptBank.push('em'); });
+  EM.sections.forEach(s => { cIdx[s.id] = META.concepts.length; META.concepts.push('選修Ⅳ ' + s.id + ' ' + s.name); META.conceptBank.push('em'); });
   let used = 0, skipped = 0; const pno = {};
   const add = (node, sectionId, level, type, stem, choices, keys, exp, perf, abCode) => {
     const key = itemKey('em', node, stem);
@@ -107,7 +111,7 @@ SOURCES.forEach(src => {
     const paper = 'em:' + level; pno[paper] = (pno[paper] || 0) + 1;
     ITEMS.push({ id, key, bank: 'em', scale: 'elec', paper, pno: pno[paper], concept: cIdx[sectionId], node: sectionId, ab: abCode, bloom: level,
       type, gid: null, stem, opts: choices, ans: keys.map(k => L[k]).join(''), table: null, fig: null,
-      sec: '電磁 ' + sectionId, focus: perf, anchor: false, exp: { text: exp || '', why: {} } });
+      sec: '選修Ⅳ ' + sectionId, focus: perf, anchor: false, exp: { text: exp || '', why: {} } });
     used++;
   };
   Object.keys(EM.conceptPractice).forEach(sid => EM.conceptPractice[sid].forEach(topic => topic.forEach(q => {

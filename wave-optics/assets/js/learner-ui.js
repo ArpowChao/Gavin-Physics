@@ -50,7 +50,7 @@ function buildNodeSidebar() {
             <summary>${m.padStart(2, '0')}　${CHAPTER_INTROS[m][0]}</summary>
             <ul class="nav-list">
                 <li><a class="nav-item" href="#module-${m}" data-route="module-${m}" onclick="followRoute(event,'module-${m}')">本章學習順序</a></li>
-                ${nodesOfModule(m).map(code => `<li><a class="nav-item nav-item-node" href="#node-${code}" data-route="node-${code}" onclick="followRoute(event,'node-${code}')"><span class="node-code-badge">${code.slice(1)}</span>${nodeMeta[code].title}${code === 'N21' ? '・延伸' : ''}</a></li>`).join('')}
+                ${nodesOfModule(m).map(code => `<li><a class="nav-item nav-item-node" href="#node-${code}" data-route="node-${code}" onclick="followRoute(event,'node-${code}')"><span class="node-code-badge">${window.GP_NODE_SEC ? GP_NODE_SEC.tag('wave', code).replace('必修 ', '必') : code.slice(1)}</span>${nodeMeta[code].title}${code === 'N21' ? '・必修複習' : ''}</a></li>`).join('')}
             </ul>
         </details>`).join('');
     document.querySelectorAll('#sidebar [data-route]').forEach(a => a.setAttribute('href', `#${a.dataset.route}`));
@@ -108,7 +108,7 @@ function renderModuleView(moduleNum) {
         <div class="view-header"><span class="view-eyebrow">CHAPTER ${String(moduleNum).padStart(2,'0')}・選修物理 III</span><h2>${CHAPTER_INTROS[moduleNum][0]}</h2><p>${CHAPTER_INTROS[moduleNum][1]}</p></div>
         <h3 class="section-title">本章學習順序</h3>${list(core)}
         <details class="lesson-disclosure"><summary>把本章串起來：概念圖</summary><div class="disclosure-content">${mod.conceptMap}</div></details>
-        ${extensions.length ? `<details class="lesson-disclosure"><summary>延伸選讀：都卜勒效應</summary><div class="disclosure-content">${list(extensions)}</div></details>` : ''}
+        ${extensions.length ? `<details class="lesson-disclosure"><summary>必修 4-5 複習：都卜勒效應</summary><div class="disclosure-content">${list(extensions)}</div></details>` : ''}
         <details class="lesson-disclosure"><summary>跨章與生活應用・延伸選讀</summary><div class="disclosure-content">${mod.extensions}</div></details>`;
 }
 
@@ -200,11 +200,11 @@ function renderNodeView(code) {
         : activityButton || ((animByNode[code] || []).length ? '<button class="lesson-secondary" onclick="openLessonMedia()">看動畫觀察 →</button>' : '');
     const sequence = code === 'N21' ? ['N21'] : CORE_NODES;
     const i = sequence.indexOf(code), prev = sequence[i - 1], next = sequence[i + 1];
-    const formulaHtml = formulas.map(f => `<article class="card formula-card"><h4>${f.name}${[].concat(f.node).includes("N21") ? "・延伸選讀" : ""}</h4><div class="formula-box">$$${f.formula}$$</div><p class="formula-anchor">${f.anchor}</p><details class="formula-detail"><summary>公式怎麼用・條件與說明</summary><div class="formula-desc">${f.desc}</div></details></article>`).join('');
+    const formulaHtml = formulas.map(f => `<article class="card formula-card"><h4>${f.name}${[].concat(f.node).includes("N21") ? "・必修 4-5" : ""}</h4><div class="formula-box">$$${f.formula}$$</div><p class="formula-anchor">${f.anchor}</p><details class="formula-detail"><summary>公式怎麼用・條件與說明</summary><div class="formula-desc">${f.desc}</div></details></article>`).join('');
     const extraFeatures = features.length ? `<details class="lesson-disclosure"><summary>練習前再看：解題提醒</summary><div class="disclosure-content">${features.map(k => `<article class="card feature-card"><div class="feature-line"><span class="feature-label label-feature">看到什麼</span>${k.feature}</div><div class="feature-line"><span class="feature-label label-bridge">怎麼連結</span>${k.bridge}</div><div class="feature-line"><span class="feature-label label-trap">留意</span>${k.trap}</div></article>`).join('')}</div></details>` : '';
     const examHtml = exams.length ? `<details class="lesson-disclosure"><summary>進一步練習：大考與段考題型（${exams.length}）</summary><div class="disclosure-content">${exams.map(e => `<article class="card exam-card"><span class="exam-year">${e.year}</span><h4>${e.title}</h4>${e.image ? `<img class="quiz-fig-img" src="${e.image}" alt="${e.imageCaption || '題型分析圖'}" loading="lazy">` : ''}<p>${e.desc}</p></article>`).join('')}</div></details>` : '';
     document.getElementById('main-content').innerHTML = `
-        <div class="view-header"><span class="view-eyebrow">${CHAPTER_INTROS[meta.module][0]}・${code === 'N21' ? '延伸選讀' : `第 ${nodesOfModule(meta.module).indexOf(code) + 1} 節`}</span><h2>${meta.title}</h2>${guide ? `<div class="lesson-goal"><span class="lesson-kicker">這節要學會</span><p>${guide.goal}</p></div>` : ''}
+        <div class="view-header"><span class="view-eyebrow">${CHAPTER_INTROS[meta.module][0]}・${code === 'N21' ? '必修 4-5 複習' : `課本 ${window.GP_NODE_SEC ? GP_NODE_SEC.tag('wave', code) : nodeMeta[code].section}`}</span><h2>${meta.title}</h2>${guide ? `<div class="lesson-goal"><span class="lesson-kicker">這節要學會</span><p>${guide.goal}</p></div>` : ''}
         ${guide?.prerequisites.length ? `<div class="prerequisites"><span>先備觀念</span>${guide.prerequisites.map(c => routeLink(`node-${c}`, nodeMeta[c].title)).join('')}</div>` : ''}</div>
         ${guide ? `<section class="observe-card"><span class="lesson-kicker">01　先觀察</span><p>${guide.observe}</p>${observationActions}</section>` : ''}
         ${code === 'N12' ? SwingWork.html() : ''}
@@ -264,7 +264,7 @@ function renderQuizView() {
     document.getElementById('main-content').innerHTML = `
         <div class="view-header"><span class="view-eyebrow">觀念練習</span><h2>一次練一個重點</h2><p>第一次學，從「記憶」與「理解」開始。觀念穩定後，再練「應用」、 「分析」或歷屆試題。答錯會存入錯題本。</p></div>
         <div class="quiz-filter-bar">
-            <label>學習主題<select onchange="setQuizFilter('node',this.value)">${options([['all','全部主題'],...ALL_NODES.map(c => [c, `${nodeMeta[c].title}${c === 'N21' ? '（延伸）' : ''}`])],quizFilter.node)}</select></label>
+            <label>學習主題<select onchange="setQuizFilter('node',this.value)">${options([['all','全部主題'],...ALL_NODES.map(c => [c, `${nodeMeta[c].title}${c === 'N21' ? '（必修 4-5）' : ''}`])],quizFilter.node)}</select></label>
             <label>難度<select onchange="setQuizFilter('level',this.value)">${options([['all','全部難度'],...QUIZ_LEVELS.map(l => [l,l])],quizFilter.level)}</select></label>
             <label>題目來源<select onchange="setQuizFilter('source',this.value)">${options([['concept','觀念題'],['exam','歷屆試題'],['all','全部來源']],quizFilter.source)}</select></label>
         </div><p class="quiz-count">${list.length ? `共 ${list.length} 題・目前第 ${start + 1}–${Math.min(start + QUIZ_PAGE_SIZE,list.length)} 題` : '此篩選沒有題目，可切換難度或來源。'}${quizFilter.node !== 'all' ? `　${routeLink(`node-${quizFilter.node}`,'回看本節重點')}` : ''}</p>
@@ -301,7 +301,7 @@ function chapterFilterHtml(selected, handler) {
 }
 function renderFormulaSheet() {
     const chapters = formulaChapter === 'all' ? Object.keys(modulesData) : [formulaChapter];
-    const rows = chapters.map(m => `<h3 class="section-title">${CHAPTER_INTROS[m][0]}</h3>${modulesData[m].formulas.map(f => `<article class="card formula-card"><h4>${f.name}${[].concat(f.node).includes("N21") ? "・延伸選讀" : ""}</h4><div class="formula-box">$$${f.formula}$$</div><p class="formula-anchor">${f.anchor}</p><details class="formula-detail"><summary>適用條件與說明</summary><div class="formula-desc">${f.desc}</div></details><div class="prerequisites">${[].concat(f.node).map(c => routeLink(`node-${c}`,`回看：${nodeMeta[c].title}`)).join('')}</div></article>`).join('')}`).join('');
+    const rows = chapters.map(m => `<h3 class="section-title">${CHAPTER_INTROS[m][0]}</h3>${modulesData[m].formulas.map(f => `<article class="card formula-card"><h4>${f.name}${[].concat(f.node).includes("N21") ? "・必修 4-5" : ""}</h4><div class="formula-box">$$${f.formula}$$</div><p class="formula-anchor">${f.anchor}</p><details class="formula-detail"><summary>適用條件與說明</summary><div class="formula-desc">${f.desc}</div></details><div class="prerequisites">${[].concat(f.node).map(c => routeLink(`node-${c}`,`回看：${nodeMeta[c].title}`)).join('')}</div></article>`).join('')}`).join('');
     document.getElementById('main-content').innerHTML = `<div class="view-header"><span class="view-eyebrow">複習工具</span><h2>公式速查</h2><p>先選章節，確認公式的物理意義與使用條件，再代入數值。</p></div><label class="chapter-select print-hide">章節<select onchange="setFormulaChapter(this.value)">${[['1','波動'],['2','聲波'],['3','幾何光學'],['4','物理光學'],['all','全部章節（列印用）']].map(([v,l]) => `<option value="${v}" ${formulaChapter === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>${rows}`;
 }
 

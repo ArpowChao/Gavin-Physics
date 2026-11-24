@@ -231,7 +231,7 @@ function adminStudentDetail(key, uid, scale) {
 const DEFAULTS = {
   FIG_FOLDER_ID: '16MNlYaCY1aqb2qrMcGu9uoLd5J79tRZT',     // 易混淆概念題的附圖（沿用原本的雲端資料夾）
   LEGACY_SHEET_ID: '1y1yze94zM5elUqDt31Ys9VHASJJ1LBIq_I0VdMyv2Pc',   // 舊系統「物理練習系統_資料庫」
-  BANK_FILE_ID: '19-ED5NwK-5jWbf5tgsX-asBsDHNZj-dh',      // 合併題庫 bank_all.json（雲端硬碟「Gavin Physics 線上練習」資料夾，含電磁學）
+  BANK_FILE_ID: '18jMm11P4JKg4y4UEBFcBZHxsrT8rsYjy',      // 合併題庫 bank_all.json（雲端硬碟「Gavin Physics 線上練習」資料夾，含電磁學）
 };
 const ANCHORS_PER_SESSION = 2;      // 每次練習加入的錨題數（同一量尺）
 const TOKEN_HOURS = 6;              // 登入閒置多久後失效（每次呼叫都會延長）

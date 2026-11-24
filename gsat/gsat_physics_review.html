@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../assets/icon-192.png">
-<link rel="stylesheet" href="../assets/warm.css?v=20261124g">
+<link rel="stylesheet" href="../assets/warm.css?v=20261124h">
 <!-- /gp-head -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>學測物理 SOIL 核心複習智慧系統</title>
@@ -37,6 +37,7 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <!-- 共用模擬執行層；Three.js 只在進入 3D 專題時才載入。 -->
+    <script src="../assets/node-sections.js?v=20261124h"></script>
     <script src="assets/js/physics-runtime.js"></script>
     <link rel="stylesheet" href="assets/css/interaction-runtime.css">
 
@@ -5330,7 +5331,7 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
 .sidebar-brand h1,.content-title,.hero-title,main h1,main h2{font-family:"Noto Serif TC",serif}
 .view-toolbar{background:rgba(255,250,243,.9) !important}
 </style>
-<script src="../assets/site.js?v=20261124g" defer></script>
+<script src="../assets/site.js?v=20261124h" defer></script>
 </head>
 <body>
 
@@ -6397,6 +6398,8 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
             { id: "N27", module: 7, code: "Ke", name: "四大基本交互作用", exam5y: 4, detail: "強力/電磁力/弱力/重力的強度排序與作用範圍（115 Q14 氦核內四力比較）、媒介粒子、β 衰變屬弱力" },
             { id: "N28", module: 7, code: "Kd", name: "普朗克量子論與黑體輻射", exam5y: 2, detail: "黑體輻射光譜、紫外災難、$E_n=nhf$、維恩位移與史蒂芬—波茲曼定律（111 Q7-8）" }
         ];
+        // 畫面上以課本章節取代課綱代碼（N01、Ea…一般人看不懂）；內部鍵值仍用 N01
+        if (window.GP_NODE_SEC) knowledgeNodes.forEach(n => { n.code = '課本 ' + GP_NODE_SEC.tag('gsat', n.id) + ' ' + GP_NODE_SEC.title('gsat', n.id); });
 
         // Render Physics Modules (Tabs S O I L)
 
