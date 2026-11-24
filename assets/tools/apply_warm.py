@@ -8,6 +8,7 @@
 import os, re, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+VER = '20261124c'   # 改版時更新，避免瀏覽器用到舊的快取
 
 L = dict(bg='#f8f1e7', soft='#f2e7d8', card='#fffaf3', card2='#fbf3e8', ink='#3b2c24', muted='#7d6a5c', line='#e7d6c3',
          acc='#c0603a', acc2='#9f4a28', accs='#f7e3d6', honey='#d4962e', sage='#5f8a5c', rose='#b4484d', plum='#86587f', teal='#3b8b86',
@@ -95,20 +96,20 @@ def apply(path, css, mode, htmlcls):
     # 清掉上一次套用的內容
     t = re.sub(r'\n?<!-- gp-head -->.*?<!-- /gp-head -->', '', t, flags=re.S)
     t = re.sub(r'\n?<style id="gp-warm">.*?</style>', '', t, flags=re.S)
-    t = re.sub(r'\n?<script src="[./]*assets/site\.js"[^>]*></script>', '', t)
+    t = re.sub(r'\n?<script src="[./]*assets/site\.js(\?[^"]*)?"[^>]*></script>', '', t)
     head = '<!-- gp-head -->\n'
     if not re.search(r'<meta[^>]+name=["\']viewport', t, re.I):
         head += '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
     head += HEAD_META + '\n'
     head += f'<link rel="manifest" href="{rel(path, "manifest.webmanifest")}">\n<link rel="apple-touch-icon" href="{rel(path, "assets/icon-192.png")}">\n'
-    head += f'<link rel="stylesheet" href="{rel(path, "assets/warm.css")}">\n<!-- /gp-head -->'
+    head += f'<link rel="stylesheet" href="{rel(path, "assets/warm.css")}?v={VER}">\n<!-- /gp-head -->'
     # 放在 <head> 最前面（在頁面自己的樣式之前），讓頁面樣式與底下的覆寫都能蓋過基礎樣式
     t = re.sub(r'\n?\s*<meta[^>]+name=["\']theme-color["\'][^>]*>', '', t, flags=re.I)
     m = re.search(r'<meta[^>]+charset[^>]*>', t, re.I) or re.search(r'<head[^>]*>', t, re.I)
     t = t[:m.end()] + '\n' + head + t[m.end():]
     tail = ''
     if css: tail += f'<style id="gp-warm">\n/* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */\n{css}\n</style>\n'
-    tail += f'<script src="{rel(path, "assets/site.js")}"' + (' data-mode="pill"' if mode == 'pill' else '') + ' defer></script>\n'
+    tail += f'<script src="{rel(path, "assets/site.js")}?v={VER}"' + (' data-mode="pill"' if mode == 'pill' else '') + ' defer></script>\n'
     m = list(re.finditer(r'</head>', t, re.I))[-1]; t = t[:m.start()] + tail + t[m.start():]
     # <html> 的 class
     t = re.sub(r'(<html\b[^>]*?)\s+data-gp="[^"]*"', r'\1', t, count=1)

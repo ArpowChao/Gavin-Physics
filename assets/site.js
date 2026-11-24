@@ -10,11 +10,12 @@
   const me = document.currentScript || [...document.scripts].find(s => /assets\/site\.js(\?|$)/.test(s.src));
   const ROOT = me ? me.src.replace(/assets\/site\.js(\?.*)?$/, '') : '/';
   const MODE = (me && me.dataset.mode) || '';
+  const Q = me && me.src.indexOf('?') > 0 ? me.src.slice(me.src.indexOf('?')) : '';
   const here = location.href;
   const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['apps/', '實驗室'], ['practice/', '線上練習']];
   const active = p => p ? here.indexOf(ROOT + p) === 0 : here.replace(/(index\.html)?([?#].*)?$/, '') === ROOT;
 
-  if (![...document.styleSheets].some(s => /assets\/warm\.css/.test(s.href || ''))) {
+  if (![...document.styleSheets].some(s => /assets\/warm\.css/.test(s.href || '')) && !document.querySelector('link[href*="assets/warm.css"]')) {
     const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = ROOT + 'assets/warm.css'; document.head.appendChild(l);
   }
 
@@ -189,9 +190,9 @@
   let apiP = null;
   function loadApi() {
     if (!apiP) apiP = (async () => {
-      if (!('PHY_API_URL' in window)) await load(ROOT + 'practice/config.js');
-      if (!window.PhyAPI) await load(ROOT + 'practice/api.js');
-      if (!window.PhyItemKey) await load(ROOT + 'practice/item-key.js');
+      if (!('PHY_API_URL' in window)) await load(ROOT + 'practice/config.js' + Q);
+      if (!window.PhyAPI) await load(ROOT + 'practice/api.js' + Q);
+      if (!window.PhyItemKey) await load(ROOT + 'practice/item-key.js' + Q);
       if (window.PhyAPI) PhyAPI.onChange(refreshUser);
     })();
     return apiP;
