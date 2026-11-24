@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Gavin Physics">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="apple-touch-icon" href="../../assets/icon-192.png">
-<link rel="stylesheet" href="../../assets/warm.css?v=20261124e">
+<link rel="stylesheet" href="../../assets/warm.css?v=20261124g">
 <!-- /gp-head --><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="都卜勒水波"><meta name="format-detection" content="telephone=no">
   <meta name="description" content="一圈一圈排出水波，量測、播放，作答直接送給老師。">
@@ -21,7 +21,7 @@
 /* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */
 html:root{--paper:#f8f1e7;--pond:#fffaf3;--ink:#3b2c24;--muted:#7d6a5c;--line:#e7d6c3;--teal:#c0603a;--gold:#d4962e;--body:'Noto Sans TC','Microsoft JhengHei',sans-serif} html body{background:#f8f1e7}
 </style>
-<script src="../../assets/site.js?v=20261124e" data-mode="pill" defer></script>
+<script src="../../assets/site.js?v=20261124g" data-mode="pill" defer></script>
 </head>
 <body>
   <header class="topbar"><a href="../index.html">← Physics Lab</a><span>水波與都卜勒效應</span><span class="topbar-right"><button id="lang-toggle" class="lang-toggle" type="button" data-no-i18n aria-label="中文 / English">EN</button><a href="#worksheet">前往作答 ↓</a></span></header>
@@ -51,7 +51,7 @@ html:root{--paper:#f8f1e7;--pond:#fffaf3;--ink:#3b2c24;--muted:#7d6a5c;--line:#e
     </div>
     <p id="status" class="status" role="status">把每一圈的圓心放到發波的位置</p>
     <section id="worksheet" class="worksheet" aria-labelledby="worksheet-title">
-      <div class="assignment"><h2 id="worksheet-title">作答</h2><label for="task">題目</label><select id="task"></select><p id="question" class="question"></p><div id="task-figure" class="task-figure" hidden></div><a id="task-link" class="task-link" href="https://arpowchao.github.io/phy-senior/gsat_physics_review.html#lab-N15" target="_blank" rel="noopener" hidden></a><button id="load-task" type="button">套用起始設定</button><p class="small-note">可重送，以最後一次為準</p></div>
+      <div class="assignment"><h2 id="worksheet-title">作答</h2><label for="task">題目</label><select id="task"></select><p id="question" class="question"></p><div id="task-figure" class="task-figure" hidden></div><a id="task-link" class="task-link" href="../../gsat/gsat_physics_review.html#lab-N15" target="_blank" rel="noopener" hidden></a><button id="load-task" type="button">套用起始設定</button><p class="small-note">可重送，以最後一次為準</p></div>
       <div class="answer-sheet"><div class="who"><label>班級<select id="cls"><option value="">選班級</option><option>101</option><option>102</option><option>103</option><option>104</option><option>105</option><option>106</option><option>107</option><option>108</option><option>109</option><option>110</option><option>111</option><option>112</option></select></label><label>座號<select id="seat"><option value="">選座號</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option><option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option><option>41</option><option>42</option><option>43</option><option>44</option><option>45</option><option>46</option><option>47</option><option>48</option><option>49</option><option>50</option></select></label><label>組別<select id="group"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option></select></label><label>姓名<input id="student" type="text" maxlength="40" placeholder="選填"></label></div><div id="task-fields" class="task-fields"></div><label for="answer" id="answer-label">我的回答</label><textarea id="answer" rows="4" maxlength="2400" placeholder="寫下理由"></textarea><div class="submit-row"><button id="submit" class="primary" type="button">⇪ 送出給老師</button><span id="submit-status" class="submit-status" aria-live="polite"></span></div><div class="export-row"><button id="capture" type="button">↓ 下載截圖＋回答</button><button id="capture-only" type="button">只下載水波圖</button></div><p id="save-note" class="small-note">第 2～4 題會附上水波截圖</p></div>
     </section>
     <section class="evidence" aria-label="本次留下的實驗圖片"><div class="evidence-heading"><h2>實驗紀錄</h2><button id="clear-records" type="button" hidden>清除本次紀錄</button></div><p id="records-empty" class="copy">下載的圖會出現在這裡</p><div id="records" class="records"></div></section>

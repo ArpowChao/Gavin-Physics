@@ -11,7 +11,7 @@
 const DEFAULTS = {
   FIG_FOLDER_ID: '16MNlYaCY1aqb2qrMcGu9uoLd5J79tRZT',     // 易混淆概念題的附圖（沿用原本的雲端資料夾）
   LEGACY_SHEET_ID: '1y1yze94zM5elUqDt31Ys9VHASJJ1LBIq_I0VdMyv2Pc',   // 舊系統「物理練習系統_資料庫」
-  BANK_FILE_ID: '1djCOygDOaSKoyc8SYTKAx09xlFq8-zU-',      // 合併題庫 bank_all.json（雲端硬碟「Gavin Physics 線上練習」資料夾）
+  BANK_FILE_ID: '19-ED5NwK-5jWbf5tgsX-asBsDHNZj-dh',      // 合併題庫 bank_all.json（雲端硬碟「Gavin Physics 線上練習」資料夾，含電磁學）
 };
 const ANCHORS_PER_SESSION = 2;      // 每次練習加入的錨題數（同一量尺）
 const TOKEN_HOURS = 6;              // 登入閒置多久後失效（每次呼叫都會延長）
@@ -202,6 +202,7 @@ function getMeta() {
   return { banks: META.banks, scales: META.scales, concepts: META.concepts, conceptBank: META.conceptBank, papers: META.papers, counts: cnt, total: ITEMS.length, changelog: CHANGELOG };
 }
 const CHANGELOG = [
+  { d: '2026-11-25', t: ['新增「電磁學」題庫 78 題（選修物理Ⅳ），和波動與光學同屬選修的能力估計。'] },
   { d: '2026-11-24', t: ['練習系統搬到 Gavin Physics 網站，原本的帳號與作答紀錄都已移過來。',
     '新增「學測必修複習」106 題與「波動與光學」107 題，練習前先選題庫。',
     '在學測、波動光學網頁裡登入後，節點檢核題的作答也會記錄，並收進錯題本。',

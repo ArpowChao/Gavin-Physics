@@ -8,7 +8,7 @@
 import os, re, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-VER = '20261124e'   # 改版時更新，避免瀏覽器用到舊的快取
+VER = '20261124g'   # 改版時更新，避免瀏覽器用到舊的快取
 
 L = dict(bg='#f8f1e7', soft='#f2e7d8', card='#fffaf3', card2='#fbf3e8', ink='#3b2c24', muted='#7d6a5c', line='#e7d6c3',
          acc='#c0603a', acc2='#9f4a28', accs='#f7e3d6', honey='#d4962e', sage='#5f8a5c', rose='#b4484d', plum='#86587f', teal='#3b8b86',
@@ -44,6 +44,7 @@ BB = (f"html:root{{{BB_D}}} html:root[data-theme='dark']{{{BB_D}}} html:root[dat
 PAGES = {
     'gsat/gsat_physics_review.html': (STUDY, 'bar', ''),
     'wave-optics/wave_optics_review.html': (STUDY + f"\nhtml:root{{--bg-body:{L['bg']}}}", 'bar', ''),
+    'electromag/index.html': (f"html:root{{--paper:{L['bg']};--white:{L['card']};--ink:{L['ink']};--muted:{L['muted']};--rule:{L['line']};--accent:{L['acc']};--sidebar:{L['cocoa']}}} html body{{background:{L['bg']}}} #sidebar{{background:{L['cocoa']} !important}}", 'bar', ''),
     'wave-optics/water_interference.html': (f"html:root{{--bg:{L['bg']};--ink:{L['ink']};--muted:{L['muted']};--line:{L['line']};--accent:{L['acc']};--soft:{L['accs']};--rose:{L['rose']}}} h1,h2{{font-family:'Noto Serif TC',serif}}", 'bar', ''),
     'physics-lecture/index.html': (f"html:root{{--primary-color:{L['acc']};--primary-hover:{L['acc2']};--bg-body:{L['bg']};--bg-card:{L['card']};--bg-sidebar:{L['card']};--text-main:{L['ink']};--text-muted:{L['muted']};--text-light:{L['muted']};--border-color:{L['line']};--border-focus:{L['acc']}}} html body{{background:{L['bg']}}} h1,h2{{font-family:'Noto Serif TC',serif}}", 'bar', ''),
     'apps/physics-review/index.html': (f"html:root{{--sunset-blue:{L['acc2']};--bg-primary:{L['bg']};--bg-card:{L['card']};--bg-sidebar:{L['card']};--text-primary:{L['ink']};--text-content:#4a3a30;--text-muted:{L['muted']};--bg-glass:rgba(255,250,243,.88);--border-glass:{L['line']}}} html{{background:{L['bg']} !important}} h1,h2{{font-family:'Noto Serif TC',serif}}", 'bar', ''),
@@ -73,7 +74,6 @@ PAGES = {
     'apps/alpha.html': ('', 'bar', 'gp-tw'),
     'apps/friction-simulation/index.html': ('', 'bar', 'gp-tw'),
     'apps/phy-olympic-wall-bar-move.html': ('', 'bar', 'gp-tw'),
-    'apps/whiteboard.html': ('', 'pill', ''),
     'apps/Uncertainty.html': (f".container{{background:{L['card']} !important}}", 'pill', 'gp-plain'),
     'apps/movable_pulley.html': (f".container{{background:{L['card']} !important}}", 'pill', 'gp-plain'),
     'apps/random_sampler.html': (f".container{{background:{L['card']} !important}}", 'pill', 'gp-plain'),
@@ -83,7 +83,7 @@ PAGES = {
 for k in ['theme1', 'theme2', 'theme3', 'theme4']:
     PAGES[f'apps/single-slit-diffraction/{k}.html'] = (f"html:root{{--primary:{L['ink']};--secondary:{L['acc']};--highlight:{L['honey']};--bg-color:{L['bg']};--panel-bg:{L['card']};--btn-play:{L['sage']};--btn-pause:{L['honey']};--btn-calm:{L['acc']};--btn-reset:#a8978a}} html body{{background:{L['bg']} !important}}", 'pill', '')
 # 自己做的首頁、目錄頁、練習頁直接使用 warm.css 的變數
-HUBS = ['index.html', 'apps/index.html', 'practice/index.html', 'practice/admin.html']
+HUBS = ['index.html', 'practice/index.html', 'practice/admin.html']
 
 HEAD_META = '''<meta name="theme-color" content="#3a2a22">
 <meta name="apple-mobile-web-app-capable" content="yes">

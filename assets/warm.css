@@ -117,4 +117,23 @@ html.gp-tw h1, html.gp-tw h2 { font-family: var(--gp-serif); }
 html.gp-plain body { background: var(--gp-bg) !important; color: var(--gp-ink); font-family: var(--gp-sans); }
 html.gp-plain h1, html.gp-plain h2 { font-family: var(--gp-serif); color: var(--gp-ink); }
 
+
+/* ---------- 節點頁的互動實驗 ---------- */
+.gp-labs { margin: 18px 0 26px; padding: 18px 20px 20px; border-radius: var(--gp-radius); background: var(--gp-card); border: 1px solid var(--gp-line); box-shadow: var(--gp-shadow); font-family: var(--gp-sans); color: var(--gp-ink); }
+.gp-labs-head h2 { margin: 0 0 4px; font: 700 1.15rem/1.4 var(--gp-serif); color: var(--gp-ink); border: 0; padding: 0; }
+.gp-labs-head p { margin: 0 0 12px; color: var(--gp-muted); font-size: .9rem; }
+.gp-labs-list { display: grid; gap: 10px; }
+.gp-lab { border: 1px solid var(--gp-line); border-radius: 12px; background: var(--gp-card-2); padding: 12px 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.gp-lab-txt { flex: 1 1 260px; display: flex; flex-direction: column; gap: 2px; }
+.gp-lab-txt strong { font-size: 1rem; }
+.gp-lab-txt span { font-size: .86rem; color: var(--gp-muted); }
+.gp-lab-btns { display: flex; gap: 8px; align-items: center; }
+.gp-lab-btns button, .gp-lab-btns a { font: 600 .88rem/1 var(--gp-sans); padding: 9px 14px; border-radius: 999px; border: 1px solid var(--gp-accent); text-decoration: none; cursor: pointer; }
+.gp-lab-btns button { background: var(--gp-accent); color: #fff; }
+.gp-lab-btns a { background: transparent; color: var(--gp-accent-ink); }
+.gp-lab-frame { flex: 1 1 100%; position: relative; margin-top: 4px; }
+.gp-lab-frame iframe { width: 100%; height: min(78vh, 720px); border: 1px solid var(--gp-line); border-radius: 10px; background: #fff; display: block; }
+.gp-lab-fs { position: absolute; top: 10px; right: 10px; padding: 8px 14px; border: 0; border-radius: 999px; background: rgba(58, 42, 34, .82); color: #fff3e6; font: 700 13px/1 var(--gp-sans); cursor: pointer; }
+iframe.gp-stage { padding: 0 !important; border: 0 !important; border-radius: 0 !important; height: 100vh !important; }
+
 @media print { .gp-bar, .gp-toast, .gp-pill, .gp-stage-btn { display: none !important; } }

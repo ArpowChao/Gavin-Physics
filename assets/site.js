@@ -12,7 +12,8 @@
   const MODE = (me && me.dataset.mode) || '';
   const Q = me && me.src.indexOf('?') > 0 ? me.src.slice(me.src.indexOf('?')) : '';
   const here = location.href;
-  const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['apps/', '實驗室'], ['practice/', '線上練習']];
+  const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['electromag/', '選修・電磁學'], ['practice/', '線上練習']];
+  window.__GP_ROOT__ = ROOT;
   const active = p => p ? here.indexOf(ROOT + p) === 0 : here.replace(/(index\.html)?([?#].*)?$/, '') === ROOT;
 
   if (![...document.styleSheets].some(s => /assets\/warm\.css/.test(s.href || '')) && !document.querySelector('link[href*="assets/warm.css"]')) {
@@ -129,7 +130,7 @@
   }
   function decorate() {
     document.querySelectorAll('canvas, svg[viewBox], iframe').forEach(m => {
-      if (m.__gpStage || m.closest('.gp-bar, .gp-pill, button, a, .gp-stage-btn, [data-gp-nostage]')) return;
+      if (m.__gpStage || m.closest('.gp-bar, .gp-pill, button, a, .gp-stage-btn, [data-gp-nostage], .gp-lab-frame')) return;
       if (m.tagName.toLowerCase() === 'svg' && m.parentElement && m.parentElement.closest('svg')) return;
       const r = m.getBoundingClientRect(); if (r.width < MIN_W || r.height < MIN_H) return;
       m.__gpStage = true;
@@ -170,11 +171,19 @@
     const isApp = /\/apps\/.+/.test(path) && !/\/apps\/(index\.html)?$/.test(path);
     const withFS = isApp || /water_interference/.test(path);
     let embedded = false; try { embedded = window.self !== window.top && !!window.top.__GP_SITE__; } catch (e) {}
-    if (embedded) {}   // 嵌在本站其他頁面的 iframe 裡：導覽交給外層頁面
+    if (embedded) {   // 嵌在本站節點頁的 iframe 裡：導覽交給外層頁面，藏起實驗自己的「回實驗室／回首頁」連結
+      document.documentElement.classList.add('gp-embedded');
+      document.querySelectorAll('a[href]').forEach(a => {
+        let u; try { u = new URL(a.getAttribute('href'), location.href); } catch (e) { return; }
+        const homeish = u.origin === location.origin && (/\/apps\/(index\.html)?$/.test(u.pathname) || u.pathname === new URL(ROOT).pathname || u.pathname === new URL(ROOT).pathname + 'index.html');
+        if (homeish || /^(←\s*)?(Physics Lab|回首頁|返回首頁|互動實驗室)$/.test(a.textContent.trim().replace(/^[←◂<]\s*/, ''))) a.style.display = 'none';
+      });
+    }
     else if (MODE === 'pill') {
       const p = document.createElement('div'); p.className = 'gp-pill';
-      p.innerHTML = '<a href="' + ROOT + 'apps/">◂ 實驗室</a><button type="button" class="gp-fsbtn">⛶ 全螢幕</button>';
+      p.innerHTML = '<a href="' + ROOT + '" class="gp-back">◂ 返回</a><button type="button" class="gp-fsbtn">⛶ 全螢幕</button>';
       document.body.appendChild(p);
+      p.querySelector('.gp-back').addEventListener('click', e => { try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (err) {} });
     } else {
       const sideBrand = document.querySelector('#sidebar .sidebar-brand');
       if (sideBrand) sideBrand.parentNode.insertBefore(bar(true, false), sideBrand);
@@ -182,6 +191,7 @@
     }
     document.querySelectorAll('.gp-fsbtn').forEach(b => b.addEventListener('click', togglePage));
     loadApi().then(refreshUser);
+    if (/\/(gsat|electromag)\/|wave_optics_review/.test(path)) load(ROOT + 'assets/topic-labs.js' + Q);
     decorate(); setTimeout(decorate, 1200);
     new MutationObserver(scheduleDecorate).observe(document.body, { childList: true, subtree: true });
     window.addEventListener('resize', () => { if (!stageEl) scheduleDecorate(); });

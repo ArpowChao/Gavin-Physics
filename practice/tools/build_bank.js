@@ -36,6 +36,7 @@ const abOf = perf => { for (const [re, k] of AB_RULES) if (re.test(perf || '')) 
 
 const confuse = JSON.parse(fs.readFileSync(confusePath, 'utf8'));
 const reg = fs.existsSync(REGISTRY) ? JSON.parse(fs.readFileSync(REGISTRY, 'utf8')) : { next: { gsat: 1001, wave: 2001 }, ids: {} };
+reg.next.em = reg.next.em || 3001;
 
 const LEVELS = ['記憶', '理解', '應用', '分析'];
 const META = {
@@ -44,6 +45,7 @@ const META = {
     { key: 'confuse', name: '易混淆概念', scale: 'req' },
     { key: 'gsat', name: '學測必修複習', scale: 'req' },
     { key: 'wave', name: '波動與光學', scale: 'elec' },
+    { key: 'em', name: '電磁學', scale: 'elec' },
   ],
   abilities: confuse.META.abilities,
   concepts: [], conceptBank: [],
@@ -89,6 +91,36 @@ SOURCES.forEach(src => {
   });
   stats[src.bank] = { used, skipped };
 });
+
+// ---------- 電磁學（選修物理Ⅳ）：逐概念練習＋逐章練習卷的單選／多選（題組與手寫題、需附圖的題目不納入） ----------
+(() => {
+  const ctx = { window: {} }; const run = f => new Function('window', 'EM', fs.readFileSync(path.join(ROOT, 'electromag/data', f), 'utf8') + '\n;return window.EM || EM;');
+  let EM = run('course.js')(ctx.window, undefined); ['concept-practice.js', 'exams.js'].forEach(f => { EM = run(f)(ctx.window, EM) || EM; });
+  const L = 'ABCDE';
+  ['記憶', '理解', '應用', '分析'].forEach(l => META.papers.push({ key: 'em:' + l, name: l + '題', bank: 'em' }));
+  const cIdx = {};
+  EM.sections.forEach(s => { cIdx[s.id] = META.concepts.length; META.concepts.push(s.id + ' ' + s.name); META.conceptBank.push('em'); });
+  let used = 0, skipped = 0; const pno = {};
+  const add = (node, sectionId, level, type, stem, choices, keys, exp, perf, abCode) => {
+    const key = itemKey('em', node, stem);
+    let id = reg.ids[key]; if (!id) { id = reg.next.em++; reg.ids[key] = id; }
+    const paper = 'em:' + level; pno[paper] = (pno[paper] || 0) + 1;
+    ITEMS.push({ id, key, bank: 'em', scale: 'elec', paper, pno: pno[paper], concept: cIdx[sectionId], node: sectionId, ab: abCode, bloom: level,
+      type, gid: null, stem, opts: choices, ans: keys.map(k => L[k]).join(''), table: null, fig: null,
+      sec: '電磁 ' + sectionId, focus: perf, anchor: false, exp: { text: exp || '', why: {} } });
+    used++;
+  };
+  Object.keys(EM.conceptPractice).forEach(sid => EM.conceptPractice[sid].forEach(topic => topic.forEach(q => {
+    if (q.figure) { skipped++; return; }
+    add(sid, sid, q.level, 'S', q.stem, q.choices, [q.key], q.explanation, '逐概念練習', null);
+  })));
+  EM.exams.forEach(e => e.questions.forEach(q => {
+    if (!(q.type === 'single' || q.type === 'multi') || q.figure) { skipped++; return; }
+    const ab = q.ability ? q.ability.slice(0, 2) : null;
+    add(q.id, q.section, q.bloom, q.type === 'multi' ? 'M' : 'S', q.stem, q.options, q.key, q.reason, '第 ' + e.chapter + ' 章練習卷', ab);
+  }));
+  stats.em = { used, skipped };
+})();
 
 // 檢查
 const ids = new Set(); ITEMS.forEach(i => { if (ids.has(i.id)) throw new Error('題號重複 ' + i.id); ids.add(i.id);
