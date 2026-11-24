@@ -68,13 +68,15 @@
     let t; while ((t = w.nextNode())) fixText(t);
   }
   let queue = new Set(), raf = 0;
-  function flush() { raf = 0; const q = queue; queue = new Set(); q.forEach(n => { if (n.isConnected) walk(n); }); }
+  function flush() { raf = 0; const q = queue; queue = new Set(); q.forEach(n => { if (n.isConnected) walk(n); }); fixTitle(); }
+  function fixTitle() { const v = document.title.replace(RE, (m, pre, d) => map['N' + d] ? pre + api.tag(course, 'N' + d) : m); if (v !== document.title) document.title = v; }
   function start() {
-    walk(document.body);
+    walk(document.body); fixTitle();
     new MutationObserver(ms => {
       ms.forEach(m => { if (m.type === 'characterData') queue.add(m.target); else m.addedNodes.forEach(n => queue.add(n)); });
-      if (!raf) raf = requestAnimationFrame(flush);
+      if (!raf) raf = setTimeout(flush, 0);   // 不用 requestAnimationFrame：背景分頁不會觸發
     }).observe(document.body, { childList: true, subtree: true, characterData: true });
+    const tt = document.querySelector('title'); if (tt) new MutationObserver(fixTitle).observe(tt, { childList: true, characterData: true, subtree: true });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })(typeof window !== 'undefined' ? window : globalThis);

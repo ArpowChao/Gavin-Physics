@@ -8,7 +8,7 @@
 import os, re, sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-VER = '20261124h'   # 改版時更新，避免瀏覽器用到舊的快取
+VER = '20261124i'   # 改版時更新，避免瀏覽器用到舊的快取
 
 L = dict(bg='#f8f1e7', soft='#f2e7d8', card='#fffaf3', card2='#fbf3e8', ink='#3b2c24', muted='#7d6a5c', line='#e7d6c3',
          acc='#c0603a', acc2='#9f4a28', accs='#f7e3d6', honey='#d4962e', sage='#5f8a5c', rose='#b4484d', plum='#86587f', teal='#3b8b86',
