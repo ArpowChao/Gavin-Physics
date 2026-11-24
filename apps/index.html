@@ -1,14 +1,24 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="gp-hub">
 <head>
 <meta charset="utf-8">
+<!-- gp-head -->
+<meta name="theme-color" content="#3a2a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gavin Physics">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/icon-192.png">
+<link rel="stylesheet" href="../assets/warm.css">
+<!-- /gp-head -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>互動物理實驗室</title>
 <style>
-  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; } }
+  :root { --bg:var(--gp-bg); --card:var(--gp-card); --ink:var(--gp-ink); --muted:var(--gp-muted); --line:var(--gp-line); --accent:var(--gp-accent); --soft:var(--gp-accent-soft); }
+  
   * { box-sizing:border-box; }
-  body { margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; }
+  body { margin:0; font-family:var(--gp-sans); background:var(--bg); color:var(--ink); line-height:1.6; }
   main { max-width:880px; margin:0 auto; padding:56px 20px 40px; }
   h1 { font-size:1.9rem; margin:0 0 6px; }
   .lead { color:var(--muted); margin:0 0 32px; }
@@ -22,6 +32,8 @@
   footer a { color:var(--accent); }
   h3 { font-size:1.05rem; margin:36px 0 12px; }
   .back { display:inline-block; margin-bottom:18px; color:var(--accent); text-decoration:none; }
+  h1, h3 { font-family:var(--gp-serif); }
+  a.card { box-shadow:var(--gp-shadow); border-radius:16px; }
 </style>
 <script src="../assets/site.js" defer></script>
 </head>
@@ -29,14 +41,13 @@
 <main>
   <a class="back" href="../">← 回總入口</a>
   <h1>互動物理實驗室</h1>
-  <p class="lead">30 個互動模擬與課堂工具，依主題分類。</p>
+  <p class="lead">29 個互動模擬與課堂工具，依主題分類。</p>
   <h3>力學與運動</h3>
   <div class="grid">
     <a class="card" href="lid-toss/"><h2>TOSS 彈蓋垃圾桶挑戰</h2><p>拋體運動任務挑戰</p></a>
     <a class="card" href="barrel-angle/"><h2>BARREL 全壘打仰角實驗室</h2><p>仰角與空氣阻力，0°–90°</p></a>
     <a class="card" href="pitch-spin/"><h2>SPIN 投球旋轉實驗室</h2><p>球速、轉速、轉軸與球路</p></a>
     <a class="card" href="baseball-cfd/"><h2>棒球氣流實驗室</h2><p>3D 縫線、邊界層與受力</p></a>
-    <a class="card" href="phy-vpython-baseball.html"><h2>棒球投球模擬</h2><p>VPython 版投球軌跡</p></a>
     <a class="card" href="friction-simulation/"><h2>摩擦力模擬</h2><p>互動摩擦力模擬</p></a>
     <a class="card" href="movable_pulley.html"><h2>滑輪組與阿特伍德機</h2><p>動滑輪、定滑輪與加速度</p></a>
     <a class="card" href="center-of-mass.html"><h2>質心運動模擬</h2><p>拋體爆炸後的質心軌跡</p></a>

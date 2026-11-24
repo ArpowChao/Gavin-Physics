@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="gp-hub">
 <head>
 <meta charset="utf-8">
+<!-- gp-head -->
+<meta name="theme-color" content="#3a2a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gavin Physics">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="assets/warm.css">
+<!-- /gp-head -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gavin Physics｜高中物理</title>
 <meta name="description" content="高中物理互動教材：學測必修複習、選修波動與光學、互動實驗室與線上練習。">
 <style>
-  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; --soft:#eef3fd; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; --soft:#1f2a3b; } }
+  :root { --bg:var(--gp-bg); --card:var(--gp-card); --ink:var(--gp-ink); --muted:var(--gp-muted); --line:var(--gp-line); --accent:var(--gp-accent); --soft:var(--gp-accent-soft); }
+  
   * { box-sizing:border-box; }
-  body { margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; }
+  body { margin:0; font-family:var(--gp-sans); background:var(--bg); color:var(--ink); line-height:1.6; }
   main { max-width:980px; margin:0 auto; padding:40px 20px 48px; }
   h1 { font-size:2rem; margin:0 0 6px; }
   .lead { color:var(--muted); margin:0 0 28px; }
@@ -33,6 +43,9 @@
   .topics span { font-size:.8rem; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:1px 9px; }
   footer { margin-top:44px; font-size:.85rem; color:var(--muted); }
   footer a { color:var(--accent); }
+  h1, h2, .card h3 { font-family:var(--gp-serif); }
+  a.card { box-shadow:var(--gp-shadow); border-radius:18px; }
+  .btn { background:var(--gp-accent); border-radius:999px; padding:11px 22px; }
 </style>
 <script src="assets/site.js" defer></script>
 </head>
@@ -95,7 +108,7 @@
   </div>
 
   <h2>互動實驗室</h2>
-  <p class="sub">30 個模擬與課堂工具，依主題分類。</p>
+  <p class="sub">29 個模擬與課堂工具，依主題分類。</p>
   <div class="grid">
     <a class="card big" href="apps/">
       <span class="tag">實驗室</span>

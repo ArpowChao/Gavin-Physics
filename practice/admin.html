@@ -1,7 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" class="gp-hub">
 <head>
 <meta charset="utf-8">
+<!-- gp-head -->
+<meta name="theme-color" content="#3a2a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gavin Physics">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/icon-192.png">
+<link rel="stylesheet" href="../assets/warm.css">
+<!-- /gp-head -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>練習系統後台｜Gavin Physics</title>
@@ -11,12 +21,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="config.js"></script>
 <script src="api.js"></script>
-<script src="../assets/site.js" defer></script>
 <style>
-:root{--bg:#f5f6f8;--card:#fff;--ink:#1d2330;--muted:#667085;--line:#e3e6ec;--accent:#2f6fde;--accent-ink:#fff;--ok:#1f8a4c;--bad:#c2410c;--warn:#b7791f;--chip:#eef2fb}
-@media (prefers-color-scheme:dark){:root{--bg:#14171c;--card:#1d2128;--ink:#e7e9ee;--muted:#9aa3b2;--line:#2c323c;--accent:#6c9cf0;--accent-ink:#0b1220;--ok:#5cc489;--bad:#f0915c;--warn:#e0b45a;--chip:#232b38}}
+:root{--bg:var(--gp-bg);--card:var(--gp-card);--ink:var(--gp-ink);--muted:var(--gp-muted);--line:var(--gp-line);--accent:var(--gp-accent);--accent-ink:#fff;--ok:var(--gp-sage);--bad:var(--gp-rose);--warn:var(--gp-honey);--chip:var(--gp-accent-soft)}
+
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--gp-sans)}
 .wrap{max-width:1180px;margin:0 auto;padding:16px}
 h1{font-size:20px;margin:4px 0 14px}h2{font-size:16px;margin:0 0 10px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
@@ -46,7 +55,10 @@ table.data{border-collapse:collapse;margin:8px 0;font-size:13px}table.data td{bo
 .fig img{max-width:100%;background:#fff;border-radius:6px}
 .err{color:var(--bad)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+h1,h2{font-family:var(--gp-serif)}
+.card,.kpi{box-shadow:var(--gp-shadow)}
 </style>
+<script src="../assets/site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -91,7 +103,7 @@ table.data{border-collapse:collapse;margin:8px 0;font-size:13px}table.data td{bo
 
     <div id="tCharts" class="hidden">
       <div class="grid2">
-        <div class="card"><h2>能力與難度分布（Wright map）</h2><canvas id="wright" height="260"></canvas><p class="note">比較學生能力（藍）與題目難度（橘）的分布；若題目普遍高於學生能力，表示題目偏難。</p></div>
+        <div class="card"><h2>能力與難度分布（Wright map）</h2><canvas id="wright" height="260"></canvas><p class="note">比較學生能力（青綠）與題目難度（陶土橘）的分布；若題目普遍高於學生能力，表示題目偏難。</p></div>
         <div class="card"><h2>每日作答量（近 30 天）</h2><canvas id="daily" height="260"></canvas></div>
       </div>
     </div>
@@ -159,7 +171,7 @@ function heat(){
   const cats = dim === 'Bloom' ? ['記憶','理解','應用','分析'] : D.abilities;
   const m = {}; D.mastery.filter(r => r.dim === dim).forEach(r => m[r.concept + '|' + r.cat] = r);
   const color = (v, n) => { if (v === '' || v == null) return ''; const a = n < 10 ? 0.35 : 1;
-    if (val === 'rate') { const t = Math.max(0, Math.min(1, v)); return 'background:rgba(47,111,222,' + (0.12 + 0.6 * t) * a + ')'; }
+    if (val === 'rate') { const t = Math.max(0, Math.min(1, v)); return 'background:rgba(192,96,58,' + (0.12 + 0.6 * t) * a + ')'; }
     const t = Math.max(-0.3, Math.min(0.3, v)) / 0.3; return t < 0 ? 'background:rgba(194,65,12,' + (0.15 + 0.6 * -t) * a + ')' : 'background:rgba(31,138,76,' + (0.15 + 0.6 * t) * a + ')'; };
   $('heatTbl').innerHTML = '<tr><th>概念</th>' + cats.map(c => '<th>' + esc(c) + '</th>').join('') + '</tr>' + D.concepts.map(c => '<tr><th style="text-align:left">' + esc(c) + '</th>' + cats.map(k => { const r = m[c + '|' + k];
     if (!r) return '<td>—</td>'; const v = val === 'rate' ? r.rate : r.index; return '<td style="' + color(v, r.n) + '" title="作答 ' + r.n + ' 次">' + (val === 'rate' ? Math.round(v * 100) + '%' : (v >= 0 ? '+' : '') + Number(v).toFixed(2)) + '</td>'; }).join('') + '</tr>').join('');
@@ -170,9 +182,9 @@ function charts(){
   const hist = arr => bins.map(b0 => arr.filter(v => v !== '' && v >= b0 && v < b0 + 0.5).length);
   const th = D.persons.map(p => Number(p.theta)), bs = D.items.map(i => Number(i.b));
   if (ch1) ch1.destroy(); if (ch2) ch2.destroy();
-  ch1 = new Chart($('wright'), { type: 'bar', data: { labels: bins.map(b => b.toFixed(1)), datasets: [{ label: '學生能力 θ', data: hist(th), backgroundColor: 'rgba(47,111,222,.7)' }, { label: '題目難度 b', data: hist(bs), backgroundColor: 'rgba(224,123,57,.7)' }] },
+  ch1 = new Chart($('wright'), { type: 'bar', data: { labels: bins.map(b => b.toFixed(1)), datasets: [{ label: '學生能力 θ', data: hist(th), backgroundColor: 'rgba(59,139,134,.75)' }, { label: '題目難度 b', data: hist(bs), backgroundColor: 'rgba(192,96,58,.75)' }] },
     options: { scales: { x: { title: { display: true, text: 'logit' } }, y: { title: { display: true, text: '人數／題數' }, beginAtZero: true } } } });
-  ch2 = new Chart($('daily'), { type: 'line', data: { labels: D.daily.map(d => d.d), datasets: [{ label: '作答筆數', data: D.daily.map(d => d.n), borderColor: '#2f6fde', tension: .2 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+  ch2 = new Chart($('daily'), { type: 'line', data: { labels: D.daily.map(d => d.d), datasets: [{ label: '作答筆數', data: D.daily.map(d => d.n), borderColor: '#c0603a', tension: .2 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
 }
 function modal(html){ $('modalBody').innerHTML = html + '<div class="row" style="margin-top:12px"><button class="ghost" id="closeM">關閉</button></div>'; $('modal').classList.remove('hidden'); $('closeM').onclick = () => $('modal').classList.add('hidden'); math($('modalBody')); }
 $('modal').onclick = e => { if (e.target.id === 'modal') $('modal').classList.add('hidden'); };

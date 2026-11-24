@@ -8,16 +8,16 @@
 
 .lab-model-card {
     padding: 0.8rem 0.9rem;
-    color: #304f59;
-    background: #f4f9f8;
-    border: 1px solid #d7e6e3;
+    color: #633726;
+    background: #f9f7f4;
+    border: 1px solid #e6ddd7;
     border-radius: 10px;
 }
 
 .lab-model-card span {
     display: block;
     margin-bottom: 0.2rem;
-    color: #698087;
+    color: #877669;
     font-size: 0.74rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -31,8 +31,8 @@
 .wave-analysis {
     margin-top: 0.8rem;
     padding: 0.65rem;
-    background: linear-gradient(145deg, #071923 0%, #0a2029 100%);
-    border: 1px solid #203d47;
+    background: linear-gradient(145deg, #1b130f 0%, #211712 100%);
+    border: 1px solid #432e24;
     border-radius: 12px;
 }
 
@@ -50,8 +50,8 @@
     min-height: 92px;
     padding: 1rem;
     color: var(--text-muted);
-    background: rgba(244, 249, 248, 0.72);
-    border: 1px dashed #cbdedb;
+    background: rgba(249, 247, 244, 0.72);
+    border: 1px dashed #ded3cb;
     border-radius: 8px;
     text-align: center;
 }
@@ -59,9 +59,9 @@
 .exam-year-load {
     min-height: 42px;
     padding: 0.55rem 1rem;
-    color: #235f67;
+    color: #673623;
     background: #ffffff;
-    border: 1px solid #bcd6d3;
+    border: 1px solid #d6c7bc;
     border-radius: 999px;
     font: inherit;
     font-size: 0.84rem;

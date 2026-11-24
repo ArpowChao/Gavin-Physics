@@ -9,10 +9,12 @@
 | 資料夾 | 內容 |
 | --- | --- |
 | `index.html` | 首頁，依課程分區 |
-| `assets/site.js` | 全站共用導覽列、練習帳號登入狀態、網頁檢核題作答紀錄 |
+| `assets/site.js` | 全站共用導覽列、練習帳號登入狀態、網頁檢核題作答紀錄、平板全螢幕（整頁與單一動畫） |
+| `assets/warm.css` | 全站溫暖主題（色彩、字體、導覽列、全螢幕樣式） |
+| `assets/tools/` | `apply_warm.py` 把主題套到每頁；`warm_shift.py` 把學測、波動光學的冷色介面換成暖色 |
 | `gsat/` | 學測物理 SOIL 核心複習系統（108 課綱必修，原 phy-senior） |
 | `wave-optics/` | 波動與光學・學習筆記（選修物理 III，原 phy-wave-optics） |
-| `apps/` | 互動物理實驗室：30 個模擬與課堂工具（原 arpowchao.github.io 的 apps） |
+| `apps/` | 互動物理實驗室：29 個模擬與課堂工具（原 arpowchao.github.io 的 apps） |
 | `physics-lecture/`、`textbooks/` | 量子現象講義、第五／六章課本 PDF |
 | `practice/` | 線上練習：學生端 `index.html`、老師後台 `admin.html` |
 | `practice/gas/` | Google Apps Script 後端原始碼（Code.gs、Data.gs、IRT.gs） |
@@ -39,6 +41,13 @@ node practice/tools/build_bank.js <易混淆 bank_data.json> bank_all.json
 1. 在 Apps Script 建立專案，貼上 `practice/gas/` 的檔案。
 2. 依序執行 `setup`（建立資料試算表、產生管理金鑰）、`importLegacy`（匯入舊系統帳號與作答）、`installHourlyTrigger`。
 3. 部署為網頁應用程式：執行身分「我」、存取權「所有人」，把 `/exec` 網址填入 `practice/config.js`。
+
+## 設計與平板
+
+- 全站採溫暖配色：米白底、陶土橘強調、暖棕文字，標題用 Noto Serif TC。深色模擬改用可可棕深底。
+- 每個夠大的動畫（canvas／svg）右上角都有「⛶」，點了會把該動畫放大到全螢幕（舞台模式）；實驗頁導覽列另有整頁「⛶ 全螢幕」。
+- iPad 在 Safari「分享 → 加入主畫面」後，從主畫面開啟即為全螢幕（`manifest.webmanifest`）。
+- 新增頁面後執行 `python3 assets/tools/apply_warm.py`，並在其中的 `PAGES` 加上該頁的色彩對照。
 
 ## 本機預覽
 

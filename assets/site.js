@@ -1,60 +1,187 @@
 /*
- * Gavin Physics 全站共用：導覽列＋線上練習登入狀態＋網頁檢核題作答紀錄
- * 用法：<script src="（相對路徑）/assets/site.js" defer></script>
- * 有 #sidebar 的大型教材頁（學測、波動光學）會把導覽放進側欄頂端，其他頁面放在最上方。
+ * Gavin Physics 全站共用
+ *   ・導覽列（有 #sidebar 的大型教材頁放進側欄；data-mode="pill" 的全螢幕型實驗用浮動小工具列）
+ *   ・線上練習登入狀態、網頁檢核題作答紀錄（GPRecord）
+ *   ・平板全螢幕：整頁全螢幕按鈕＋每個動畫畫布的「⛶ 全螢幕」舞台模式
+ * 用法：<link rel="stylesheet" href="…/assets/warm.css"><script src="…/assets/site.js" defer></script>
  */
 (function () {
   if (window.__GP_SITE__) return; window.__GP_SITE__ = true;
   const me = document.currentScript || [...document.scripts].find(s => /assets\/site\.js(\?|$)/.test(s.src));
   const ROOT = me ? me.src.replace(/assets\/site\.js(\?.*)?$/, '') : '/';
+  const MODE = (me && me.dataset.mode) || '';
   const here = location.href;
-  const NAV = [
-    ['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['apps/', '實驗室'], ['practice/', '線上練習'],
-  ];
-  const active = p => p && here.indexOf(ROOT + p) === 0 || (!p && here.replace(/index\.html$/, '') === ROOT);
+  const NAV = [['', '首頁'], ['gsat/', '必修・學測'], ['wave-optics/', '選修・波動光學'], ['apps/', '實驗室'], ['practice/', '線上練習']];
+  const active = p => p ? here.indexOf(ROOT + p) === 0 : here.replace(/(index\.html)?([?#].*)?$/, '') === ROOT;
 
-  const css = `
-  .gp-bar{font:14px/1.4 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;background:#13263a;color:#e8eef6;z-index:50;position:relative}
-  .gp-bar a{color:inherit;text-decoration:none}
-  .gp-bar .gp-in{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:6px 14px;flex-wrap:wrap}
-  .gp-bar .gp-brand{font-weight:700;letter-spacing:.02em;margin-right:6px;white-space:nowrap}
-  .gp-bar .gp-links{display:flex;gap:2px 4px;flex-wrap:wrap;flex:1}
-  .gp-bar .gp-links a{padding:4px 9px;border-radius:7px;opacity:.82;white-space:nowrap}
-  .gp-bar .gp-links a:hover,.gp-bar .gp-links a:focus-visible{opacity:1;background:rgba(255,255,255,.1);outline:none}
-  .gp-bar .gp-links a.on{opacity:1;background:rgba(255,255,255,.16);font-weight:600}
-  .gp-bar .gp-user{white-space:nowrap;font-size:13px;padding:4px 10px;border:1px solid rgba(255,255,255,.28);border-radius:999px}
-  .gp-bar .gp-user:hover{background:rgba(255,255,255,.1)}
-  .gp-side{margin:0 0 10px;padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.14)}
-  .gp-side .gp-in{padding:0;display:block}
-  .gp-side .gp-brand{display:block;font-size:12px;opacity:.75;margin-bottom:6px}
-  .gp-side .gp-links{gap:4px}
-  .gp-side .gp-links a{font-size:12.5px;padding:3px 8px;background:rgba(255,255,255,.06)}
-  .gp-side .gp-user{display:inline-block;margin-top:8px}
-  .gp-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#13263a;color:#fff;padding:9px 16px;border-radius:10px;font:14px/1.4 "Noto Sans TC",system-ui,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:10000;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw}
-  .gp-toast.show{opacity:1;pointer-events:auto}.gp-toast a{color:#9cc3ff}
-  .gp-pill{position:fixed;left:10px;bottom:10px;z-index:9000;font:12.5px/1.3 "Noto Sans TC",system-ui,sans-serif;background:rgba(19,38,58,.82);color:#fff;border-radius:999px;padding:6px 12px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.2);opacity:.8;backdrop-filter:blur(4px)}
-  .gp-pill:hover,.gp-pill:focus-visible{opacity:1}
-  @media print{.gp-bar,.gp-toast,.gp-pill{display:none!important}}`;
-  const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  if (![...document.styleSheets].some(s => /assets\/warm\.css/.test(s.href || ''))) {
+    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = ROOT + 'assets/warm.css'; document.head.appendChild(l);
+  }
 
-  function bar(side) {
+  // ---------- 全螢幕工具 ----------
+  const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  const canFS = () => !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+  function reqFS() {
+    const d = document.documentElement;
+    try { const p = (d.requestFullscreen || d.webkitRequestFullscreen).call(d, { navigationUI: 'hide' }); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+  }
+  function exitFS() { try { const f = document.exitFullscreen || document.webkitExitFullscreen; if (fsEl() && f) { const p = f.call(document); if (p && p.catch) p.catch(() => {}); } } catch (e) {} }
+  const kick = () => { window.dispatchEvent(new Event('resize')); };
+  const kickLater = () => { requestAnimationFrame(kick); setTimeout(kick, 120); setTimeout(kick, 400); };
+
+  function togglePage() {
+    if (fsEl()) { exitFS(); return; }
+    if (canFS()) { reqFS(); return; }
+    toast('這台裝置的瀏覽器不支援網頁全螢幕。可以在 Safari 按「分享 → 加入主畫面」，從主畫面開啟就是全螢幕。', 5200);
+  }
+  function syncFS() {
+    const on = !!fsEl() && !stageEl;
+    document.documentElement.classList.toggle('gp-fullpage', on);
+    document.querySelectorAll('.gp-fsbtn').forEach(b => { b.textContent = on ? '✕ 離開全螢幕' : '⛶ 全螢幕'; });
+    if (!fsEl() && stageEl) exitStage(true);
+    kickLater();
+  }
+  document.addEventListener('fullscreenchange', syncFS); document.addEventListener('webkitfullscreenchange', syncFS);
+
+  // ---------- 舞台模式：單一動畫放大到全螢幕 ----------
+  let stageEl = null, stageExit = null, stageSaved = null;
+  function isDarkBg(el) {
+    let n = el;
+    while (n && n.nodeType === 1) {
+      const c = getComputedStyle(n).backgroundColor; const m = c.match(/\d+(\.\d+)?/g);
+      if (m && (m.length < 4 || Number(m[3]) > 0.5)) { const [r, g, b] = m.map(Number); return (0.299 * r + 0.587 * g + 0.114 * b) < 110; }
+      n = n.parentElement;
+    }
+    return false;
+  }
+  // 祖先若有 transform／filter／z-index 等會「困住」position:fixed 的屬性，放大期間暫時解除
+  function freeAncestors(el) {
+    const saved = []; const set = (n, prop, val) => { saved.push([n, prop, n.style.getPropertyValue(prop), n.style.getPropertyPriority(prop)]); n.style.setProperty(prop, val, 'important'); };
+    for (let n = el.parentElement; n && n !== document.documentElement; n = n.parentElement) {
+      const cs = getComputedStyle(n);
+      if (cs.animationName && cs.animationName !== 'none') set(n, 'animation', 'none');   // 仍在作用中的 transform 動畫也會困住 fixed
+      if (cs.transform !== 'none') set(n, 'transform', 'none');
+      if (cs.filter !== 'none') set(n, 'filter', 'none');
+      if ((cs.backdropFilter || cs.webkitBackdropFilter || 'none') !== 'none') { set(n, 'backdrop-filter', 'none'); set(n, '-webkit-backdrop-filter', 'none'); }
+      if (cs.perspective !== 'none') set(n, 'perspective', 'none');
+      if (cs.contain && cs.contain !== 'none') set(n, 'contain', 'none');
+      if (cs.willChange && cs.willChange !== 'auto') set(n, 'will-change', 'auto');
+      if (cs.position !== 'static' && cs.zIndex !== 'auto') set(n, 'z-index', '2147483000');
+      if (Number(cs.opacity) < 1) set(n, 'opacity', '1');
+      if (cs.contentVisibility && cs.contentVisibility !== 'visible') set(n, 'content-visibility', 'visible');
+    }
+    return saved;
+  }
+  function enterStage(el) {
+    if (stageEl) exitStage();
+    stageEl = el; stageSaved = { style: el.getAttribute('style'), anc: freeAncestors(el) };
+    el.classList.add('gp-stage'); if (isDarkBg(el.parentElement || el)) el.classList.add('gp-stage-dark');
+    document.documentElement.classList.add('gp-staging');
+    stageExit = document.createElement('button'); stageExit.className = 'gp-stage-exit'; stageExit.type = 'button'; stageExit.textContent = '✕ 離開全螢幕';
+    stageExit.onclick = () => exitStage(); document.body.appendChild(stageExit);
+    if (!/^(canvas|svg|img|video)$/i.test(el.tagName)) el.classList.add('gp-stage-box');
+    if (canFS() && !fsEl()) reqFS();
+    kickLater(); setTimeout(() => fitMedia(el), 480); setTimeout(() => fitMedia(el), 1100);
+  }
+  // 放大後若動畫本身沒有跟著變大（固定尺寸的畫布、svg），用 CSS 等比放大填滿畫面
+  function fitMedia(box) {
+    if (stageEl !== box || box.tagName.match(/^(canvas|svg|img|video)$/i)) return;
+    const B = box.getBoundingClientRect(), W = B.width - 24, H = B.height - 24;
+    box.querySelectorAll(':scope > canvas, :scope > svg, :scope > * > canvas, :scope > * > svg').forEach(m => {
+      if (m.closest('.gp-stage-btn')) return;
+      const r = m.getBoundingClientRect(); if (r.width < 60 || r.height < 40) return;
+      const tooBig = r.width > W + 2 || r.height > H + 2, tooSmall = r.width < W * 0.8 && r.height < H * 0.8;
+      if (!tooBig && !tooSmall) return;
+      const ar = m.tagName.toLowerCase() === 'canvas' && m.width ? m.width / m.height : r.width / r.height;
+      let w = W, h = W / ar; if (h > H) { h = H; w = H * ar; }
+      m.__gpFit = m.getAttribute('style'); m.style.setProperty('width', w + 'px', 'important'); m.style.setProperty('height', h + 'px', 'important');
+      m.style.setProperty('max-width', 'none', 'important'); m.style.setProperty('max-height', 'none', 'important');
+    });
+    kick();
+  }
+  function unfitMedia(box) {
+    box.querySelectorAll('canvas, svg').forEach(m => { if ('__gpFit' in m) { if (m.__gpFit == null) m.removeAttribute('style'); else m.setAttribute('style', m.__gpFit); delete m.__gpFit; } });
+  }
+  function exitStage(fromFS) {
+    if (!stageEl) return;
+    unfitMedia(stageEl); stageEl.classList.remove('gp-stage', 'gp-stage-dark', 'gp-stage-box');
+    if (stageSaved && stageSaved.style != null) stageEl.setAttribute('style', stageSaved.style); else if (stageSaved) stageEl.removeAttribute('style');
+    if (stageSaved && stageSaved.anc) stageSaved.anc.reverse().forEach(([n, prop, v, pr]) => { if (v) n.style.setProperty(prop, v, pr); else n.style.removeProperty(prop); });
+    stageEl = null; if (stageExit) stageExit.remove(); stageExit = null;
+    document.documentElement.classList.remove('gp-staging');
+    if (!fromFS) exitFS();
+    kickLater();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && stageEl) exitStage(); });
+
+  // 找出值得放大的動畫：夠大的 canvas／有 viewBox 的 svg；父層只包著它（其餘都浮在上面）時，放大整個父層
+  const MIN_W = 300, MIN_H = 170;
+  function stageTarget(media) {
+    const p = media.parentElement; if (!p || p === document.body) return media;
+    const inFlow = [...p.children].filter(c => {
+      if (c === media || c.classList.contains('gp-stage-btn')) return false;
+      const cs = getComputedStyle(c); return cs.position !== 'absolute' && cs.position !== 'fixed' && cs.display !== 'none';
+    });
+    const pr = p.getBoundingClientRect(), mr = media.getBoundingClientRect();
+    if (!inFlow.length && pr.width * pr.height <= mr.width * mr.height * 1.8) return p;
+    return media;
+  }
+  function decorate() {
+    document.querySelectorAll('canvas, svg[viewBox]').forEach(m => {
+      if (m.__gpStage || m.closest('.gp-bar, .gp-pill, button, a, .gp-stage-btn, [data-gp-nostage]')) return;
+      if (m.tagName.toLowerCase() === 'svg' && m.parentElement && m.parentElement.closest('svg')) return;
+      const r = m.getBoundingClientRect(); if (r.width < MIN_W || r.height < MIN_H) return;
+      m.__gpStage = true;
+      const target = stageTarget(m); const host = target === m ? m.parentElement : target;
+      if (!host) return;
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'gp-stage-btn'; b.innerHTML = '⛶<span>全螢幕</span>'; b.title = '動畫全螢幕'; b.setAttribute('aria-label', '把這個動畫放大到全螢幕');
+      b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); enterStage(target); });
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      if (getComputedStyle(host).position === 'static') {
+        const absKids = [...host.children].some(c => getComputedStyle(c).position === 'absolute');
+        if (absKids) { b.classList.add('inline'); host.insertBefore(b, target === m ? m : host.firstChild); return; }
+        host.style.position = 'relative';
+      }
+      host.appendChild(b);
+    });
+  }
+  let decoT = null; const scheduleDecorate = () => { clearTimeout(decoT); decoT = setTimeout(decorate, 300); };
+
+  // ---------- 導覽 ----------
+  function bar(side, withFS) {
     const el = document.createElement(side ? 'div' : 'nav');
-    el.className = side ? 'gp-bar gp-side' : 'gp-bar';
-    el.setAttribute('aria-label', '全站導覽');
-    el.innerHTML = '<div class="gp-in"><a class="gp-brand" href="' + ROOT + '">Gavin Physics</a><div class="gp-links">' +
+    el.className = side ? 'gp-bar gp-side' : 'gp-bar'; el.setAttribute('aria-label', '全站導覽');
+    el.innerHTML = '<div class="gp-in"><a class="gp-brand" href="' + ROOT + '"><i aria-hidden="true"></i>Gavin Physics</a><div class="gp-links">' +
       NAV.map(([p, t]) => '<a href="' + ROOT + p + '"' + (active(p) ? ' class="on" aria-current="page"' : '') + '>' + t + '</a>').join('') +
-      '</div><a class="gp-user" id="gp-user" href="' + ROOT + 'practice/">登入練習帳號</a></div>';
+      '</div><div class="gp-tools">' + (withFS ? '<button type="button" class="gp-fsbtn">⛶ 全螢幕</button>' : '') +
+      '<a class="gp-user" id="gp-user" href="' + ROOT + 'practice/">登入練習帳號</a></div></div>';
     return el;
   }
+  // body 有最大寬度或內距的頁面：把導覽列拉滿整個視窗寬、貼齊頂端
+  function stretch(b) {
+    b.style.marginLeft = b.style.marginTop = b.style.width = '';
+    const r = b.getBoundingClientRect(), W = document.documentElement.clientWidth;
+    if (r.left > 0.5 || r.width < W - 1) { b.style.marginLeft = (-r.left) + 'px'; b.style.width = W + 'px'; }
+    const top = r.top + window.scrollY; if (top > 0.5) b.style.marginTop = (-top) + 'px';
+  }
   function mount() {
-    if (me && me.dataset.mode === 'pill') {   // 全螢幕互動實驗：只放一顆小按鈕，不擠壓版面
-      const a = document.createElement('a'); a.className = 'gp-pill'; a.href = ROOT + 'apps/'; a.textContent = '◂ Gavin Physics 實驗室';
-      document.body.appendChild(a); return;
+    const path = location.pathname;
+    const isApp = /\/apps\/.+/.test(path) && !/\/apps\/(index\.html)?$/.test(path);
+    const withFS = isApp || /water_interference/.test(path);
+    if (MODE === 'pill') {
+      const p = document.createElement('div'); p.className = 'gp-pill';
+      p.innerHTML = '<a href="' + ROOT + 'apps/">◂ 實驗室</a><button type="button" class="gp-fsbtn">⛶ 全螢幕</button>';
+      document.body.appendChild(p);
+    } else {
+      const sideBrand = document.querySelector('#sidebar .sidebar-brand');
+      if (sideBrand) sideBrand.parentNode.insertBefore(bar(true, false), sideBrand);
+      else { const b = bar(false, withFS); document.body.insertBefore(b, document.body.firstChild); stretch(b); window.addEventListener('resize', () => stretch(b)); }
     }
-    const sideBrand = document.querySelector('#sidebar .sidebar-brand');
-    if (sideBrand) sideBrand.parentNode.insertBefore(bar(true), sideBrand);
-    else document.body.insertBefore(bar(false), document.body.firstChild);
+    document.querySelectorAll('.gp-fsbtn').forEach(b => b.addEventListener('click', togglePage));
     loadApi().then(refreshUser);
+    decorate(); setTimeout(decorate, 1200);
+    new MutationObserver(scheduleDecorate).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('resize', () => { if (!stageEl) scheduleDecorate(); });
   }
 
   // ---------- 線上練習 API ----------
@@ -83,10 +210,7 @@
     t.innerHTML = html; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), ms || 2600);
   }
 
-  /**
-   * 網頁檢核題作答紀錄（學測、波動光學頁面呼叫）
-   * bank: 'gsat' | 'wave'；resp: 選項字母，如 'BD'
-   */
+  /** 網頁檢核題作答紀錄（學測、波動光學頁面呼叫）：bank 'gsat' | 'wave'；resp 選項字母如 'BD' */
   let warned = false;
   window.GPRecord = async function (bank, node, stem, resp, source) {
     try {
@@ -104,6 +228,7 @@
       if (String(e.message).indexOf('逾時') >= 0) { toast('登入已逾時，<a href="' + ROOT + 'practice/?back=' + encodeURIComponent(location.pathname + location.hash) + '">重新登入</a>後作答才會記錄', 4500); refreshUser(); }
     }
   };
+  window.GPStage = { enter: enterStage, exit: exitStage, togglePage };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
 })();

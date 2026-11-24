@@ -2,6 +2,16 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
+<!-- gp-head -->
+<meta name="theme-color" content="#3a2a22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gavin Physics">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/icon-192.png">
+<link rel="stylesheet" href="../assets/warm.css">
+<!-- /gp-head -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>水的三態實驗台 | Arpow Deep-Learning</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -219,7 +229,11 @@
     *{transition:none!important}
   }
   </style>
-<script src="../assets/site.js" data-mode="pill" defer></script>
+<style id="gp-warm">
+/* 溫暖主題覆寫（assets/tools/apply_warm.py 產生） */
+html:root{--bg:#f8f1e7;--surface:#fffaf3;--surface-2:#f2e7d8;--sunken:#fbf3e8;--line:#e7d6c3;--line-soft:#efe2d3;--ink:#3b2c24;--ink-2:#5a4638;--ink-3:#7d6a5c} h1,h2{font-family:'Noto Serif TC',serif}
+</style>
+<script src="../assets/site.js" defer></script>
 </head>
 <body>
 <div class="wrap">
