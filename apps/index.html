@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>互動物理實驗室</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1d2430; --muted:#5b6575; --line:#e2e6ec; --accent:#2f6fde; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1d222a; --ink:#e8ecf2; --muted:#9aa4b2; --line:#2c333d; --accent:#7aa7ff; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.6; }
+  main { max-width:880px; margin:0 auto; padding:56px 20px 40px; }
+  h1 { font-size:1.9rem; margin:0 0 6px; }
+  .lead { color:var(--muted); margin:0 0 32px; }
+  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  a.card { display:flex; flex-direction:column; gap:6px; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s, transform .15s; }
+  a.card:hover, a.card:focus-visible { border-color:var(--accent); transform:translateY(-2px); outline:none; }
+  .tag { font-size:.8rem; color:var(--accent); font-weight:600; letter-spacing:.04em; }
+  .card h2 { font-size:1.15rem; margin:0; }
+  .card p { margin:0; color:var(--muted); font-size:.93rem; }
+  footer { margin-top:40px; font-size:.85rem; color:var(--muted); }
+  footer a { color:var(--accent); }
+  h3 { font-size:1.05rem; margin:36px 0 12px; }
+  .back { display:inline-block; margin-bottom:18px; color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">← 回總入口</a>
+  <h1>互動物理實驗室</h1>
+  <p class="lead">30 個互動模擬與課堂工具，依主題分類。</p>
+  <h3>力學與運動</h3>
+  <div class="grid">
+    <a class="card" href="lid-toss/"><h2>TOSS 彈蓋垃圾桶挑戰</h2><p>拋體運動任務挑戰</p></a>
+    <a class="card" href="barrel-angle/"><h2>BARREL 全壘打仰角實驗室</h2><p>仰角與空氣阻力，0°–90°</p></a>
+    <a class="card" href="pitch-spin/"><h2>SPIN 投球旋轉實驗室</h2><p>球速、轉速、轉軸與球路</p></a>
+    <a class="card" href="baseball-cfd/"><h2>棒球氣流實驗室</h2><p>3D 縫線、邊界層與受力</p></a>
+    <a class="card" href="phy-vpython-baseball.html"><h2>棒球投球模擬</h2><p>VPython 版投球軌跡</p></a>
+    <a class="card" href="friction-simulation/"><h2>摩擦力模擬</h2><p>互動摩擦力模擬</p></a>
+    <a class="card" href="movable_pulley.html"><h2>滑輪組與阿特伍德機</h2><p>動滑輪、定滑輪與加速度</p></a>
+    <a class="card" href="center-of-mass.html"><h2>質心運動模擬</h2><p>拋體爆炸後的質心軌跡</p></a>
+    <a class="card" href="simulation/"><h2>彈簧碰撞模擬器</h2><p>虎克定律與碰撞</p></a>
+    <a class="card" href="phy-olympic-wall-bar-move.html"><h2>滑動桿物理模擬器</h2><p>細桿沿牆滑落何時脫離</p></a>
+  </div>
+  <h3>萬有引力與軌道</h3>
+  <div class="grid">
+    <a class="card" href="newton-cannon/"><h2>CANNON 牛頓大砲</h2><p>從拋體到軌道</p></a>
+    <a class="card" href="orbit/"><h2>ORBIT 軌道實驗室</h2><p>圓、橢圓、拋物線與雙曲線軌道</p></a>
+    <a class="card" href="orbit_transfer/"><h2>軌道轉移與重力逃逸</h2><p>軌道機動遊戲</p></a>
+    <a class="card" href="orbital_decay/"><h2>軌道衰減模擬器</h2><p>近地衛星與能量守恆</p></a>
+  </div>
+  <h3>波動與聲音</h3>
+  <div class="grid">
+    <a class="card" href="doppler/"><h2>都卜勒・水波實驗</h2><p>排出水波、量測並作答</p></a>
+    <a class="card" href="single-slit-diffraction/"><h2>單狹縫繞射四大核心主題</h2><p>成德高中 陳家騏老師 設計</p></a>
+    <a class="card" href="audio-digital-science.html"><h2>聲音的數位轉生</h2><p>從類比到邏輯</p></a>
+  </div>
+  <h3>電磁、熱與近代物理</h3>
+  <div class="grid">
+    <a class="card" href="charged-spheres/"><h2>帶電球的近距離電力</h2><p>與球心庫侖公式比較</p></a>
+    <a class="card" href="pn-diode/"><h2>DIODE 二極體單行道</h2><p>PN 接面單向導通</p></a>
+    <a class="card" href="transistor-pn/"><h2>PN 接面與 NPN 電晶體</h2><p>B 極如何控制 E→C 導通</p></a>
+    <a class="card" href="semiconductor.html"><h2>半導體物理進階模擬</h2><p>摻雜、載子與晶格</p></a>
+    <a class="card" href="semiconductor-process/"><h2>從矽到晶片</h2><p>半導體製程 3D 模擬</p></a>
+    <a class="card" href="water-states.html"><h2>水的三態實驗台</h2><p>加熱冷卻與分子排列・陳家騏老師 設計</p></a>
+    <a class="card" href="alpha.html"><h2>拉塞福散射公式推導</h2><p>α 粒子與金箔實驗</p></a>
+  </div>
+  <h3>複習、探究與課堂工具</h3>
+  <div class="grid">
+    <a class="card" href="physics-review/"><h2>學測物理全概念互動複習講義</h2><p>搭配各模擬的總整理</p></a>
+    <a class="card" href="Uncertainty.html"><h2>測量不確定度完整指南</h2><p>用範圍思考測量結果</p></a>
+    <a class="card" href="data_analysis_lab.html"><h2>數據分析實驗室</h2><p>從量測、分佈到建立模型</p></a>
+    <a class="card" href="inquiry_and_practice.html"><h2>探究與實作</h2><p>從靈感到實踐</p></a>
+    <a class="card" href="random_sampler.html"><h2>隨機抽樣產生器</h2><p>隨機數生成與統計</p></a>
+    <a class="card" href="whiteboard.html"><h2>線上白板</h2><p>課堂板書</p></a>
+  </div>
+</main>
+</body>
+</html>

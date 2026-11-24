@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物理教材線上講義 - 量子現象 | 108課綱自然科學領綱</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX CDN for math equation rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand-section">
+                <div class="brand-logo">Φ</div>
+                <div class="brand-title">物理線上講義</div>
+            </div>
+            
+            <nav class="nav-links">
+                <li>
+                    <button class="nav-item-btn active" data-chapter="ch-6-1">
+                        <span>6-1 量子論的誕生</span>
+                        <span class="nav-status"></span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item-btn" data-chapter="ch-6-2">
+                        <span>6-2 光的粒子性</span>
+                        <span class="nav-status"></span>
+                    </button>
+                </li>
+                <li>
+                    <button class="nav-item-btn" data-chapter="ch-6-3">
+                        <span>6-3 物質的波動性</span>
+                        <span class="nav-status"></span>
+                    </button>
+                </li>
+            </nav>
+            
+            <div class="sidebar-progress">
+                <div class="progress-header">
+                    <span>學習進度</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-wrapper">
+            <header class="header-bar">
+                <a href="../index.html" class="back-home-link">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    返回首頁
+                </a>
+                <div style="font-size: 0.85rem; color: var(--text-light); font-weight: 500;">
+                    108課綱自然科學領域學科講義
+                </div>
+            </header>
+
+            <!-- CHAPTER 6-1: 量子論的誕生 -->
+            <section id="ch-6-1" class="concept-chapter active">
+                <div class="chapter-title-wrapper">
+                    <span class="chapter-badge">Chapter 6 量子現象</span>
+                    <h1 class="chapter-title">6-1 量子論的誕生</h1>
+                    <p class="chapter-intro">探索十九世紀末物理學家如何突破經典力學的框架，從黑體輻射實驗中開啟微觀量子世界的大門。</p>
+                </div>
+
+                <!-- 關鍵概念 -->
+                <div class="concept-card card-key">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">關鍵概念</span>
+                        <h2 class="concept-title">能量量子化假設</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>1900年，德國物理學家馬克斯·普朗克（Max Planck）為了解釋黑體輻射譜，提出了一個革命性的假設：微觀帶電振子的能量不能連續變化，而只能是某個最小能量單元的整數倍。這個最小能量單元被稱為<strong>能量子</strong>。</p>
+                        <div class="formula-block">
+                            $E = n h f$
+                        </div>
+                        <p>其中 $n$ 為正整數（量子數），$f$ 為電磁波的頻率，而比例常數 $h$ 稱為<strong>普朗克常數</strong>：</p>
+                        <p style="text-align: center; font-family: monospace; font-weight: bold;">
+                            $h \approx 6.626 \times 10^{-34} \text{ J}\cdot\text{s}$
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 輔助概念 -->
+                <div class="concept-card card-support">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">輔助概念</span>
+                        <h2 class="concept-title">黑體輻射與溫度的關係</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>一個理想的吸熱器（黑體）會輻射出連續的光譜。隨著溫度升高，輻射的總能量會劇烈增加，且輻射強度最大值所對應的波長 $\lambda_{\text{max}}$ 會往短波長（高頻率）移動，此規律遵循<strong>維恩位移定律</strong>。</p>
+                        
+                        <!-- 動態模擬器 -->
+                        <div class="simulation-container">
+                            <div class="simulation-header">
+                                <span>黑體輻射光譜動態曲線</span>
+                                <span style="color: #fbbf24; font-size: 0.8rem;">拖曳溫度觀察峰值移動</span>
+                            </div>
+                            <div class="simulation-canvas-wrapper">
+                                <canvas id="bb-canvas" class="simulation-canvas"></canvas>
+                            </div>
+                            <div class="simulation-controls">
+                                <div class="control-item">
+                                    <label>
+                                        <span>黑體溫度 (T)</span>
+                                        <span id="bb-temp-val" style="font-family: monospace;">4500 K</span>
+                                    </label>
+                                    <input type="range" id="bb-temp" min="3000" max="6000" step="100" value="4500">
+                                </div>
+                            </div>
+                            <div class="simulation-stats">
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">峰值波長 λ_max</span>
+                                    <span class="sim-stat-val" id="stat-peak-wl">644 nm</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">總輻射功率 (相對值)</span>
+                                    <span class="sim-stat-val" id="stat-total-energy">5.1x</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">光譜主要色系</span>
+                                    <span class="sim-stat-val" style="color: #fbbf24;">可見光區</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 細節概念 -->
+                <div class="concept-card card-detail">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">細節概念</span>
+                        <h2 class="concept-title">經典物理的崩潰：紫外災變</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>根據傳統的经典熱力學（能量均分定理），電磁波輻射強度應隨著波長變短而趨近於無限大（即在高頻紫外光區發散），這被稱為<strong>紫外災變</strong>。這顯然與實驗中短波長強度趨近於零的事實完全相反。</p>
+                        <p>普朗克指出，能量並非像傳統物理所認為的水流一般連續，而是像沙粒一樣有最小單元。當頻率 $f$ 極高時，單個能量子 $hf$ 的門檻過高，使得高頻振子難以被激發，成功消除了高頻區的無限大發散問題。</p>
+                    </div>
+                </div>
+
+                <!-- 補充概念 -->
+                <div class="concept-card card-supplement">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">補充概念</span>
+                        <h2 class="concept-title">普朗克的妥協與掙扎</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>普朗克在提出能量量子化時，內心其實充滿掙扎。他極度推崇經典物理的連續性，最初僅將 $E = nhf$ 視為一個數學上的「權宜之計」或「湊公式的技巧」。他花了多年時間試圖將這個常數 $h$ 納入古典物理學中，但都以失敗告終。他沒想到的是，這正是拉開量子力學黃金時代的序幕。</p>
+                    </div>
+                </div>
+
+                <!-- 學生互動填答區 -->
+                <div class="interactive-input-section">
+                    <div class="input-problem-desc">
+                        ✍️ 試算練習：若一束綠光的波長為 $500\text{ nm}$，試利用公式 $E = \frac{1240}{\lambda\text{ (nm)}}$ 計算此光子的能量約為多少電子伏特 ($\text{eV}$)？（請四捨五入算至小數點後兩位）
+                    </div>
+                    <div class="interactive-form-grid">
+                        <input type="text" id="ans-6-1" class="interactive-text-input" placeholder="例如：2.50">
+                        <button class="interactive-submit-btn" onclick="verifyInlineAnswer('ans-6-1')">驗證答案</button>
+                    </div>
+                    <div id="ans-6-1-feedback" class="interactive-feedback"></div>
+                </div>
+
+                <!-- Bloom 知識確認測驗 -->
+                <div class="bloom-section">
+                    <div class="bloom-title-wrapper">
+                        <div class="bloom-header">
+                            <span class="bloom-icon-badge">Q</span>
+                            <span class="bloom-title-main">核心觀念檢測</span>
+                        </div>
+                        <span style="font-size: 0.825rem; color: var(--text-light);">檢測你的認知層級</span>
+                    </div>
+
+                    <!-- 1. 記憶 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-memory">層級一：記憶</span>
+                        <div class="bloom-q-text">1. 科學家為了解釋某些無法用古典物理說明的微觀現象，提出了多個重要的量子理論。下列關於科學家及其提出理論的配對，何者正確？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-1', 'ch-6-1')">
+                                <span class="bloom-option-badge">A</span> 湯姆森 —— 提出光量子假說，成功解釋光電效應
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-1', 'ch-6-1')">
+                                <span class="bloom-option-badge">B</span> 普朗克 —— 提出物質波假說，認為所有物質皆具有波動性
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-1', 'ch-6-1')">
+                                <span class="bloom-option-badge">C</span> 愛因斯坦 —— 提出能量量子化，成功解釋熱輻射現象
+                            </div>
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-1-1', 'ch-6-1')">
+                                <span class="bloom-option-badge">D</span> 波耳 —— 提出氫原子模型，假設電子的軌道與能量皆為量子化
+                            </div>
+                        </div>
+                        <div id="exp-6-1-1" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 D。提出光量子假說的是愛因斯坦；提出物質波假說的是德布羅意；提出能量量子化以解釋熱輻射的是普朗克。波耳則是提出了結合量子化概念的氫原子能階模型。
+                        </div>
+                    </div>
+
+                    <!-- 2. 理解 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-understanding">層級二：理解</span>
+                        <div class="bloom-q-text">2. 在十九世紀，科學家觀察到將管中氫氣加熱後發光，通過三稜鏡會產生離散且僅有特定波長的「發射光譜」。若依據波耳的氫原子模型，下列何者是此現象最合理的原理解釋？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-2', 'ch-6-1')">
+                                <span class="bloom-option-badge">A</span> 因為氫原子內部具有多個電子，不同電子發出不同的色光。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-2', 'ch-6-1')">
+                                <span class="bloom-option-badge">B</span> 因為氫氣被加熱時，原子核發生衰變而釋放出不同頻率的電磁波。
+                            </div>
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-1-2', 'ch-6-1')">
+                                <span class="bloom-option-badge">C</span> 因為電子僅能在特定能量的能階間躍遷，並放出能量等於兩能階差的光子。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-1-2', 'ch-6-1')">
+                                <span class="bloom-option-badge">D</span> 因為電子的物質波在不同介質中傳播時，發生了建設性干涉。
+                            </div>
+                        </div>
+                        <div id="exp-6-1-2" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 C。氫原子的電子只能在特定軌道（能階）運行。當電子從高能階躍遷回低能階時，會放出特定能量（光子能量等於兩能階差）的光子，形成不連續的發射光譜。
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CHAPTER 6-2: 光的粒子性 -->
+            <section id="ch-6-2" class="concept-chapter">
+                <div class="chapter-title-wrapper">
+                    <span class="chapter-badge">Chapter 6 量子現象</span>
+                    <h1 class="chapter-title">6-2 光的粒子性</h1>
+                    <p class="chapter-intro">研究光如何藉由釋放「光量子」與物質交互作用，打出電子並產生光電流，證實光的粒子屬性。</p>
+                </div>
+
+                <!-- 關鍵概念 -->
+                <div class="concept-card card-key">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">關鍵概念</span>
+                        <h2 class="concept-title">愛因斯坦的光量子假說</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>1905年，愛因斯坦推廣普朗克的思想，指出電磁波本身就是由一顆顆能量分離的粒子組成的，稱為<strong>光子 (Photon)</strong>。光束在真空中以光速 $c$ 傳播。單個光子的能量只與其頻率有關：</p>
+                        <div class="formula-block">
+                            $E = h f = \frac{h c}{\lambda}$
+                        </div>
+                        <p>當光子撞擊金屬板時，會與單個電子進行一對一的碰撞，將其全部能量轉移給電子。若光子能量大於金屬所特有的最低能量門檻（激發門檻），電子便能克服阻力飛出金屬表面，產生光電子。</p>
+                    </div>
+                </div>
+
+                <!-- 輔助概念 -->
+                <div class="concept-card card-support">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">輔助概念</span>
+                        <h2 class="concept-title">光電效應與底限頻率</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>只有當入射光的頻率高於特定極限（稱為<strong>底限頻率 $f_c$</strong>）時，才會有電子發射。若入射光的頻率低於此底限，則不論光強再大、照射時間再長，也絕對不會激發出任何光電子。</p>
+
+                        <!-- 動態模擬器 -->
+                        <div class="simulation-container">
+                            <div class="simulation-header">
+                                <span>光電效應實驗動態模擬</span>
+                                <span style="color: #10b981; font-size: 0.8rem;">調整波長、光強，更換金屬靶材</span>
+                            </div>
+                            <div class="simulation-canvas-wrapper">
+                                <canvas id="pe-canvas" class="simulation-canvas"></canvas>
+                            </div>
+                            <div class="simulation-controls">
+                                <div class="control-item">
+                                    <label>
+                                        <span>入射波長 (λ)</span>
+                                        <span id="pe-wl-val" style="font-family: monospace;">450 nm</span>
+                                    </label>
+                                    <input type="range" id="pe-wl" min="200" max="800" step="10" value="450">
+                                </div>
+                                <div class="control-item">
+                                    <label>
+                                        <span>光線強度</span>
+                                        <span id="pe-int-val" style="font-family: monospace;">50 %</span>
+                                    </label>
+                                    <input type="range" id="pe-int" min="0" max="100" step="5" value="50">
+                                </div>
+                                <div class="control-item">
+                                    <label>
+                                        <span>金屬靶材 (功函數 W)</span>
+                                    </label>
+                                    <select id="pe-metal">
+                                        <option value="sodium">鈉 (Na) - 激發門檻：低</option>
+                                        <option value="zinc">鋅 (Zn) - 激發門檻：中</option>
+                                        <option value="copper">銅 (Cu) - 激發門檻：高</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="simulation-stats">
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">單個光子能量</span>
+                                    <span class="sim-stat-val" id="stat-photon-energy">2.76 eV</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">金屬激發門檻能量</span>
+                                    <span class="sim-stat-val" id="stat-metal-threshold">低</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">是否逸出電子</span>
+                                    <span class="sim-stat-val" id="stat-is-emitted">是</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">光電流大小</span>
+                                    <span class="sim-stat-val" style="color: #10b981;" id="stat-photocurrent">微弱</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 細節概念 -->
+                <div class="concept-card card-detail">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">細節概念</span>
+                        <h2 class="concept-title">為何經典波動理論會徹底失敗？</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>依照古典波動說，光是一種連續傳播的波動，其能量與「光強度（振幅平方）」成正比。若波理論正確，預期會出現以下現象，但皆與實驗事實相悖：</p>
+                        <ul>
+                            <li><strong>波動說預測</strong>：不論頻率如何，只要光強度夠大，累積一段時間後定能發射電子。<br><strong style="color: var(--accent-purple);">實驗發現</strong>：低於底限頻率，再強的光也無電子射出。</li>
+                            <li><strong>波動說預測</strong>：微弱的光照射需要幾分鐘甚至幾小時來「累積能量」才能發射電子。<br><strong style="color: var(--accent-purple);">實驗發現</strong>：一旦頻率夠高，發射是瞬間發生的（延遲小於 $10^{-9}$ 秒）。</li>
+                            <li><strong>波動說預測</strong>：光電子飛出的能量大小應隨光線強度變強而增加。<br><strong style="color: var(--accent-purple);">實驗發現</strong>：光電子的能量僅由光子能量（頻率）決定，光強僅影響飛出的電子數量。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 補充概念 -->
+                <div class="concept-card card-supplement">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">補充概念</span>
+                        <h2 class="concept-title">愛因斯坦唯一獲得諾貝爾獎的工作</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>大眾常認為愛因斯坦是因相對論獲得諾貝爾獎，但事實上，他在1921年獲得的諾貝爾物理學獎，頒獎理由明確寫著是為了「他對理論物理學的貢獻，特別是發現了光電效應的規律」。因為在當時，相對論仍然極具爭議，而光電效應的實驗規律已獲得無可置疑的驗證，這也是開啟半導體光電科技的理論基石。</p>
+                    </div>
+                </div>
+
+                <!-- 學生互動填答區 -->
+                <div class="interactive-input-section">
+                    <div class="input-problem-desc">
+                        ✍️ 概念檢測：若入射紫外光的能量為 $3.10\text{ eV}$，照射在激發能量門檻為 $2.28\text{ eV}$ 的金屬鈉上，能否激發並逸出光電子？（請填入『能』或『不能』）
+                    </div>
+                    <div class="interactive-form-grid">
+                        <input type="text" id="ans-6-2" class="interactive-text-input" placeholder="例如：能">
+                        <button class="interactive-submit-btn" onclick="verifyInlineAnswer('ans-6-2')">驗證答案</button>
+                    </div>
+                    <div id="ans-6-2-feedback" class="interactive-feedback"></div>
+                </div>
+
+                <!-- Bloom 知識確認測驗 -->
+                <div class="bloom-section">
+                    <div class="bloom-title-wrapper">
+                        <div class="bloom-header">
+                            <span class="bloom-icon-badge">Q</span>
+                            <span class="bloom-title-main">核心觀念檢測</span>
+                        </div>
+                        <span style="font-size: 0.825rem; color: var(--text-light);">檢測你的認知層級</span>
+                    </div>
+
+                    <!-- 3. 應用 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-application">層級三：應用</span>
+                        <div class="bloom-q-text">1. 將特定頻率的單色光照射在某金屬板上，若能產生光電效應，下列何種調整方式一定能增加發射的光電子數目，但不會改變光電子的最高能量？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-2-1', 'ch-6-2')">
+                                <span class="bloom-option-badge">A</span> 保持單色光頻率不變，增加光的強度（亮度）
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-1', 'ch-6-2')">
+                                <span class="bloom-option-badge">B</span> 保持光的強度不變，提高光線的頻率
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-1', 'ch-6-2')">
+                                <span class="bloom-option-badge">C</span> 換成激發門檻能量更高的金屬靶材
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-1', 'ch-6-2')">
+                                <span class="bloom-option-badge">D</span> 減弱入射單色光的強度
+                            </div>
+                        </div>
+                        <div id="exp-6-2-1" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 A。光的強度決定了單位時間內入射的光子數目。因此，保持頻率（單個光子能量）不變但增加強度，能打出更多光電子（光電流增大），但不會改變單個光電子的最高能量。
+                        </div>
+                    </div>
+
+                    <!-- 4. 分析 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-analysis">層級四：分析</span>
+                        <div class="bloom-q-text">2. 某生進行光電效應實驗，將不同頻率的單色光照射在同一金屬板上。他發現：當使用低頻率的紅光時，無論將強度調到多強或照射多久，均無法產生光電流；但改用微弱的紫光（高頻率）照射時，卻能立刻產生光電流。分析此現象，下列哪一個推論最能說明古典理論的局限與光量子論的合理性？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-2-2', 'ch-6-2')">
+                                <span class="bloom-option-badge">A</span> 古典理論預測光能隨強度與時間累積，而實驗顯示激發與否僅取決於單一光子能量（頻率），支持了光量子論。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-2', 'ch-6-2')">
+                                <span class="bloom-option-badge">B</span> 實驗結果說明紅光是粒子，而紫光是電磁波，因而能發射電子。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-2', 'ch-6-2')">
+                                <span class="bloom-option-badge">C</span> 實驗結果說明光電流的大小只與入射光的頻率成正比，而與光的強度無關。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-2-2', 'ch-6-2')">
+                                <span class="bloom-option-badge">D</span> 古典波動說能完美預測此種瞬間激發行為，因此不需使用量子理論。
+                            </div>
+                        </div>
+                        <div id="exp-6-2-2" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 A。古典波動說預測能量是連續且可累積的，因此強光或長時照射必能打出電子；然而實驗顯示，低於底限頻率則完全無電子，這說明碰撞是一對一且能量取決於單個光子的頻率（$E = hf$），印證了光量子假說。
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CHAPTER 6-3: 物質的波動性 -->
+            <section id="ch-6-3" class="concept-chapter">
+                <div class="chapter-title-wrapper">
+                    <span class="chapter-badge">Chapter 6 量子現象</span>
+                    <h1 class="chapter-title">6-3 物質的波動性</h1>
+                    <p class="chapter-intro">挑戰傳統認知的「波動」與「粒子」互斥思維，引入物質的波動本質，揭開波粒二象性的神祕面紗。</p>
+                </div>
+
+                <!-- 關鍵概念 -->
+                <div class="concept-card card-key">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">關鍵概念</span>
+                        <h2 class="concept-title">德布羅意物質波假說</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>1924年，法國物理學家德布羅意（Louis de Broglie）大膽提出對稱設想：既然被視為波動的光具有粒子性，那麼被視為粒子的實體物質（如電子、質子）也應該具有波動性。他將這種伴隨著運動粒子出現的波稱為<strong>物質波 (Matter Wave)</strong>。</p>
+                        <p>一個動量為 $p$ 的運動粒子，其對應的物質波波長 $\lambda$ 反比於其動量：波長越短，粒子的粒子性越顯著；波長越長，波動性越易被觀測。德布羅意提出波長 $\lambda$ 與粒子質量 $m$ 及速度 $v$ 有如下關係：</p>
+                        <div class="formula-block">
+                            $\lambda = \frac{h}{m v}$
+                        </div>
+                        <p>因此，極微觀且輕量的粒子（如電子）才容易展現出波動性，而巨觀物體則因質量巨大，其波長小到無法觀測。</p>
+                    </div>
+                </div>
+
+                <!-- 輔助概念 -->
+                <div class="concept-card card-support">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">輔助概念</span>
+                        <h2 class="concept-title">物質波與宏觀物體的表現</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>物質波波長與物體的動量成反比。對於宏觀物體（例如棒球、飛機），由於質量極大，其德布羅意波長遠小於原子核的尺度，因此我們在日常生活中完全觀測不到宏觀物體的干涉與繞射等波動特徵。而在極微觀尺度（如高速運作的電子），波動性便會顯現出來。</p>
+
+                        <!-- 動態模擬器 -->
+                        <div class="simulation-container">
+                            <div class="simulation-header">
+                                <span>物質波運動與雙狹縫實驗模擬</span>
+                                <span style="color: #8b5cf6; font-size: 0.8rem;">切換粒子種類，觀察波動行為的消長</span>
+                            </div>
+                            <div class="simulation-canvas-wrapper">
+                                <canvas id="mw-canvas" class="simulation-canvas"></canvas>
+                            </div>
+                            <div class="simulation-controls">
+                                <div class="control-item">
+                                    <label>
+                                        <span>粒子種類 (質量 m)</span>
+                                    </label>
+                                    <select id="mw-particle">
+                                        <option value="electron">電子 (m ≈ 9.1 x 10^-31 kg) - 顯著波動</option>
+                                        <option value="alpha">α 粒子 (比電子重7300倍) - 微弱波動</option>
+                                        <option value="baseball">棒球 (m ≈ 0.145 kg) - 完全粒子性</option>
+                                    </select>
+                                </div>
+                                <div class="control-item">
+                                    <label>
+                                        <span>粒子運動速度 (v)</span>
+                                        <span id="mw-vel-val" style="font-family: monospace;">2.0 x10^6 m/s</span>
+                                    </label>
+                                    <input type="range" id="mw-vel" min="0.5" max="5.0" step="0.5" value="2.0">
+                                </div>
+                                <div class="control-item" style="justify-content: center; flex-direction: row; gap: 0.5rem; align-items: center;">
+                                    <input type="checkbox" id="mw-slits" style="width: 18px; height: 18px; cursor: pointer;">
+                                    <label for="mw-slits" style="cursor: pointer; font-size: 0.9rem;">開啟雙狹縫屏與接收器</label>
+                                </div>
+                            </div>
+                            <div class="simulation-stats">
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">粒子相對質量</span>
+                                    <span class="sim-stat-val" id="stat-mw-mass">極小</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">粒子相對速度</span>
+                                    <span class="sim-stat-val" id="stat-mw-velocity">中等</span>
+                                </div>
+                                <div class="sim-stat-box">
+                                    <span class="sim-stat-label">波動特性顯著度</span>
+                                    <span class="sim-stat-val" id="stat-mw-wave-visibility" style="color: #8b5cf6;">極顯著</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 細節概念 -->
+                <div class="concept-card card-detail">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">細節概念</span>
+                        <h2 class="concept-title">物質波是「水波」或「聲波」嗎？概率波解釋</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>很多人會誤以為電子是做「蛇行」運動，或將物質波當作介質擾動。物理學家玻恩（Max Born）提出，物質波本質上是一種<strong>機率波 (Probability Wave)</strong>。</p>
+                        <p>波包振幅較大的地方，代表粒子在該處出現的<strong>機率密度</strong>較高。在雙狹縫實驗中，單個電子依然是整顆通過狹縫並落在屏幕上的某一個點上（粒子性）；但當我們發射大量電子後，這些落點分布會漸漸堆疊出明暗相間的干涉條紋（波動性），這展現了波與粒子的和諧統一。</p>
+                    </div>
+                </div>
+
+                <!-- 補充概念 -->
+                <div class="concept-card card-supplement">
+                    <div class="concept-header">
+                        <span class="concept-type-tag">補充概念</span>
+                        <h2 class="concept-title">穿透極限：電子顯微鏡</h2>
+                    </div>
+                    <div class="concept-body">
+                        <p>光學顯微鏡的分辨率受限於可見光的波長（約 $400 - 700\text{ nm}$，因繞射極限限制）。而電子顯微鏡利用高速電子束，其物質波波長可小於 $0.1\text{ nm}$（比可見光短數萬倍），因而能清晰分辨出單個原子的排列結構，廣泛應用於現代半導體奈米製程檢測與病毒研究中。</p>
+                    </div>
+                </div>
+
+                <!-- 學生互動填答區 -->
+                <div class="interactive-input-section">
+                    <div class="input-problem-desc">
+                        ✍️ 概念檢測：根據物質波的理論，當電子的運動速度變快（動量變大）時，其伴隨的物質波波長將會變『長』或『短』？
+                    </div>
+                    <div class="interactive-form-grid">
+                        <input type="text" id="ans-6-3" class="interactive-text-input" placeholder="例如：短">
+                        <button class="interactive-submit-btn" onclick="verifyInlineAnswer('ans-6-3')">驗證答案</button>
+                    </div>
+                    <div id="ans-6-3-feedback" class="interactive-feedback"></div>
+                </div>
+
+                <!-- Bloom 知識確認測驗 -->
+                <div class="bloom-section">
+                    <div class="bloom-title-wrapper">
+                        <div class="bloom-header">
+                            <span class="bloom-icon-badge">Q</span>
+                            <span class="bloom-title-main">核心觀念檢測</span>
+                        </div>
+                        <span style="font-size: 0.825rem; color: var(--text-light);">檢測你的認知層級</span>
+                    </div>
+
+                    <!-- 3. 應用 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-application">層級三：應用</span>
+                        <div class="bloom-q-text">1. 德布羅意在1924年提出物質波假說，指出運動中的粒子具有波動性，且波長 $\lambda$ 與粒子的動量 $p = mv$ 成反比（$\lambda = \frac{h}{mv}$）。若甲、乙兩顆棒球的質量相同，但甲球的飛行速率為乙球的 2 倍，則甲球的物質波波長為乙球的多少倍？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-1', 'ch-6-3')">
+                                <span class="bloom-option-badge">A</span> 2 倍
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-1', 'ch-6-3')">
+                                <span class="bloom-option-badge">B</span> 1 倍
+                            </div>
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-3-1', 'ch-6-3')">
+                                <span class="bloom-option-badge">C</span> 0.5 倍
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-1', 'ch-6-3')">
+                                <span class="bloom-option-badge">D</span> 0.25 倍
+                            </div>
+                        </div>
+                        <div id="exp-6-3-1" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 C。根據物質波公式 $\lambda = \frac{h}{mv}$，在質量 $m$ 相同時，波長 $\lambda$ 與速度 $v$ 成反比。甲的速度是乙的 2 倍，故甲的物質波波長為乙的 $\frac{1}{2}$ 倍（即 0.5 倍）。
+                        </div>
+                    </div>
+
+                    <!-- 4. 分析 -->
+                    <div class="bloom-question-card">
+                        <span class="bloom-level-badge level-analysis">層級四：分析</span>
+                        <div class="bloom-q-text">2. 某生在做完電子的雙狹縫干涉實驗後總結：「既然電子是一顆一顆發射並落在屏幕上，那說明電子在空中必定有固定的粒子軌跡，只是我們不知道它走哪一條而已。」分析電子雙狹縫干涉的物理本質，下列何種說法最為合理？</div>
+                        <div class="bloom-options-list">
+                            <div class="bloom-option-item" data-correct="true" onclick="selectBloomOption(this, true, 'exp-6-3-2', 'ch-6-3')">
+                                <span class="bloom-option-badge">A</span> 電子的物質波本質上是機率波，在未進行觀測前電子處於通過雙狹縫的疊加態，干涉圖樣是落點機率分佈的展現。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-2', 'ch-6-3')">
+                                <span class="bloom-option-badge">B</span> 電子是實體粒子，因此在通過雙狹縫時必然像水流一樣分裂成兩半同時通過，最後在屏幕重新凝聚。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-2', 'ch-6-3')">
+                                <span class="bloom-option-badge">C</span> 單個電子在空中確實有固定軌跡，干涉條紋是多個電子在空中互相碰撞偏折所產生的。
+                            </div>
+                            <div class="bloom-option-item" onclick="selectBloomOption(this, false, 'exp-6-3-2', 'ch-6-3')">
+                                <span class="bloom-option-badge">D</span> 電子在雙狹縫中會被分裂成電磁波，到達屏幕時再重新凝聚成粒子。
+                            </div>
+                        </div>
+                        <div id="exp-6-3-2" class="bloom-explanation">
+                            <strong>解析：</strong> 答案為 A。電子在未被觀測時，由描述空間中機率分佈的物質波（機率波）來描述，電子可同時通過兩狹縫並產生干涉。如果假設電子走特定一條軌跡，就無法合理解釋干涉現象的形成。
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="simulation.js"></script>
+</body>
+</html>

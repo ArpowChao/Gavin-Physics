@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f2">
+  <meta name="description" content="3D 棒球全壘打仰角與空氣阻力實驗室：重現 158 km/h 下全壘打甜蜜仰角僅有 4 度（26°–30° Barrel），完整探索 0°～90° 仰角、界內與界外判定、空氣阻力、後旋馬格努斯力與 60°～90° 沖天炮倒退奇觀。">
+  <title>BARREL 全壘打仰角與空氣阻力實驗室 (0°–90°) | Physics Lab</title>
+  <link rel="icon" href="../../assets/img/apps/barrel-angle.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- KaTeX for Mathematics Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" defer></script>
+
+  <script src="../pitch-spin/lib/three.min.js" defer></script>
+  <script src="barrel-physics.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="../index.html" class="back-link">← Physics Lab</a>
+    <span>擊球空氣動力學 / LAUNCH ANGLE &amp; AIR DRAG (0°–90°)</span>
+    <a href="#principle">物理原理 ↗</a>
+  </header>
+
+  <main>
+    <header class="hero">
+      <div>
+        <p class="eyebrow">為什麼真空 45° 飛最遠，真實球場卻是 28°？60°～90° 沖天炮甚至會倒退飛進本壘後方界外區？</p>
+        <h1>
+          <span class="wordmark">BARREL</span>
+          <span class="hero-subtitle">全壘打仰角與空氣阻力實驗室</span>
+        </h1>
+      </div>
+      <p class="intro">
+        在打球初速 158 km/h（98 mph）下，容易形成全壘打的「甜蜜仰角」只有區區 <strong>4 度（26°–30°）</strong>。<br>
+        把仰角從 <strong>0° 拉到 90°</strong>，搭配<strong>界內／界外（±45° 邊線與本壘後方擋網）</strong>，同場比較<strong>真空拋體、純空氣阻力、阻力＋後旋馬格努斯力</strong>。
+      </p>
+    </header>
+
+    <!-- IG Reel 故事分鏡導覽列 -->
+    <section class="story-bar" aria-label="IG 影片故事展演模式">
+      <div class="story-controls">
+        <button id="story-play" type="button" class="story-play-btn">▶ 自動展演故事 (8 幕)</button>
+      </div>
+      <div id="chapter-list" class="chapter-list" role="tablist" aria-label="故事分鏡">
+        <button type="button" class="chapter-pill active" data-chapter="0">① 開場慢動作 ×1/8</button>
+        <button type="button" class="chapter-pill" data-chapter="1">② 10° 太低 (83m 安打)</button>
+        <button type="button" class="chapter-pill" data-chapter="2">③ 45° 太高 (103m 接殺)</button>
+        <button type="button" class="chapter-pill" data-chapter="3">④ 28° 全壘打 (114m)</button>
+        <button type="button" class="chapter-pill highlight-pill" data-chapter="4">⑤ 60°–90° 沖天炮倒退界外</button>
+        <button type="button" class="chapter-pill" data-chapter="5">⑥ 0°–90° 齊發 (4° Barrel)</button>
+        <button type="button" class="chapter-pill" data-chapter="6">⑦ 161 km/h (9° Barrel)</button>
+        <button type="button" class="chapter-pill" data-chapter="7">⑧ 187 km/h (8°–50° 大谷級)</button>
+      </div>
+    </section>
+
+    <div class="lab-layout">
+      <section class="stage-col" aria-label="3D 棒球場與軌跡模擬">
+
+        <!-- 獨立於畫布上方的即時數據與解說面板（完全不擋 3D 畫面） -->
+        <div class="scoreboard-banner" aria-live="polite">
+          <div class="hud-metrics">
+            <div class="hud-cell">
+              <span class="hud-label">打球初速</span>
+              <strong id="hud-speed">158<small>km/h</small></strong>
+            </div>
+            <div class="hud-cell">
+              <span class="hud-label">打球仰角</span>
+              <strong id="hud-angle" class="accent-text">28<small>度</small></strong>
+            </div>
+            <div class="hud-cell">
+              <span class="hud-label">水平方向</span>
+              <strong id="hud-spray">0°<small>中外野</small></strong>
+            </div>
+            <div class="hud-cell">
+              <span class="hud-label">滯空時間</span>
+              <strong id="hud-time">0:00.00</strong>
+            </div>
+            <div class="hud-cell">
+              <span class="hud-label">水平距離</span>
+              <strong id="hud-dist">0<small>m</small></strong>
+            </div>
+          </div>
+
+          <div class="hud-narrative">
+            <div class="hud-narrative-top">
+              <span id="hud-eyebrow" class="hud-eyebrow">158 km/h · 海拔 0m · 無風</span>
+              <div class="hud-badges">
+                <span id="hud-fair-badge" class="hud-fair-badge fair">界內 FAIR</span>
+                <span id="hud-badge" class="hud-badge">實時 ×1.0</span>
+                <span id="hud-outcome" class="hud-outcome">ホームラン 全壘打</span>
+              </div>
+            </div>
+            <h2 id="hud-title" class="hud-title">28度：飛進 114m 外野看台的全壘打！</h2>
+            <p id="hud-subtitle" class="hud-subtitle">兼顧水平穿透力與後旋升力，滯空 5.0 秒直接越過 110m 全壘打牆（位於 MLB Barrel 甜蜜區）</p>
+          </div>
+        </div>
+
+        <!-- 視角切換與播放控制列（置於 3D 畫布正上方，不遮擋球路） -->
+        <div class="stage-toolbar">
+          <div class="view-buttons" role="group" aria-label="觀察視角">
+            <button type="button" data-cam="stadium" class="active">高處全景</button>
+            <button type="button" data-cam="catcher">本壘後方 (看界內外)</button>
+            <button type="button" data-cam="batter">揮棒近景</button>
+            <button type="button" data-cam="side">一壘側面 (0°–90°剖面)</button>
+            <button type="button" data-cam="top">正上方俯視 (界內外雷達)</button>
+            <button type="button" data-cam="outfield">全壘打牆視角</button>
+            <button type="button" data-cam="follow">追球視角</button>
+          </div>
+
+          <div class="playback-controls" role="group" aria-label="播放與速度控制">
+            <button id="play-pause-btn" type="button" class="play-toggle-btn">⏸ 暫停</button>
+            <button id="replay-shot" type="button" class="replay-btn">↺ 重播</button>
+            <div class="speed-buttons" role="group" aria-label="播放倍速">
+              <button type="button" data-speed="0.125">×1/8 極慢</button>
+              <button type="button" data-speed="0.5">×0.5 慢速</button>
+              <button type="button" data-speed="1" class="active">×1.0 正常</button>
+              <button type="button" data-speed="2">×2.0 快速</button>
+            </div>
+          </div>
+
+          <div class="mode-row">
+            <div class="mode-buttons" role="group" aria-label="發球模式">
+              <button type="button" data-mode="single" class="active">單球三模型對照</button>
+              <button type="button" data-mode="fan">0°–90° 扇形齊發</button>
+            </div>
+            <div id="fan-filter-bar" class="fan-filter-bar" hidden>
+              <span>扇形區間：</span>
+              <button type="button" data-fan="0-90" class="active">0°–90° 全象限</button>
+              <button type="button" data-fan="0-60">0°–60° 常規</button>
+              <button type="button" data-fan="60-90">60°–90° 沖天炮倒退</button>
+            </div>
+            <!-- 保留隱藏 select 相容舊測試或腳本 -->
+            <select id="time-scale" hidden>
+              <option value="0.125">×1/8</option>
+              <option value="0.5">×0.5</option>
+              <option value="1" selected>×1.0</option>
+              <option value="1.5">×1.5</option>
+              <option value="2">×2.0</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 純淨無遮擋 3D 棒球場畫布 -->
+        <div id="stage" class="stage">
+          <canvas id="stadium-canvas" aria-label="3D 棒球場：顯示界內與界外、0°～90° 擊球軌跡、空氣阻力與真空對照"></canvas>
+        </div>
+
+        <!-- 畫布下方圖例列 -->
+        <div class="stage-footer">
+          <div class="stage-legend">
+            <span><i class="key real-key"></i>真實擊球（空氣阻力＋後旋升力，耀眼金黃）</span>
+            <span><i class="key foul-key"></i>界外球 ／ 60°–90° 沖天炮倒退（雷射紅）</span>
+            <span><i class="key drag-key"></i>僅空氣阻力（無後旋升力，皇家藍）</span>
+            <span><i class="key vac-key"></i>真空無阻力（銀白對照線，45° 最遠）</span>
+          </div>
+          <p id="stage-note" class="stage-note">3D 畫面直接附帶實體軌跡標籤 · 各模型顏色完全獨立不混淆 · 滑鼠拖曳旋轉 · 滾輪縮放</p>
+        </div>
+
+        <!-- 兩個 2D 物理分析面板 -->
+        <div class="two-panels">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>0°～90° 仰角 vs 飛行距離全圖</h2>
+                <span class="panel-tag">點擊或拖曳圖表可直接改變仰角 · 含 60°–90° 倒退界外區 (x &lt; 0)</span>
+              </div>
+              <span id="optimal-tag" class="badge-tag">真實最佳 ≈ 28° (真空 45°)</span>
+            </div>
+            <canvas id="angle-chart" class="chart-canvas" width="640" height="270" aria-label="0到90度仰角對飛行距離曲線圖：比較真空、僅阻力與阻力加後旋三條曲線"></canvas>
+            <p class="panel-note">
+              <i class="dot real"></i>阻力＋後旋（&gt;83° 倒退至本壘後方界外 x&lt;0）　
+              <i class="dot drag"></i>僅空氣阻力　
+              <i class="dot vac"></i>真空拋物線（45° 達 197m）
+            </p>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>初速 × 仰角 (0°～90°) Barrel 與全壘打相圖</h2>
+                <span class="panel-tag">MLB Statcast 甜蜜區隨球速擴張 · 點擊可直接切換球速與仰角</span>
+              </div>
+              <span id="barrel-tag" class="badge-tag accent-badge">Barrel 26°–30° (寬 4°)</span>
+            </div>
+            <canvas id="phase-chart" class="chart-canvas" width="640" height="270" aria-label="初速與仰角相圖：顯示 MLB Barrel 區、全壘打區與 60-90 度沖天炮區"></canvas>
+            <p class="panel-note">
+              <i class="dot barrel"></i>MLB Barrel 甜蜜區　
+              <i class="dot popup"></i>60°–90° 沖天炮／後旋倒退區
+            </p>
+          </section>
+        </div>
+      </section>
+
+      <!-- 右側互動控制欄 -->
+      <aside class="controls" aria-label="擊球與環境參數控制">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>經典擊球情境</h2>
+            <span class="panel-tag">0°～90° 與界內外實測</span>
+          </div>
+          <div class="presets" id="preset-buttons">
+            <button type="button" data-preset="deg10">
+              <strong>10° 平飛安打</strong>
+              <small>158 km/h · 83m (比真空遠)</small>
+            </button>
+            <button type="button" data-preset="deg28" class="active">
+              <strong>28° 黃金全壘打</strong>
+              <small>158 km/h · 114m Barrel</small>
+            </button>
+            <button type="button" data-preset="deg45">
+              <strong>45° 高飛接殺</strong>
+              <small>158 km/h · 103m (滯空6.3s)</small>
+            </button>
+            <button type="button" data-preset="deg68">
+              <strong>68° 內野沖天炮</strong>
+              <small>158 km/h · 51m (超高滯空)</small>
+            </button>
+            <button type="button" data-preset="deg88">
+              <strong>88° 後旋倒退界外</strong>
+              <small>158 km/h · −17m (本壘後方)</small>
+            </button>
+            <button type="button" data-preset="foulPole">
+              <strong>48° 標竿外側界外轟</strong>
+              <small>158 km/h · 114m 大號界外</small>
+            </button>
+            <button type="button" data-preset="ohtani">
+              <strong>187 km/h 大谷怪力</strong>
+              <small>116 mph · Barrel 寬達 42°</small>
+            </button>
+            <button type="button" data-preset="coors">
+              <strong>洛磯山高原球場</strong>
+              <small>海拔 1600m · 空氣稀薄 18%</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>調整擊球、方向與空氣阻力</h2>
+            <button id="reset-btn" type="button" class="mini-button">重設</button>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="speed-slider">打球初速 Exit Velocity</label>
+              <output id="speed-out">158 km/h (98.2 mph)</output>
+            </div>
+            <div class="slider-row">
+              <input id="speed-slider" type="range" min="80" max="195" step="1" value="158">
+              <div class="num-stepper">
+                <input id="speed-num" class="num-input" type="number" min="80" max="195" step="1" value="158" aria-label="直接輸入打球初速 (km/h)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="speed-slider" data-step-dir="1" title="增加 1 km/h" aria-label="打球初速增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="speed-slider" data-step-dir="-1" title="減少 1 km/h" aria-label="打球初速減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-marks"><span>80 km/h</span><span>158 (Barrel門檻)</span><span>195 km/h</span></div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="angle-slider">打球仰角 Launch Angle (0°–90°)</label>
+              <output id="angle-out">28°</output>
+            </div>
+            <div class="slider-row">
+              <input id="angle-slider" type="range" min="0" max="90" step="1" value="28">
+              <div class="num-stepper">
+                <input id="angle-num" class="num-input" type="number" min="0" max="90" step="1" value="28" aria-label="直接輸入打球仰角 (度)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="angle-slider" data-step-dir="1" title="增加 1°" aria-label="打球仰角增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="angle-slider" data-step-dir="-1" title="減少 1°" aria-label="打球仰角減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-marks">
+              <span>0° 平飛</span>
+              <span>28° 甜蜜點</span>
+              <span>45°</span>
+              <span>60°–90° 沖天炮</span>
+            </div>
+            <div class="angle-step-btns">
+              <button type="button" data-d-angle="-5">−5°</button>
+              <button type="button" data-d-angle="-1">−1°</button>
+              <button type="button" data-d-angle="1">＋1°</button>
+              <button type="button" data-d-angle="5">＋5°</button>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="spray-slider">水平方向 Spray Angle (界內 ±45°)</label>
+              <output id="spray-out">0° (中外野・界內)</output>
+            </div>
+            <div class="slider-row">
+              <input id="spray-slider" type="range" min="-65" max="65" step="1" value="0">
+              <div class="num-stepper">
+                <input id="spray-num" class="num-input" type="number" min="-65" max="65" step="1" value="0" aria-label="直接輸入水平方向角 (度)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="spray-slider" data-step-dir="1" title="向右 +1°" aria-label="水平方向增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="spray-slider" data-step-dir="-1" title="向左 −1°" aria-label="水平方向減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-marks">
+              <span>−65° 左界外</span>
+              <span>−45° 三壘線</span>
+              <span>0° 中外野</span>
+              <span>+45° 一壘線</span>
+              <span>+65° 右界外</span>
+            </div>
+            <div class="angle-step-btns">
+              <button type="button" data-set-spray="-44">左標竿內 −44°</button>
+              <button type="button" data-set-spray="0">中外野 0°</button>
+              <button type="button" data-set-spray="44">右標竿內 +44°</button>
+              <button type="button" data-set-spray="50">右界外 +50°</button>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="rpm-slider">後旋轉速 Backspin</label>
+              <output id="rpm-out">1260 rpm</output>
+            </div>
+            <div class="slider-row">
+              <input id="rpm-slider" type="range" min="-1500" max="3500" step="50" value="1260">
+              <div class="num-stepper">
+                <input id="rpm-num" class="num-input" type="number" min="-1500" max="3500" step="50" value="1260" aria-label="直接輸入後旋轉速 (rpm)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="rpm-slider" data-step-dir="1" title="增加 50 rpm" aria-label="後旋轉速增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="rpm-slider" data-step-dir="-1" title="減少 50 rpm" aria-label="後旋轉速減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <p class="hint">正值為後旋；83°–90° 沖天炮會因上升段馬格努斯力往本壘後方倒退成界外球。</p>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="cd-slider">空氣阻力係數 C<sub>D</sub></label>
+              <output id="cd-out">0.40</output>
+            </div>
+            <div class="slider-row">
+              <input id="cd-slider" type="range" min="0.00" max="0.65" step="0.01" value="0.40">
+              <div class="num-stepper">
+                <input id="cd-num" class="num-input" type="number" min="0.00" max="0.65" step="0.01" value="0.40" aria-label="直接輸入空氣阻力係數">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="cd-slider" data-step-dir="1" title="增加 0.01" aria-label="空氣阻力係數增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="cd-slider" data-step-dir="-1" title="減少 0.01" aria-label="空氣阻力係數減少">▼</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="alt-slider">球場海拔 Altitude</label>
+              <output id="alt-out">0 m (海平面)</output>
+            </div>
+            <div class="slider-row">
+              <input id="alt-slider" type="range" min="0" max="2400" step="100" value="0">
+              <div class="num-stepper">
+                <input id="alt-num" class="num-input" type="number" min="0" max="2400" step="100" value="0" aria-label="直接輸入球場海拔 (m)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="alt-slider" data-step-dir="1" title="增加 100 m" aria-label="球場海拔增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="alt-slider" data-step-dir="-1" title="減少 100 m" aria-label="球場海拔減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-marks"><span>0m 海平面</span><span>1600m 洛磯山高原</span><span>2400m</span></div>
+          </div>
+
+          <div class="control">
+            <div class="control-head">
+              <label for="wind-slider">外野風速 Wind</label>
+              <output id="wind-out">0 m/s (無風)</output>
+            </div>
+            <div class="slider-row">
+              <input id="wind-slider" type="range" min="-12" max="12" step="1" value="0">
+              <div class="num-stepper">
+                <input id="wind-num" class="num-input" type="number" min="-12" max="12" step="1" value="0" aria-label="直接輸入外野風速 (m/s)">
+                <div class="tri-btns">
+                  <button type="button" class="tri-btn up" data-step-target="wind-slider" data-step-dir="1" title="增加 1 m/s" aria-label="外野風速增加">▲</button>
+                  <button type="button" class="tri-btn down" data-step-target="wind-slider" data-step-dir="-1" title="減少 1 m/s" aria-label="外野風速減少">▼</button>
+                </div>
+              </div>
+            </div>
+            <div class="range-marks"><span>−12 m/s 逆風</span><span>無風</span><span>+12 m/s 順風</span></div>
+          </div>
+
+          <div class="toggle-group">
+            <label class="check-row">
+              <input id="show-vacuum" type="checkbox" checked>
+              <span>同場顯示「真空無阻力 (45°最遠)」虛線</span>
+            </label>
+            <label class="check-row">
+              <input id="show-drag-only" type="checkbox" checked>
+              <span>同場顯示「僅空氣阻力 (無旋轉)」虛線</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel readout-panel">
+          <div class="panel-head">
+            <h2>三模型物理數據與界內外判定</h2>
+            <span class="panel-tag">即時 RK4 積分</span>
+          </div>
+          <dl class="readouts">
+            <div>
+              <dt>界內／界外判定</dt>
+              <dd id="r-fair-status" class="highlight-val">—</dd>
+            </div>
+            <div>
+              <dt>真實飛距離（阻力＋後旋）</dt>
+              <dd id="r-full-dist" class="highlight-val">—</dd>
+            </div>
+            <div>
+              <dt>僅空氣阻力（無旋轉）</dt>
+              <dd id="r-drag-dist">—</dd>
+            </div>
+            <div>
+              <dt>真空理想拋物線（無阻力）</dt>
+              <dd id="r-vac-dist">—</dd>
+            </div>
+            <div>
+              <dt>空氣阻力吃掉距離</dt>
+              <dd id="r-drag-loss">—</dd>
+            </div>
+            <div>
+              <dt>後旋馬格努斯貢獻</dt>
+              <dd id="r-spin-gain">—</dd>
+            </div>
+            <div>
+              <dt>最高點高度 ／ 滯空時間</dt>
+              <dd id="r-apex-time">—</dd>
+            </div>
+            <div>
+              <dt>落地終端球速</dt>
+              <dd id="r-impact-speed">—</dd>
+            </div>
+            <div>
+              <dt>MLB Barrel 甜蜜區</dt>
+              <dd id="r-barrel-zone">—</dd>
+            </div>
+          </dl>
+        </section>
+      </aside>
+    </div>
+
+    <!-- 物理原理詳解區 -->
+    <section id="principle" class="principles" aria-labelledby="principle-title">
+      <div class="principle-intro">
+        <p class="eyebrow">AERODYNAMICS OF A HOME RUN (0°–90°)</p>
+        <h2 id="principle-title">為什麼真實棒球的最佳仰角不是 45°，<br>而 85° 沖天炮會倒退飛進本壘後方界外區？</h2>
+        <p>
+          高中物理課本假設「無空氣阻力」，推導出仰角 45° 射程最遠（$R = v_0^2 \sin 2\theta / g$）。
+          但在真實大氣中，一顆以 158 km/h 飛出的棒球會受到比重力還大的<strong>二次空氣阻力</strong>與<strong>後旋馬格努斯力</strong>，徹底改寫了 0°～90° 的拋體物理。
+        </p>
+        <div class="links">
+          <a href="../pitch-spin/index.html">→ SPIN 投球旋轉實驗室</a>
+          <a href="../baseball-cfd/index.html">→ 2D 棒球數值風洞 (CFD)</a>
+        </div>
+      </div>
+
+      <div class="principle-details">
+        <div class="equation">
+          <span>運動方程式（含風速 $\vec{v}_w$、空氣阻力 $C_D$ 與馬格努斯升力 $C_L$）</span>
+          <p class="formula">
+            $$m\frac{d\vec{v}}{dt} = m\vec{g} - \frac{1}{2}\rho A C_D |\vec{v}_{\text{rel}}|\vec{v}_{\text{rel}} + \frac{1}{2}\rho A C_L(S)|\vec{v}_{\text{rel}}|\left(\hat{\omega}\times\vec{v}_{\text{rel}}\right)$$
+          </p>
+          <p>
+            其中相對風速 $\vec{v}_{\text{rel}} = \vec{v} - \vec{v}_w$，旋轉比 $S = r\omega / |\vec{v}_{\text{rel}}|$。對後旋球而言，$\hat{\omega}\times\vec{v}_{\text{rel}} = (-v_{\text{rel},y},\, +v_{\text{rel},x})$。
+          </p>
+        </div>
+
+        <div class="guide">
+          <p>
+            <i class="swatch green"></i>
+            <span>
+              <strong>1. 為什麼 28° 打得比 45° 遠？（甜蜜區 Barrel 僅 4 度）</strong><br>
+              在 45° 高仰角下，球在空中停留超過 6.3 秒，空氣阻力持續消耗水平動量，使球在末端幾乎「垂直掉落」（從真空的 197 m 縮水到 103 m）。反之，26°～30° 兼具足夠的水平初速與後旋向上的馬格努斯升力（$+v_x$ 分量最大），讓球剛好越過 110 m 全壘打牆。
+            </span>
+          </p>
+          <p>
+            <i class="swatch blue"></i>
+            <span>
+              <strong>2. 為什麼 10° 平飛球「有空氣阻力＋後旋」反而比「真空」飛更遠？</strong><br>
+              在 10° 低仰角時，真空拋體僅 1.68 秒就落地（72.4 m）；但真實棒球的後旋產生約 0.4–0.5 倍重力的向上升力，將滯空時間延長到 2.63 秒，使飛行距離達到 83 m，超越真空射程！
+            </span>
+          </p>
+          <p>
+            <i class="swatch red"></i>
+            <span>
+              <strong>3. 60°～90° 沖天炮與界內／界外：為什麼 85°～90° 的球會飛到本壘板後方成為界外球？</strong><br>
+              棒球場以本壘板頂點往一、三壘延伸的兩條 90° 夾角邊線（$\pm 45^\circ$）區分<strong>界內（Fair）</strong>與<strong>界外（Foul）</strong>。當仰角達到 60°～90° 時，上升階段 $v_y \gg v_x$，後旋馬格努斯力 $\hat{\omega}\times\vec{v} = (-v_y, v_x)$ 的<strong>水平分量指向捕手後方</strong>！因為上升球速（44 m/s）遠大於下降終端速度（約 28 m/s），上升段向後的衝量勝出，使 85° 的球落在本壘後方 7 m（界外區，捕手可接殺），而 90° 的球更會倒退 23 m 直接飛過 18.3 m 本壘後方擋網！
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Physics Lab · Batted-Ball Aerodynamics &amp; MLB Statcast Barrel (0°–90°)</span>
+      <span>靈感致敬：@sports_kaibogaku · RK4 空氣動力與馬格努斯數值模擬</span>
+    </footer>
+  </main>
+</body>
+</html>
