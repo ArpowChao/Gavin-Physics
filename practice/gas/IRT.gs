@@ -57,6 +57,7 @@ const IRT_HEAD = {
 
 /** 重新計算 IRT（後台按鈕或每小時觸發器） */
 function runIRT() {
+  syncBankFile_();
   dirty_(SH.resp);
   const resp = rows_(SH.resp); const im = itemMap_();
   const users = {}; rows_(SH.users).forEach(r => users[r[0]] = { nick: r[1] });

@@ -93,6 +93,7 @@ const IRT_HEAD = {
 
 /** 重新計算 IRT（後台按鈕或每小時觸發器） */
 function runIRT() {
+  syncBankFile_();
   dirty_(SH.resp);
   const resp = rows_(SH.resp); const im = itemMap_();
   const users = {}; rows_(SH.users).forEach(r => users[r[0]] = { nick: r[1] });
@@ -326,7 +327,16 @@ function installHourlyTrigger() {
   ScriptApp.newTrigger('runIRTIfNew').timeBased().everyHours(1).create();
   Logger.log('已建立每小時檢查的自動分析觸發器');
 }
+/** 程式碼裡指定的題庫檔若和目前使用的不同（更新題庫後），切換過去並清除快取；runIRT／每小時觸發器都會檢查 */
+function syncBankFile_() {
+  const props = PropertiesService.getScriptProperties(); const want = DEFAULTS.BANK_FILE_ID;
+  if (!want || props.getProperty('BANK_FILE_ID') === want) return false;
+  props.setProperty('BANK_FILE_ID', want); clearCaches(); __IM = __KM = __GM = null;
+  try { writeItemsSheet_(); } catch (e) { Logger.log('題庫總覽更新失敗：' + e.message); }
+  Logger.log('已切換題庫檔：' + want + '，共 ' + ITEMS.length + ' 題'); return true;
+}
 function runIRTIfNew() {
+  syncBankFile_();
   const n = sheet_(SH.resp).getLastRow(); const props = PropertiesService.getScriptProperties();
   if (String(n) === props.getProperty('IRT_LAST_N')) { Logger.log('沒有新的作答，略過'); return; }
   const r = runIRT(); props.setProperty('IRT_LAST_N', String(n)); return r;
