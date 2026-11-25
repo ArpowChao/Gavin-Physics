@@ -263,7 +263,7 @@ def main():
         assert hand_item.locator(".exam-hand-answer").is_visible()
         assert hand_item.locator(".exam-rubric").is_visible()
 
-        # Taxonomy, mock exam, statistics, and local record operations.
+        # Taxonomy, statistics, and local record operations.
         page.evaluate("navigateTo('tool-taxonomy')")
         queue = page.locator(".taxonomy-queue-item")
         click_js(queue.nth(1))
@@ -273,12 +273,6 @@ def main():
         click_js(node_pick)
         assert page.locator(".taxonomy-node-pick").first.evaluate("element => element.classList.contains('selected')") != selected_before
         click_js(page.locator('[onclick="taxonomyMarkConfirmed()"]'))
-
-        page.evaluate("navigateTo('tool-mock')")
-        mock_item = page.locator(".exam-item").first
-        click_js(mock_item.locator(".exam-head"))
-        click_js(mock_item.locator(".exam-sol-btn"))
-        assert mock_item.locator(".exam-sol").is_visible()
 
         page.evaluate("navigateTo('tool-stats')")
         sort_control = page.locator('[onclick^="toggleStatsSort"]').first

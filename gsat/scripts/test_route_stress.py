@@ -15,7 +15,7 @@ def main():
         "module-6", "node-N21", "topic-N21", "home", "lab-N21",
         "home", "module-7", "node-N23", "lab-N23", "topic-N23",
         "tool-summary", "tool-quiz", "bank-N03", "tool-exams", "exams-N07",
-        "tool-taxonomy", "tool-mock", "tool-stats", "tool-wrong", "tool-buster",
+        "tool-taxonomy", "tool-stats", "tool-wrong", "tool-buster",
         "lab-N18", "topic-N18", "node-N06", "topic-N06", "node-N28",
         "lab-N28", "topic-N28", "node-N07", "lab-N07", "home",
         "module-2", "node-N05", "topic-N05", "module-3", "node-N11",

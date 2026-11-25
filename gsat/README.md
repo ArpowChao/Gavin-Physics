@@ -155,8 +155,7 @@ phy-senior/
 │  ├─ css/                     # 互動元件、手機分頁與 reduced-motion 樣式
 │  ├─ js/                      # 共用固定步長、Three.js 延遲載入與 3D 清理執行層
 │  ├─ lib/                     # 本地自託管函式庫（Three.js）
-│  ├─ exam_crops/              # 歷屆題目裁切圖與答案卡底圖
-│  └─ mock_crops/              # 模擬考裁切圖
+│  └─ exam_crops/              # 歷屆題目裁切圖與答案卡底圖
 ├─ images/                     # 早期 111–115 年題圖；現行頁面改用 assets/exam_crops
 ├─ 108課綱全/                  # 108 課綱試卷與參考資料
 └─ 99課綱/                     # 106–110 年舊制試卷與資料

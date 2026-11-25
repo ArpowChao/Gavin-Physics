@@ -98,11 +98,21 @@ function setBankFile() {
   clearCaches(); writeItemsSheet_();
   Logger.log('題庫：' + ITEMS.length + ' 題（檔案 ' + prop_('BANK_FILE_ID') + '）');
 }
-/** 更改後台管理金鑰：在編輯器中修改引號內文字後執行 */
+/**
+ * 更換後台管理金鑰。
+ * 預設（CUSTOM_KEY 留空）：自動產生 32 字元隨機金鑰，顯示在執行紀錄。
+ * 若要自訂：在編輯器暫時填入 CUSTOM_KEY（至少 16 字元）執行，執行後立刻改回空字串，不要存檔或提交到 repo。
+ */
 function setAdminKey() {
-  const NEW_KEY = 'changeme';
-  PropertiesService.getScriptProperties().setProperty('ADMIN_KEY', NEW_KEY);
-  Logger.log('管理金鑰已設為：' + NEW_KEY);
+  const CUSTOM_KEY = '';
+  let key = CUSTOM_KEY.trim();
+  if (key) {
+    if (key.length < 16 || /^(changeme|password|admin)/i.test(key)) throw new Error('金鑰太弱：至少 16 字元，且不可用預設字樣');
+  } else {
+    key = Utilities.getUuid().replace(/-/g, '').slice(0, 32);
+  }
+  PropertiesService.getScriptProperties().setProperty('ADMIN_KEY', key);
+  Logger.log('管理金鑰已更換為：' + key + '（舊金鑰立即失效）');
 }
 /** 匯入附圖（易混淆概念題）：資料夾中 q12.png、g22.png 這類檔名 */
 function importFigures() {

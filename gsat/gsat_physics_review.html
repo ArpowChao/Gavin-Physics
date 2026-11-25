@@ -5362,7 +5362,6 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
             <li><a class="nav-item" data-route="tool-quiz" onclick="switchMainView(this, 'tool-quiz')"><span class="nav-icon">✏️</span> 知識節點分級題庫</a></li>
             <li><a class="nav-item" data-route="tool-exams" onclick="switchMainView(this, 'tool-exams')"><span class="nav-icon">📚</span> 歷屆試題練習</a></li>
             <li><a class="nav-item" data-route="tool-taxonomy" onclick="switchMainView(this, 'tool-taxonomy')"><span class="nav-icon">🏷️</span> 歷屆題分類校對</a></li>
-            <li><a class="nav-item" data-route="tool-mock" onclick="switchMainView(this, 'tool-mock')"><span class="nav-icon">🧪</span> 模擬考練習（111–114）</a></li>
             <li><a class="nav-item" data-route="tool-diagnose" onclick="switchMainView(this, 'tool-diagnose')"><span class="nav-icon">🎯</span> 15 分鐘診斷卷</a></li>
             <li><a class="nav-item" data-route="tool-wrong" onclick="switchMainView(this, 'tool-wrong')"><span class="nav-icon">📕</span> 錯題本<span class="nav-badge" id="wrong-nav-badge" style="display:none;"></span></a></li>
             <li><a class="nav-item" data-route="tool-stats" onclick="switchMainView(this, 'tool-stats')"><span class="nav-icon">📊</span> 五年命題矩陣（節點層級）</a></li>
@@ -5561,7 +5560,6 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
                 'tool-quiz': '知識節點分級題庫',
                 'tool-exams': '歷屆試題練習',
                 'tool-taxonomy': '歷屆題分類校對',
-                'tool-mock': '模擬考練習',
                 'tool-diagnose': '15 分鐘診斷卷',
                 'tool-wrong': '錯題本',
                 'tool-stats': '五年命題矩陣',
@@ -5625,8 +5623,6 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
                 renderWrongView();
             } else if (route === 'tool-diagnose') {
                 renderDiagnoseView();
-            } else if (route === 'tool-mock') {
-                renderMockView();
             } else {
                 navigateTo('home', { replace: true });
                 return;
@@ -11958,33 +11954,6 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
                                     <li>依安培右手定則，判斷線圈磁場方向，並連結到磁鐵受到的合力方向。</li>
                                 </ol>
                             </div>
-                            <div style="margin-top:0.9rem; padding:0.9rem 1rem; border:1px solid rgba(37,99,235,0.22); border-radius:0.65rem; background:var(--primary-blue-light); font-size:0.9rem; line-height:1.65; color:var(--text-main);">
-                                <b style="color:var(--primary-blue);">📄 模考命題連結（一）：111 學年度第三次模考 Q16～17</b><br>
-                                Q16 要用右手握拳定則判斷螺線管的等效磁極，再比較兩端磁鐵的合力方向；Q17 進一步結合冷次定律，判斷列車前、後方線圈的感應磁力如何阻礙列車運動。這組題正好把影片現象串連到「電流磁效應＋電磁感應」。
-                                <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:0.7rem;">
-                                    <a href="模擬考/111模考3_試題.pdf#page=6" target="_blank" rel="noopener"
-                                       style="display:inline-block; padding:0.5rem 0.8rem; border-radius:0.55rem; background:var(--primary-blue); color:#fff; font-weight:700; text-decoration:none;">
-                                        開啟 Q16～17 試題
-                                    </a>
-                                    <a href="模擬考/111模考3_解答.pdf#page=2" target="_blank" rel="noopener"
-                                       style="display:inline-block; padding:0.5rem 0.8rem; border:1px solid var(--primary-blue); border-radius:0.55rem; color:var(--primary-blue); font-weight:700; text-decoration:none;">
-                                        查看詳解
-                                    </a>
-                                </div>
-                                <div style="height:1px; margin:0.9rem 0; background:rgba(37,99,235,0.18);"></div>
-                                <b style="color:var(--primary-blue);">📄 模考命題連結（二）：111 學年度第四次模考 Q58～60</b><br>
-                                Q58 檢驗電磁學科學史與基本觀念；Q59 以單極馬達考<b>右手開掌定則</b>，由電流方向與外加磁場方向判斷銅線受力、旋轉方向；Q60 則回到電池小火車，綜合判斷螺線管電流、磁極配置與列車受力方向。
-                                <div style="display:flex; flex-wrap:wrap; gap:0.6rem; margin-top:0.7rem;">
-                                    <a href="模擬考/111模考4_試題.pdf#page=16" target="_blank" rel="noopener"
-                                       style="display:inline-block; padding:0.5rem 0.8rem; border-radius:0.55rem; background:var(--primary-blue); color:#fff; font-weight:700; text-decoration:none;">
-                                        開啟 Q58～60 試題
-                                    </a>
-                                    <a href="模擬考/111模考4_解答.pdf#page=4" target="_blank" rel="noopener"
-                                       style="display:inline-block; padding:0.5rem 0.8rem; border:1px solid var(--primary-blue); border-radius:0.55rem; color:var(--primary-blue); font-weight:700; text-decoration:none;">
-                                        查看詳解
-                                    </a>
-                                </div>
-                            </div>
                             <p style="font-size:0.84rem; line-height:1.55; color:var(--text-muted); margin:0.8rem 0 0;">
                                 ※ 實際受力來自磁場與電流的交互作用；磁鐵方向、電流方向與接觸位置會共同影響結果。強力磁鐵與線圈可能發熱，實作時應避免短路過久。
                             </p>
@@ -17943,113 +17912,6 @@ html{background:#f8f1e7 !important} body::before{display:none !important}
             `;
 
             scheduleMathJax([main]);
-        }
-
-        // ===== 模擬考練習（111–114 學年自然科模擬考，取自嘉華中學公開試題區） =====
-        // 原始 PDF 在 模擬考/；物理部分已裁成頁圖 assets/mock_crops/{學年}模考{次}_q|a_p{頁}.jpg 內嵌顯示。
-        // qp＝內嵌的試題頁、ap＝內嵌的詳解頁。txt=true 表示文字版（頁碼經關鍵字掃描精確定位）；
-        // 掃描版（114 全、113 第2–4次）物理固定從第 2 頁卷首起，內嵌前段，混合題組的物理題看完整 PDF。
-        // qp 前段＝第壹部分物理選擇；後段＝第貳部分混合題組中的物理題組頁
-        // （文字版經關鍵字＋逐頁統計、掃描版經逐卷目視定位，如：114-1 布朗運動／衛星、
-        //   113-4 阻尼共振／AC-DC／測地球周長／終端速度）。ap＝詳解內嵌頁（含混合題詳解）。
-        const mockExams = [
-            { yr: '114', n: 1, pages: 18, qp: [2,3,4,5,11,12,15], ap: [2,3,4,5,6,7,8] },
-            { yr: '114', n: 2, pages: 20, qp: [2,3,4,5,10,11,12], ap: [2,3,4,5,6,7,8] },
-            { yr: '114', n: 3, pages: 20, qp: [2,3,4,5,12,16], ap: [2,3,4,5,6,7,8,9,10,11,12] },
-            { yr: '114', n: 4, pages: 24, qp: [2,3,4,5,16,23,24], ap: [2,3,4,5,6,7,8,9,10] },
-            { yr: '113', n: 1, pages: 21, qp: [3,4,5,14,17], ap: [1,2,3,4,5,6,7,8,9,10], txt: true },
-            { yr: '113', n: 2, pages: 24, qp: [2,3,4,5,15,16,21], ap: [2,3,4,5,6,7,8,9,10,11,12] },
-            { yr: '113', n: 3, pages: 20, qp: [2,3,4,5,14,15,16,17,18], ap: [2,3,4,5,6,7,8,9] },
-            { yr: '113', n: 4, pages: 24, qp: [2,3,4,5,10,12,14,15,16,20,22,23], ap: [2,3,4,5,6,7,8,9,10,11,12] },
-            { yr: '112', n: 1, pages: 24, qp: [2,3,4,13,14], ap: [1,2,3,4,5,6,7], txt: true },
-            { yr: '112', n: 2, pages: 20, qp: [2,3,4,12,13,15], ap: [1,2,3,4,5,6,7,8,9], txt: true },
-            { yr: '111', n: 2, pages: 16, qp: [2,3,9,10,11,15], ap: [1,2,3,4,5,6,7], txt: true },
-            { yr: '111', n: 3, pages: 20, qp: [4,5,6,12,13], ap: [1,2,3,4], txt: true },
-            { yr: '111', n: 4, pages: 16, qp: [2,3,4,15,16], ap: [1,2,3,4], txt: true, extra: true },
-        ];
-
-        function toggleMockSol(btn) {
-            const box = btn.parentElement.querySelector('.exam-sol');
-            if (box.hasAttribute('hidden')) {
-                box.removeAttribute('hidden');
-                btn.textContent = '📖 收合物理詳解';
-            } else {
-                box.setAttribute('hidden', '');
-                btn.textContent = '📖 顯示物理詳解';
-            }
-            resizeExamBody(btn);
-        }
-
-        function renderMockView() {
-            currentView = 'mock';
-            const main = document.getElementById('main-content');
-            const groups = {};
-            mockExams.forEach(m => { (groups[m.yr] = groups[m.yr] || []).push(m); });
-
-            let cards = '';
-            Object.keys(groups).sort((a, b) => b - a).forEach(yr => {
-                const rows = groups[yr].map(m => {
-                    const base = `模擬考/${m.yr}模考${m.n}`;
-                    const crop = `${m.yr}模考${m.n}`;
-                    const q = encodeURI(base + '_試題.pdf');
-                    const ans = encodeURI(base + '_解答.pdf');
-                    const hint = `物理選擇題＋混合題組物理頁已內嵌（第 ${m.qp.join('、')} 頁）；詳解含混合題解析`;
-                    const inv = invertCrops ? 'inverted' : '';
-                    const qImgs = m.qp.map(p =>
-                        `<img class="exam-crop ${inv}" loading="lazy" src="assets/mock_crops/${crop}_q_p${p}.jpg" alt="${crop} 試題第 ${p} 頁" onload="resizeExamBody(this)">`
-                    ).join('');
-                    const aImgs = m.ap.map(p =>
-                        `<img class="exam-crop ${inv}" loading="lazy" src="assets/mock_crops/${crop}_a_p${p}.jpg" alt="${crop} 詳解第 ${p} 頁" onload="resizeExamBody(this)">`
-                    ).join('');
-                    return `
-                        <div class="exam-item">
-                            <button class="exam-head" onclick="toggleExamItem(this)">
-                                <span class="exam-qno">第 ${m.n} 次</span>
-                                <span class="exam-headmain">
-                                    <span class="exam-topic">${m.yr} 學年模擬考 — 物理部分</span>
-                                    <span style="font-size:0.75rem; color:var(--text-muted);">${hint}</span>
-                                </span>
-                                <span class="exam-chev">▶</span>
-                            </button>
-                            <div class="exam-body">
-                                <div class="exam-body-inner">
-                                    ${qImgs}
-                                    <div class="exam-sol-wrap">
-                                        <button class="exam-sol-btn" onclick="toggleMockSol(this)">📖 顯示物理詳解</button>
-                                        <div class="exam-sol" hidden>
-                                            <div style="font-size:0.78rem; color:var(--text-muted); margin:0.3rem 0;">翰林詳解按物→化→生→地排列，每題標「概念：物理科」；以下內嵌物理段。</div>
-                                            ${aImgs}
-                                        </div>
-                                    </div>
-                                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-top:0.5rem;">
-                                        <a class="exam-pdflink" href="${q}#page=${m.qp[0]}" target="_blank" rel="noopener">📄 完整試卷（跳至物理，第 ${m.qp[0]} 頁）</a>
-                                        <a class="exam-pdflink" href="${ans}" target="_blank" rel="noopener" style="background:var(--accent-green-light); border-color:rgba(16,185,129,0.2); color:#047857;">✅ 完整詳解 PDF</a>
-                                        ${m.extra ? `<a class="exam-pdflink" href="${encodeURI(base + '_答案卡.pdf')}" target="_blank" rel="noopener">📝 答案卡</a>` : ''}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>`;
-                }).join('');
-                cards += `
-                    <div class="edu-card">
-                        <div class="edu-card-title">🗓️ ${yr} 學年度學測模擬考（自然科）　<span style="font-weight:500; font-size:0.85rem; color:var(--text-muted);">${groups[yr].length} 回</span></div>
-                        ${rows}
-                    </div>`;
-            });
-
-            main.innerHTML = `
-                <div class="content-header">
-                    <span class="content-badge">全真模擬演練</span>
-                    <h2 class="content-title">🧪 學測自然科模擬考練習（111–114 學年，共 ${mockExams.length} 回）</h2>
-                    <p class="content-subtitle">來源：嘉華中學公開學測模擬考題（翰林／北模等命題）。點任一回即<strong>原地展開物理題頁</strong>（免開 PDF），寫完再點「顯示物理詳解」對答案；物理錯題記得自行歸類到對應知識節點回去複習。</p>
-                </div>
-                <div class="info-alert">
-                    <span class="info-alert-icon">⏱️</span>
-                    <div><strong>模擬考使用法：</strong>①限時作答（只寫物理約 25–30 分鐘；整卷演練用底部完整試卷連結，110 分鐘）→ ②展開詳解逐題檢討，物理題認「概念：物理科—×××」標籤 → ③回到對應知識節點與題庫補強，並用命題矩陣「掌握度」追蹤。題型比照學測：第壹部分選擇題＋第貳部分混合題組。</div>
-                </div>
-                ${cards}
-                <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.5rem;">試卷來源：嘉義市嘉華高級中學網站公開資源（學測模擬考題專區）。檔案已下載至本專案 模擬考/ 資料夾，離線可用。</div>
-            `;
         }
 
         // ===== 15 分鐘診斷卷 =====
