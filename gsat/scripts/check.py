@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-防回歸檢查腳本 —— 每次（尤其是 GPT/Gemini）大改後跑一次：python check.py
+防回歸檢查腳本 —— 每次（尤其是 GPT/Gemini）大改後跑一次：python scripts/check.py
 檢查項目：
   1. 超綱禁用詞（課綱紅線，必修=Ⅴc；詳見記憶與 108課綱全/00-*.pdf）
   2. JS 字串內單反斜線 LaTeX（\frac 會被吃成 form-feed，必須寫 \\frac）
@@ -19,8 +19,11 @@ import tempfile
 from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent.parent
+# 頁面主程式已從 gsat_physics_review.html 拆到 assets/js/review/*.js（依檔名順序載入）
+REVIEW_JS = sorted((ROOT / "assets" / "js" / "review").glob("*.js"))
 FILES = [ROOT / "gsat_physics_review.html",
+         *REVIEW_JS,
          *sorted((ROOT / "data").glob("*.js"))]
 
 failures = []
@@ -140,15 +143,18 @@ if not hit:
 print("[4] node --check 語法")
 tmpdir = Path(tempfile.mkdtemp())
 targets = []
-html_text = texts[ROOT / "gsat_physics_review.html"]
-inline = "\n;\n".join(re.findall(r"<script>(.*?)</script>", html_text, re.S))
+page_html = texts[ROOT / "gsat_physics_review.html"]
+inline = "\n;\n".join(re.findall(r"<script>(.*?)</script>", page_html, re.S))
+# 後續檢查要看「整頁程式碼」：HTML 加上拆出去的主程式
+html_text = page_html + "\n" + "\n".join(texts[f] for f in REVIEW_JS)
 p = tmpdir / "inline.js"
 p.write_text(inline, encoding="utf-8")
 targets.append(("gsat_physics_review.html <script>", p))
 targets += [(f.name, f) for f in FILES if f.suffix == ".js"]
 for label, path in targets:
     r = subprocess.run(["node", "--check", str(path)],
-                       capture_output=True, text=True, shell=True)
+                       capture_output=True, text=True,
+                       shell=sys.platform == "win32")  # Linux 上 shell=True＋list 只會執行裸 node
     if r.returncode != 0:
         fail(f"{label} 語法錯誤：{(r.stderr or r.stdout).strip().splitlines()[-1][:200]}")
     else:

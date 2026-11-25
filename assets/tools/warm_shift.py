@@ -58,8 +58,8 @@ def process(path):
 
 if __name__ == '__main__':
     root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    files = sys.argv[1:] or ['gsat/gsat_physics_review.html', 'gsat/assets/css/interaction-runtime.css',
-                             'wave-optics/wave_optics_review.html', 'wave-optics/assets/css/learner.css', 'wave-optics/assets/css/interaction-runtime.css',
+    files = sys.argv[1:] or ['gsat/assets/css/review.css', 'gsat/assets/css/interaction-runtime.css',
+                             'wave-optics/assets/css/review.css', 'wave-optics/assets/css/learner.css','wave-optics/assets/css/interaction-runtime.css',
                              'wave-optics/water_interference.html', 'wave-optics/assets/css/aquarium.css', 'wave-optics/assets/css/swing-work.css']
     for f in files:
         print(f, '已更新' if process(os.path.join(root, f)) else '無變更')

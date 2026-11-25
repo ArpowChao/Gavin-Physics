@@ -1,0 +1,36 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apps Script 合併檔與來源一致
+        run: node practice/tools/build_gas.js --check
+
+      - name: 搜尋索引是最新的
+        run: |
+          node assets/tools/build_search_index.js
+          git diff --exit-code -- assets/search-index.json
+
+      - name: 學測頁防回歸檢查
+        run: python gsat/scripts/check.py
+
+      - name: 波動與光學頁檢查
+        working-directory: wave-optics
+        run: |
+          python scripts/audit_codebase.py
+          node scripts/audit_learning_content.js
+          node scripts/audit_aquarium.js
+          node scripts/audit_swing_work.js

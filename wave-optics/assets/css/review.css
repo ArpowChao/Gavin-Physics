@@ -1,0 +1,634 @@
+/* 由 wave_optics_review.html 拆出的頁面樣式 */
+        :root {
+            --bg-body: #fbfaf8;
+            --bg-sidebar: #33231b;
+            --bg-card: rgba(255, 255, 255, 0.72);
+
+            --text-main: #2d211a;
+            --text-muted: #7b6b60;
+            --border-color: rgba(42, 29, 23, 0.08);
+
+            --primary-blue: #843c1f;
+            --primary-blue-light: rgba(133, 60, 31, 0.07);
+            --accent-cyan: #803a1e;
+            --accent-green: #7c381d;
+            --accent-green-light: rgba(130, 59, 31, 0.07);
+            --accent-orange: hsl(32, 88%, 42%);
+            --accent-orange-light: rgba(220, 130, 20, 0.08);
+            --accent-rose: hsl(348, 72%, 45%);
+            --accent-rose-light: rgba(200, 40, 70, 0.07);
+            --accent-violet: #b25b38;
+            --accent-violet-light: rgba(200, 107, 70, 0.07);
+
+            --transition: all 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-neon: 0 4px 20px rgba(42, 29, 23, 0.04);
+            --shadow-neon-hover: 0 10px 30px rgba(42, 29, 23, 0.09);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { background: #f5f2ef; }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background: radial-gradient(circle at 50% 0%, #fdfdfc 0%, #f5f2ef 100%);
+        }
+        body {
+            color: var(--text-main);
+            font-family: 'Outfit', 'Noto Sans TC', system-ui, sans-serif;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ---------- 側欄 ---------- */
+        #sidebar {
+            width: 296px;
+            padding: 1.7rem 1.1rem 2rem;
+            background: var(--bg-sidebar);
+            box-shadow: 10px 0 30px rgba(44, 30, 23, 0.09);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #6a3b28 transparent;
+        }
+
+        .sidebar-brand {
+            margin: 0 0 1.6rem;
+            padding: 0.3rem 0.7rem 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-brand::before {
+            content: '';
+            display: block;
+            width: 34px; height: 3px;
+            margin-bottom: 0.8rem;
+            border-radius: 99px;
+            background: #c97858;
+            box-shadow: 12px 0 0 rgba(201, 120, 88, 0.35);
+        }
+        .sidebar-brand h1 { color: #fcf8f4; font-size: 1.16rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
+        .sidebar-brand p { font-size: 0.74rem; font-weight: 500; margin-top: 0.4rem; color: #b8a89d; line-height: 1.55; }
+
+        .nav-section-title {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.12em; color: #d08a6f; margin: 1.45rem 0.7rem 0.6rem;
+        }
+        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.16rem; }
+        .nav-item {
+            display: flex; align-items: center; min-height: 40px;
+            padding: 0.58rem 0.7rem; border: 1px solid transparent; border-radius: 8px;
+            cursor: pointer; color: #cbbfb6; font-size: 0.85rem; font-weight: 500;
+            transition: var(--transition); text-decoration: none; gap: 0.7rem; line-height: 1.5;
+        }
+        .nav-item:hover { color: #fcf8f4; background: rgba(255, 255, 255, 0.055); }
+        .nav-item.active {
+            color: #fff; background: rgba(186, 106, 74, 0.16);
+            border-color: rgba(210, 140, 112, 0.22); border-left: 3px solid #c57758; font-weight: 700;
+        }
+        .nav-item-node { padding-left: 1.5rem; }
+        .nav-module-label {
+            font-size: 0.71rem; font-weight: 800; color: #ce957e;
+            margin: 0.85rem 0.7rem 0.35rem; letter-spacing: 0.04em;
+        }
+        .node-code-badge {
+            font-size: 0.67rem; font-weight: 800; min-width: 34px; padding: 0.12rem 0.36rem; white-space: nowrap; text-align: center;
+            color: #dba48e; background: rgba(195, 116, 85, 0.1);
+            border: 1px solid rgba(195, 116, 85, 0.15); border-radius: 4px;
+            font-family: 'Outfit', sans-serif; text-align: center;
+        }
+        .nav-item.active .node-code-badge { color: #fff; background: rgba(197, 119, 88, 0.32); }
+        .nav-icon { width: 18px; text-align: center; font-size: 0.95rem; }
+        .nav-badge {
+            margin-left: auto; font-size: 0.66rem; font-weight: 800; padding: 0.05rem 0.36rem;
+            border-radius: 99px; background: var(--accent-rose); color: #fff;
+        }
+        .mobile-nav-toggle { display: none; }
+
+        /* ---------- 版面 ---------- */
+        .app-workspace {
+            flex: 1; min-width: 0; display: flex; flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .view-toolbar {
+            position: sticky; top: 0; z-index: 30;
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem clamp(1rem, 3vw, 2.5rem);
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(10px) saturate(140%);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .view-toolbar button {
+            font: inherit; font-size: 0.8rem; font-weight: 600;
+            padding: 0.32rem 0.7rem; border-radius: 7px;
+            border: 1px solid var(--border-color); background: #fff;
+            color: var(--text-main); cursor: pointer; transition: var(--transition);
+        }
+        .view-toolbar button:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .view-breadcrumb { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-left: 0.4rem; }
+
+        /* 標了 wide 的互動實驗需要更多橫向空間才看得清楚（例如水波干涉的雙曲線族） */
+        #main-content.lab-wide { max-width: 1520px; }
+
+        #main-content {
+            flex: 1;
+            padding: 2.2rem clamp(1.1rem, 4vw, 3rem) 2.5rem;
+            max-width: 1180px; width: 100%;
+        }
+
+        /* 系統統一頁尾 (解決滾輪滑至底端斷崖留白問題) */
+        .app-footer {
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid var(--border-color);
+            padding: 1.6rem clamp(1.1rem, 4vw, 3rem);
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .footer-inner {
+            max-width: 1180px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 1rem;
+        }
+        .footer-title {
+            font-weight: 800; color: var(--text-main); font-size: 0.92rem;
+            margin-bottom: 0.2rem;
+        }
+        .footer-desc {
+            line-height: 1.55; color: var(--text-muted); font-size: 0.8rem;
+        }
+        .footer-credit {
+            margin-top: 0.35rem; font-size: 0.78rem; color: var(--primary-blue); font-weight: 600;
+        }
+        .btn-footer-top {
+            font: inherit; font-size: 0.8rem; font-weight: 700;
+            padding: 0.4rem 0.9rem; border-radius: 8px;
+            border: 1px solid var(--border-color); background: #fff;
+            color: var(--primary-blue); cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: inline-flex; align-items: center; gap: 0.3rem;
+        }
+        .btn-footer-top:hover {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue-light);
+            transform: translateY(-1px);
+        }
+
+        /* ---------- 通用元件 ---------- */
+        .view-header { margin-bottom: 1.8rem; }
+        .view-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--accent-cyan); background: rgba(136, 61, 32, 0.08);
+            border: 1px solid rgba(136, 61, 32, 0.16);
+            padding: 0.2rem 0.6rem; border-radius: 99px; margin-bottom: 0.7rem;
+        }
+        .view-header h2 { font-size: clamp(1.45rem, 3.2vw, 2rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.25; }
+        .view-header p { margin-top: 0.6rem; color: var(--text-muted); font-size: 0.94rem; line-height: 1.8; max-width: 62ch; }
+
+        .section-title {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 1.08rem; font-weight: 800; margin: 2.3rem 0 1rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);
+        }
+        .section-title::before {
+            content: ''; width: 4px; height: 18px; border-radius: 99px; background: var(--accent-cyan);
+        }
+        .section-title .title-hint { font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-left: auto; }
+
+        .card {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 1.1rem 1.2rem; box-shadow: var(--shadow-neon);
+            transition: var(--transition);
+        }
+        .card + .card { margin-top: 0.95rem; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.95rem; }
+        .card-grid .card + .card { margin-top: 0; }
+
+        /* 公式卡 */
+        .formula-card { border-left: 4px solid var(--primary-blue); }
+        .formula-card h4 {
+            font-size: 1rem; font-weight: 800; display: flex; align-items: center;
+            gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem;
+        }
+        .formula-node-tag {
+            font-size: 0.66rem; font-weight: 800; padding: 0.1rem 0.4rem; border-radius: 4px;
+            color: var(--primary-blue); background: var(--primary-blue-light);
+            border: 1px solid rgba(133, 60, 31, 0.18); cursor: pointer;
+        }
+        .formula-box {
+            margin: 0.55rem 0 0.75rem; padding: 0.75rem 0.9rem; overflow-x: auto;
+            background: rgba(133, 60, 31, 0.045); border: 1px solid rgba(133, 60, 31, 0.12);
+            border-radius: 10px; text-align: center; font-size: 1.02rem;
+        }
+        .formula-anchor {
+            font-size: 0.85rem; font-weight: 700; color: var(--accent-cyan);
+            padding-left: 0.7rem; border-left: 3px solid var(--accent-cyan); margin-bottom: 0.7rem; line-height: 1.7;
+        }
+        .formula-desc { font-size: 0.88rem; line-height: 1.9; color: var(--text-main); }
+        .formula-desc b { color: var(--primary-blue); }
+
+        /* 即時檢核 probe */
+        .probe { margin-top: 0.85rem; padding: 0.75rem 0.85rem; border-radius: 10px; background: var(--accent-violet-light); border: 1px solid rgba(200, 107, 70, 0.15); }
+        .probe-q { font-size: 0.84rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .probe-opts { display: flex; flex-direction: column; gap: 0.35rem; }
+        .probe-opt {
+            text-align: left; font: inherit; font-size: 0.82rem; padding: 0.38rem 0.6rem;
+            border-radius: 7px; border: 1px solid rgba(200, 107, 70, 0.18);
+            background: rgba(255, 255, 255, 0.85); cursor: pointer; transition: var(--transition);
+        }
+        .probe-opt:hover { border-color: var(--accent-violet); }
+        .probe-opt.right { background: var(--accent-green-light); border-color: var(--accent-green); color: var(--accent-green); font-weight: 700; }
+        .probe-opt.wrong { background: var(--accent-rose-light); border-color: var(--accent-rose); color: var(--accent-rose); }
+
+        /* 解題特徵卡 */
+        .feature-card { border-left: 4px solid var(--accent-orange); }
+        .feature-line { font-size: 0.88rem; line-height: 1.85; }
+        .feature-line + .feature-line { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--border-color); }
+        .feature-label {
+            display: inline-block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em;
+            padding: 0.08rem 0.4rem; border-radius: 4px; margin-right: 0.45rem; vertical-align: 1px;
+        }
+        .label-feature { color: var(--primary-blue); background: var(--primary-blue-light); }
+        .label-bridge { color: var(--accent-green); background: var(--accent-green-light); }
+        .label-trap { color: var(--accent-rose); background: var(--accent-rose-light); }
+
+        /* 概念圖 */
+        .concept-map-container { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+        .map-node {
+            width: 100%; max-width: 680px; padding: 0.8rem 1rem; border-radius: 12px;
+            background: var(--bg-card); border: 1px solid var(--border-color); box-shadow: var(--shadow-neon);
+        }
+        .map-node-title { font-size: 0.92rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 0.25rem; }
+        .map-node-desc { font-size: 0.83rem; line-height: 1.8; color: var(--text-muted); }
+        .map-connector { font-size: 0.76rem; font-weight: 700; color: var(--accent-cyan); padding: 0.35rem 0; }
+
+        /* 表格 */
+        .edu-table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); }
+        .edu-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: rgba(255,255,255,0.72); min-width: 520px; }
+        .edu-table th {
+            background: rgba(133, 60, 31, 0.07); font-weight: 800; text-align: left;
+            padding: 0.65rem 0.8rem; border-bottom: 2px solid rgba(133, 60, 31, 0.14); color: var(--primary-blue);
+        }
+        .edu-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid var(--border-color); line-height: 1.75; vertical-align: top; }
+        .edu-table tr:last-child td { border-bottom: 0; }
+        .formula-desc .edu-table { min-width: 380px; margin-top: 0.5rem; }
+
+        /* 大考題型卡 */
+        .exam-card { border-left: 4px solid var(--accent-violet); }
+        .exam-card h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.3rem; }
+        .exam-year {
+            display: inline-block; font-size: 0.7rem; font-weight: 800; padding: 0.1rem 0.45rem;
+            border-radius: 4px; color: var(--accent-violet); background: var(--accent-violet-light);
+            border: 1px solid rgba(200, 107, 70, 0.18); margin-bottom: 0.45rem;
+        }
+        .exam-card p { font-size: 0.86rem; line-height: 1.85; color: var(--text-main); }
+
+        /* 首頁 */
+        .home-hero {
+            padding: 1.7rem 1.6rem; border-radius: 18px; margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(133, 60, 31, 0.07), rgba(200, 107, 70, 0.05));
+            border: 1px solid var(--border-color);
+        }
+        .home-hero h2 { max-width: 24ch; }
+        .home-hero p { max-width: 60ch; }
+        .home-hero h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; }
+        .home-hero p { margin-top: 0.7rem; font-size: 0.92rem; line-height: 1.85; color: var(--text-muted); }
+        .home-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(108px, 1fr)); gap: 0.6rem; margin-top: 1.4rem; }
+        .home-stat {
+            padding: 0.7rem 0.85rem; border-radius: 12px; background: rgba(255,255,255,0.8);
+            border: 1px solid var(--border-color);
+        }
+        .home-stat span { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); }
+        .home-stat strong { display: block; font-size: 1.35rem; font-weight: 800; color: var(--primary-blue); font-family: 'Outfit', sans-serif; }
+
+        .module-card { cursor: pointer; border-left: 4px solid var(--accent-cyan); }
+        .module-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-neon-hover); border-color: var(--accent-cyan); }
+        .module-card h3 { font-size: 1.02rem; font-weight: 800; margin-bottom: 0.3rem; }
+        .module-card p { font-size: 0.84rem; color: var(--text-muted); line-height: 1.75; }
+        .module-badge {
+            display: inline-block; font-size: 0.68rem; font-weight: 800; padding: 0.1rem 0.45rem;
+            border-radius: 4px; color: var(--accent-cyan); background: rgba(136, 61, 32, 0.08);
+            border: 1px solid rgba(136, 61, 32, 0.16); margin-bottom: 0.4rem;
+        }
+        .module-nodes { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.7rem; }
+        .module-node-chip {
+            font-size: 0.7rem; font-weight: 700; padding: 0.16rem 0.45rem; border-radius: 5px;
+            background: var(--primary-blue-light); color: var(--primary-blue);
+            border: 1px solid rgba(133, 60, 31, 0.14); cursor: pointer; transition: var(--transition);
+        }
+        .module-node-chip:hover { background: var(--primary-blue); color: #fff; }
+
+        /* 節點頁動作列 */
+        .node-route-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.6rem; margin-bottom: 1.6rem; }
+        .node-route-btn {
+            font: inherit; text-align: left; padding: 0.7rem 0.85rem; border-radius: 12px; cursor: pointer;
+            background: rgba(255,255,255,0.82); border: 1px solid var(--border-color); transition: var(--transition);
+        }
+        .node-route-btn:hover { border-color: var(--accent-cyan); transform: translateY(-1px); box-shadow: var(--shadow-neon-hover); }
+        .node-route-btn b { display: block; font-size: 0.88rem; font-weight: 800; }
+        .node-route-btn span { display: block; font-size: 0.76rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+        /* 題庫 */
+        .quiz-toolbar { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.1rem; align-items: center; }
+        .chip-btn {
+            font: inherit; font-size: 0.79rem; font-weight: 700; padding: 0.34rem 0.75rem;
+            border-radius: 99px; border: 1px solid var(--border-color); background: #fff;
+            color: var(--text-muted); cursor: pointer; transition: var(--transition);
+        }
+        .chip-btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .chip-btn.is-active { background: var(--accent-cyan); border-color: var(--accent-cyan); color: #fff; }
+        .quiz-card { border-left: 4px solid var(--accent-green); }
+        .quiz-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
+        .quiz-tag { font-size: 0.68rem; font-weight: 800; padding: 0.1rem 0.42rem; border-radius: 4px; border: 1px solid var(--border-color); color: var(--text-muted); background: rgba(255,255,255,0.7); }
+        .quiz-tag.level-記憶 { color: var(--primary-blue); background: var(--primary-blue-light); border-color: rgba(133, 60, 31, 0.18); }
+        .quiz-tag.level-理解 { color: var(--accent-cyan); background: rgba(136, 61, 32, 0.08); border-color: rgba(136, 61, 32, 0.18); }
+        .quiz-tag.level-應用 { color: var(--accent-orange); background: var(--accent-orange-light); border-color: rgba(220,130,20,0.2); }
+        .quiz-tag.level-分析 { color: var(--accent-violet); background: var(--accent-violet-light); border-color: rgba(200, 107, 70, 0.2); }
+        .quiz-tag.exam-badge { color: #dc2626; background: rgba(220, 38, 38, 0.09); border-color: rgba(220, 38, 38, 0.28); font-weight: 800; }
+        .quiz-tag.source-badge { color: #a34926; background: rgba(163, 73, 38, 0.08); border-color: rgba(163, 73, 38, 0.22); }
+        .quiz-q { font-size: 0.92rem; font-weight: 700; line-height: 1.8; margin-bottom: 0.7rem; }
+        .quiz-fig-box {
+            margin: 0.85rem 0 1rem 0;
+            padding: 0.65rem 0.85rem;
+            background: linear-gradient(180deg, #fdfdfd 0%, #fcfaf8 100%);
+            border: 1px solid #f0e9e2;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(37, 26, 20, 0.04);
+        }
+        .quiz-fig-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px dashed #e8cec4;
+            font-size: 0.75rem;
+        }
+        .quiz-fig-seal {
+            font-weight: 800;
+            color: #dc2626;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .quiz-fig-src {
+            color: #8b7464;
+            font-weight: 600;
+        }
+        .quiz-fig-img {
+            display: block;
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            max-height: 520px;
+            object-fit: contain;
+            margin: 0.35rem auto;
+            border-radius: 6px;
+            background: #fff;
+            image-rendering: -webkit-optimize-contrast;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+        .quiz-fig-cap {
+            margin-top: 0.45rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #695547;
+            font-weight: 600;
+        }
+        .quiz-opts { display: flex; flex-direction: column; gap: 0.4rem; }
+        .quiz-opt {
+            text-align: left; font: inherit; font-size: 0.86rem; line-height: 1.7;
+            padding: 0.5rem 0.7rem; border-radius: 9px; border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.85); cursor: pointer; transition: var(--transition);
+        }
+        .quiz-opt:hover { border-color: var(--accent-cyan); }
+        .quiz-opt.picked { border-color: var(--primary-blue); background: var(--primary-blue-light); }
+        .quiz-opt.right { border-color: var(--accent-green); background: var(--accent-green-light); }
+        .quiz-opt.wrong { border-color: var(--accent-rose); background: var(--accent-rose-light); }
+        .quiz-why { display: block; margin-top: 0.3rem; font-size: 0.79rem; color: var(--text-muted); line-height: 1.7; }
+        .quiz-actions { display: flex; gap: 0.45rem; margin-top: 0.7rem; flex-wrap: wrap; }
+        .quiz-exp {
+            margin-top: 0.7rem; padding: 0.6rem 0.8rem; border-radius: 0 9px 9px 0;
+            border-left: 3px solid var(--accent-green); background: var(--accent-green-light);
+            font-size: 0.83rem; line-height: 1.8;
+        }
+        .quiz-empty { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        .quiz-lab-btn {
+            border-color: #7f391e !important;
+            background: rgba(127, 57, 30, 0.08) !important;
+            color: #7f391e !important;
+            font-weight: 600;
+        }
+        .quiz-lab-btn:hover {
+            background: #7f391e !important;
+            color: #ffffff !important;
+        }
+        .quiz-lab-btn.is-open {
+            background: #7f391e !important;
+            color: #ffffff !important;
+        }
+        .quiz-lab-box {
+            margin-top: 1rem;
+            border: 1.5px solid rgba(127, 57, 30, 0.25);
+            border-radius: 12px;
+            background: #fefefd;
+            padding: 0.85rem;
+            box-shadow: 0 4px 16px rgba(127, 57, 30, 0.06);
+            animation: fadeInLab 0.24s ease-out;
+        }
+        .quiz-lab-guide {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.85rem;
+            margin-bottom: 0.75rem;
+            background: rgba(130, 59, 31, 0.1);
+            border-left: 3.5px solid var(--accent-cyan);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.84rem;
+            color: #31221b;
+            line-height: 1.6;
+        }
+        @keyframes fadeInLab {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* 提示條 */
+        .callout {
+            padding: 0.75rem 0.95rem; border-radius: 0 10px 10px 0; font-size: 0.85rem; line-height: 1.85;
+            border-left: 3px solid var(--accent-orange); background: var(--accent-orange-light); margin: 1rem 0;
+        }
+        .callout.info { border-left-color: var(--primary-blue); background: var(--primary-blue-light); }
+
+        .print-hide { }
+
+        /* ---------- 動畫講解 ---------- */
+        .anim-block { border-left: 4px solid var(--accent-violet); }
+        /* 這支動畫在打哪個迷思——放在最前面，讀者一眼知道要不要看 */
+        .anim-myth {
+            font-size: 0.84rem; line-height: 1.8; color: var(--text-main);
+            background: var(--accent-rose-light);
+            border-left: 3px solid var(--accent-rose);
+            border-radius: 0 8px 8px 0;
+            padding: 0.55rem 0.75rem; margin-bottom: 0.7rem; max-width: 68ch;
+        }
+        .anim-myth b {
+            display: inline-block; margin-right: 0.5rem;
+            font-size: 0.74rem; font-weight: 800; letter-spacing: 0.04em;
+            color: var(--accent-rose);
+        }
+
+        .anim-lead {
+            font-size: 0.88rem; line-height: 1.85; color: var(--text-muted);
+            margin-bottom: 0.85rem; max-width: 66ch;
+        }
+        .anim-stage {
+            position: relative; border-radius: 12px; overflow: hidden;
+            background: #201611; border: 1px solid rgba(42, 29, 23, 0.16);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+        /* 明確宣告 16:9。preload 尚未取得 metadata 前，瀏覽器會用預設的
+         * 300×150（2:1）當內建比例，版面會先歪一下再跳回來。 */
+        .anim-stage video {
+            display: block; width: 100%; height: auto;
+            aspect-ratio: 16 / 9; background: #201611;
+        }
+        .anim-stage-vertical {
+            max-width: 360px; margin: 0 auto;
+            aspect-ratio: 9 / 16; height: auto; position: relative;
+        }
+        .anim-stage-vertical iframe {
+            display: block; width: 100%; height: 100%;
+            border: 0; background: #000;
+        }
+        .anim-meta {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+            margin: 0.7rem 0 0.2rem; font-size: 0.76rem; color: var(--text-muted);
+        }
+        .anim-dur {
+            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.72rem;
+            color: var(--accent-violet); background: rgba(193, 105, 70, 0.08);
+            border: 1px solid rgba(193, 105, 70, 0.18);
+            padding: 0.14rem 0.5rem; border-radius: 99px;
+        }
+        .anim-speed-control {
+            display: flex; align-items: center; gap: 0.55rem;
+            margin-top: 0.55rem; padding: 0.45rem 0.65rem;
+            border-radius: 9px; color: var(--accent-violet);
+            background: rgba(193, 105, 70, 0.05);
+            border: 1px solid rgba(193, 105, 70, 0.14);
+        }
+        .anim-speed-control label {
+            font-size: 0.76rem; font-weight: 700; white-space: nowrap;
+        }
+        .anim-speed-control .speed-limit {
+            font-size: 0.69rem; font-weight: 700; color: var(--text-muted); white-space: nowrap;
+        }
+        .anim-speed-control .speed-current {
+            font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+        }
+        .anim-speed-control input[type="range"] {
+            flex: 1; min-width: 90px; accent-color: var(--accent-violet); cursor: pointer;
+        }
+        .anim-speed-control b {
+            min-width: 38px; text-align: right;
+            font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 800;
+        }
+
+        /* 章節時間戳 */
+        .anim-chapters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+        .anim-chip {
+            font: inherit; font-size: 0.76rem; font-weight: 600; text-align: left;
+            display: inline-flex; align-items: baseline; gap: 0.45rem;
+            padding: 0.32rem 0.62rem; border-radius: 8px; cursor: pointer;
+            border: 1px solid rgba(193, 105, 70, 0.2);
+            background: rgba(193, 105, 70, 0.045); color: var(--text-main);
+            transition: var(--transition);
+        }
+        .anim-chip { text-decoration: none; }
+        .anim-chip:hover { background: var(--accent-violet); color: #fff; border-color: var(--accent-violet); }
+        .anim-chip:hover time { color: rgba(255, 255, 255, 0.75); }
+        .anim-chip time {
+            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.72rem;
+            color: var(--accent-violet); font-variant-numeric: tabular-nums;
+        }
+        .anim-chip.playing {
+            background: var(--accent-violet); color: #fff; border-color: var(--accent-violet);
+        }
+        .anim-chip.playing time { color: rgba(255, 255, 255, 0.75); }
+
+        /* 靜態力圖／對照圖 */
+        .anim-figs { display: grid; gap: 0.8rem; margin-top: 1rem; }
+        .anim-fig { border-radius: 12px; overflow: hidden; border: 1px solid rgba(42, 29, 23, 0.14); }
+        .anim-fig img { display: block; width: 100%; height: auto; background: #201611; }
+        /* 影片與靜態圖都不要被容器裁切 */
+        .anim-stage video, .anim-fig img { object-fit: contain; }
+        .anim-fig figcaption {
+            font-size: 0.79rem; line-height: 1.75; color: var(--text-muted);
+            padding: 0.6rem 0.75rem; background: rgba(42, 29, 23, 0.03);
+            border-top: 1px solid rgba(42, 29, 23, 0.08);
+        }
+
+        /* 影片重點結論 */
+        .anim-points { list-style: none; margin-top: 0.95rem; display: grid; gap: 0.5rem; }
+        .anim-points li {
+            position: relative; padding-left: 1.5rem;
+            font-size: 0.85rem; line-height: 1.8; color: var(--text-main);
+        }
+        .anim-points li::before {
+            content: ''; position: absolute; left: 0.35rem; top: 0.72em;
+            width: 6px; height: 6px; border-radius: 99px; background: var(--accent-violet);
+        }
+        .anim-extra { display: grid; gap: 0.8rem; margin-top: 0.9rem; }
+        .anim-extra-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+        /* 首頁／空狀態的通用小字 */
+        .muted-note { font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); }
+        .tip-card h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.35rem; }
+
+        @media print { .view-toolbar, #sidebar { display: none !important; } #main-content { padding: 0; } }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            #sidebar {
+                width: 100%; height: auto; position: static; padding: 0.9rem 1rem;
+                flex-direction: column;
+            }
+            .mobile-nav-toggle {
+                display: block; position: absolute; top: 0.9rem; right: 1rem;
+                font-size: 1.3rem; background: none; border: 0; color: #ebd3ca; cursor: pointer;
+            }
+            #sidebar > .nav-section-title,
+            #sidebar > .nav-list,
+            #sidebar > #node-nav-container { display: none; }
+            #sidebar.mobile-open > .nav-list { display: flex; }
+            #sidebar.mobile-open > .nav-section-title,
+            #sidebar.mobile-open > #node-nav-container { display: block; }
+            #sidebar.mobile-open { padding-bottom: 1.1rem; }
+            .sidebar-brand { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+        }
+        @media (max-width: 640px) {
+            #main-content { padding: 1.4rem 0.9rem 4rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .node-route-actions { grid-template-columns: 1fr; }
+            .lab-readout { grid-template-columns: 1fr 1fr; }
+            .home-stats { grid-template-columns: 1fr 1fr; }
+            .view-toolbar .toolbar-long { display: none; }
+            .formula-box { font-size: 0.92rem; padding: 0.6rem 0.5rem; }
+            .quiz-toolbar { gap: 0.35rem; }
+            .chip-btn { font-size: 0.74rem; padding: 0.28rem 0.6rem; }
+            .anim-chapters { display: grid; grid-template-columns: 1fr; gap: 0.3rem; }
+            .anim-chip { width: 100%; }
+            .anim-fig figcaption { font-size: 0.76rem; }
+        }

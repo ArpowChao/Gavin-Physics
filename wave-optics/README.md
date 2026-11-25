@@ -58,7 +58,9 @@ N14 的視深實驗分為「拖曳眼睛：看魚也看鳥」「岸上看水中�
 
 | 檔案 | 用途 |
 | --- | --- |
-| `wave_optics_review.html` | 主頁、路由、Canvas 實驗與播放器 |
+| `wave_optics_review.html` | 主頁骨架；載入下列樣式與程式 |
+| `assets/css/review.css` | 主頁樣式 |
+| `assets/js/review/` | 主頁程式，依檔名順序載入：`01-app-core.js` 路由與各檢視、`02-lab-framework.js` 實驗共用框架、`03`–`19` 各互動實驗（`LABS.*`）、`20-boot.js` 啟動。皆為一般 `<script>`，共用全域範圍，並標 `data-page-required`，任一檔載入失敗會顯示復原畫面 |
 | `assets/js/learner-ui.js` | 初學導讀、章節介面、練習篩選與學習紀錄 |
 | `assets/css/learner.css` | 資訊層次、響應式排版與鍵盤焦點 |
 | `data/learningGuide.js` | 21 節導讀、例題與檢核 |

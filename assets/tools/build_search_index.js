@@ -18,7 +18,9 @@ const push = (t, sub, book, url, kw) => items.push({ t, sub, book, url, kw: kw |
 
 // 1. 必修物理（gsat/）：knowledgeNodes
 {
-  const html = fs.readFileSync(path.join(ROOT, 'gsat', 'gsat_physics_review.html'), 'utf8');
+  const reviewDir = path.join(ROOT, 'gsat', 'assets', 'js', 'review');   // 頁面程式碼拆在這裡
+  const html = fs.readdirSync(reviewDir).filter(f => f.endsWith('.js')).sort()
+    .map(f => fs.readFileSync(path.join(reviewDir, f), 'utf8')).join('\n');
   const m = html.match(/const knowledgeNodes\s*=\s*(\[[\s\S]*?\]);/);
   if (!m) throw new Error('找不到 gsat knowledgeNodes');
   const nodes = new Function(`return ${m[1]};`)();

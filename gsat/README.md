@@ -145,23 +145,28 @@ python -m http.server 8000
 ```text
 phy-senior/
 ├─ index.html                  # GitHub Pages 與本機入口
-├─ gsat_physics_review.html    # 主要介面、圖表與互動實驗
+├─ gsat_physics_review.html    # 頁面骨架（側欄、版面），載入下列 CSS／JS
 ├─ data/
 │  ├─ modulesData.js           # 七大模組的 SOIL 教材內容
 │  ├─ questionBank.js          # N01–N28 分級題庫
 │  ├─ examPractice.js          # 歷屆題索引、年份與節點歸類
 │  └─ examSolutions.js         # 答案、詳解與非選答案卡設定
 ├─ assets/
+│  ├─ css/review.css           # 主頁樣式
 │  ├─ css/                     # 互動元件、手機分頁與 reduced-motion 樣式
+│  ├─ js/review/               # 主頁程式，依檔名順序載入（01 核心路由 → 13 繪圖板與啟動）
 │  ├─ js/                      # 共用固定步長、Three.js 延遲載入與 3D 清理執行層
 │  ├─ lib/                     # 本地自託管函式庫（Three.js）
 │  └─ exam_crops/              # 歷屆題目裁切圖與答案卡底圖
+├─ scripts/check.py            # 防回歸檢查（超綱詞、LaTeX 跳脫、語法、裁切圖、圖解覆蓋）
 ├─ images/                     # 早期 111–115 年題圖；現行頁面改用 assets/exam_crops
 ├─ 108課綱全/                  # 108 課綱試卷與參考資料
 └─ 99課綱/                     # 106–110 年舊制試卷與資料
 ```
 
 修改資料檔後，重新整理瀏覽器即可看到結果；不需編譯或打包。
+
+`assets/js/review/*.js` 是一般的 `<script>`（不是模組），彼此共用全域範圍：任一檔的函式都能互相呼叫，但「載入當下就執行」的程式只能用到排在前面的檔案。新增檔案時要在 `gsat_physics_review.html` 加上 `<script>`，並更新 `?v=` 版本參數讓平板拿到新檔。大改後跑一次 `python scripts/check.py`。
 
 ## 待更新與未來開發
 

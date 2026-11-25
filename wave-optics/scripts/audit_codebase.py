@@ -12,6 +12,14 @@ def run_audit():
 
     # Canvas 模組與主頁都必須遵守同一條 DPR 規則。
     canvas_sources = [('wave_optics_review.html', html)]
+    # 頁面程式碼已拆到 assets/js/review/*.js
+    review_dir = 'assets/js/review'
+    for name in sorted(os.listdir(review_dir)) if os.path.isdir(review_dir) else []:
+        if name.endswith('.js'):
+            with open(os.path.join(review_dir, name), 'r', encoding='utf-8') as f:
+                code = f.read()
+            canvas_sources.append((f'{review_dir}/{name}', code))
+            html += '\n' + code
     swing_path = 'assets/js/swing-work.js'
     if os.path.exists(swing_path):
         with open(swing_path, 'r', encoding='utf-8') as f:

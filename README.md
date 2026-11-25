@@ -39,7 +39,7 @@ node practice/tools/build_bank.js <易混淆 bank_data.json> bank_all.json
 
 ### 後端部署
 
-1. 在 Apps Script 建立專案，貼上 `practice/gas/` 的檔案。
+1. 在 Apps Script 建立專案，貼上 `practice/gas/` 的檔案（或貼上單檔 `_combined_for_paste.gs`）。只改 `Data.gs`／`IRT.gs`／`Code.gs`，改完執行 `node practice/tools/build_gas.js` 重新產生合併檔；GitHub Actions 會檢查兩者是否一致。
 2. 依序執行 `setup`（建立資料試算表、產生管理金鑰）、`importLegacy`（匯入舊系統帳號與作答）、`installHourlyTrigger`。
 3. 部署為網頁應用程式：執行身分「我」、存取權「所有人」，把 `/exec` 網址填入 `practice/config.js`。
 
@@ -49,6 +49,12 @@ node practice/tools/build_bank.js <易混淆 bank_data.json> bank_all.json
 - 每個夠大的動畫（canvas／svg）右上角都有「⛶」，點了會把該動畫放大到全螢幕（舞台模式）；實驗頁導覽列另有整頁「⛶ 全螢幕」。
 - iPad 在 Safari「分享 → 加入主畫面」後，從主畫面開啟即為全螢幕（`manifest.webmanifest`）。
 - 新增頁面後執行 `python3 assets/tools/apply_warm.py`，並在其中的 `PAGES` 加上該頁的色彩對照。
+
+## 自動檢查
+
+每次推送時 GitHub Actions（`.github/workflows/checks.yml`）會跑：Apps Script 合併檔一致性、搜尋索引是否最新、`gsat/scripts/check.py`，以及 `wave-optics/scripts/` 的內容與實驗稽核。本機可照同樣指令執行。
+
+學測與波動光學兩個主頁的樣式與程式分別放在各自的 `assets/css/review.css` 與 `assets/js/review/`（依檔名順序載入），HTML 只留頁面骨架。
 
 ## 本機預覽
 

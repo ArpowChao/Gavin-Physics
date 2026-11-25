@@ -2,7 +2,10 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
-const html = fs.readFileSync('wave_optics_review.html', 'utf8');
+// 頁面程式碼已拆到 assets/js/review/*.js；依檔名順序串回來，等同原本內嵌的 <script>
+const html = fs.readFileSync('wave_optics_review.html', 'utf8') + '\n' +
+    fs.readdirSync('assets/js/review').filter(f => f.endsWith('.js')).sort()
+        .map(f => fs.readFileSync('assets/js/review/' + f, 'utf8')).join('\n');
 const start = html.indexOf('LABS.apparent_depth = {');
 const end = html.indexOf('/* 10. 薄透鏡', start);
 assert.ok(start > 0 && end > start, 'Apparent-depth model must be found');
